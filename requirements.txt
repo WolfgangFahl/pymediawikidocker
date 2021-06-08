@@ -3,3 +3,6 @@
 # Docker SDK for Python
 #https://pypi.org/project/docker/
 docker
+#
+# avoid ModuleNotFoundError: No module named 'six'
+six
