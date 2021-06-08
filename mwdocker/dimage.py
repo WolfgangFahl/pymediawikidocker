@@ -28,8 +28,8 @@ class DockerClient(object):
         if cls.instance is None:
             cls.instance=DockerClient()
         return cls.instance
-        
-
+    
+    
 class DockerImage(object):
     '''
     MediaWiki Docker image
