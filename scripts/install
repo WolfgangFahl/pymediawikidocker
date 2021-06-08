@@ -1,0 +1,48 @@
+#!/bin/bash
+# WF 2020-07-27
+os=$(uname -a)
+useroption="--user"
+
+#
+# autoinstall the package for the given command
+#
+autoinstall() {
+  local l_cmd="$1"
+  local l_package="$2"
+  echo "checking whether $l_cmd is installed ..."
+  which $l_cmd 
+  if [ $? -ne 0 ]
+  then
+    echo  "installing $l_cmd from package $l_package ..."
+    $install $l_package
+  fi
+}
+case $os in
+  Darwin*)
+   pip="pip3"
+   install="sudo port install"
+   ;;
+  *)
+   pip="pip3"
+   if [ "$USER" = "travis" ]
+   then
+     # https://stackoverflow.com/a/20621143/1497139
+     echo "environment is travis with python version $TRAVIS_PYTHON_VERSION"
+     pip="pip"
+     useroption=""
+   fi
+   install="sudo apt-get install"
+   ;;
+esac
+#$install python3-pip
+$pip --version
+echo "installing required python modules with useroption $useroption"
+$pip install $useroption -r requirements.txt
+
+# make sure pywikibot configuration is available
+if [ ! -d $HOME/.pywikibot ]
+then
+   mkdir $HOME/.pywikibot
+   echo "creating user-config.py"
+   echo "put_throttle = 0" > $HOME/.pywikibot/user-config.py
+fi
