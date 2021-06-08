@@ -67,7 +67,7 @@ class TestInstall(unittest.TestCase):
         if self.debug:
             print(cl)
         # make sure there are at least 4 running containers
-        self.assertTrue(3>=len(cl))
+        self.assertTrue(len(cl)>=3)
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']
