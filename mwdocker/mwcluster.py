@@ -9,11 +9,13 @@ class MediaWikiCluster(object):
     a cluster of mediawiki 
     '''
 
-    def __init__(self,debug=False,versions=["1.27.7","1.31.14","1.35.2"],networkName="mwNetwork",mariaDBVersion="10.5",mySQLRootPassword="insecurepassword"):
+    def __init__(self,debug=False,sqlPort=9306,basePort=9080,versions=["1.27.7","1.31.14","1.35.2"],networkName="mwNetwork",mariaDBVersion="10.5",mySQLRootPassword="insecurepassword"):
         '''
         Constructor
         '''
         self.debug=debug
+        self.sqlPort=sqlPort
+        self.basePort=basePort
         self.versions=versions
         self.mariaDBVersion=mariaDBVersion
         self.mySQLRootPassword=mySQLRootPassword
@@ -36,11 +38,19 @@ class MediaWikiCluster(object):
         self.mariaImage.pull()
         self.containers.append(self.mariaImage.run(
             environment={"MYSQL_ROOT_PASSWORD":self.mySQLRootPassword},
-            network=self.networkName
+            network=self.networkName,
+            hostname="mariadb",
+            ports={'3306/tcp': self.sqlPort}
         ))
-        for version in self.versions:
+        for i,version in enumerate(self.versions):
+            port=self.basePort+i
             mwImage=DockerImage(self.dockerClient,version=version,debug=True)
             mwImage.pull()
-            self.containers.append(mwImage.run(network=self.networkName))
+            mwname=version.replace(".","")
+            self.containers.append(mwImage.run(
+                network=self.networkName,
+                ports={'80/tcp': port},
+                hostname=f"mw{mwname}"
+            ))
         
     
