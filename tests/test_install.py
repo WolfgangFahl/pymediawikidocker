@@ -5,7 +5,7 @@ Created on 2021-01-25
 '''
 import unittest
 import docker
-from mwdocker.mwimage import MWImage
+from mwdocker.dimage import DockerImage
 import warnings
 
 class TestInstall(unittest.TestCase):
@@ -16,6 +16,7 @@ class TestInstall(unittest.TestCase):
 
     def setUp(self):
         self.debug=False
+        self.client = docker.from_env()
         # filter annoying resource warnings
         warnings.filterwarnings(action="ignore", message="unclosed", category=ResourceWarning)
         pass
@@ -26,23 +27,30 @@ class TestInstall(unittest.TestCase):
     def log(self,msg):
         if self.debug:
             print(msg)
+            
+            
+    def testDockerCredentialDesktop(self):
+        '''
+        check that docker-credential-desktop is available
+        '''
+        mwImage=DockerImage(self.client,debug=True,doCheckDocker=False)
+        mwImage.checkDocker()
     
     def testInstallation(self):
         '''
         test the MediaWiki docker image installation
         '''
         versions=["1.27.7","1.31.14","1.35.2"]
-        client = docker.from_env()
-        il=client.images.list()
+        
+        il=self.client.images.list()
         print(il)
-        cl=client.containers.list()
+        cl=self.client.containers.list()
         print(cl)
+        mariaImage=DockerImage(self.client,name="mariadb",version="10.5")
+        mariaImage.pull()
         for version in versions:
-            mwImage=MWImage(client,version=version)
-            print(f"pulling Mediawiki {version} docker image ...")
+            mwImage=DockerImage(self.client,version=version,debug=True)
             mwImage.pull()
-        
-        
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']
