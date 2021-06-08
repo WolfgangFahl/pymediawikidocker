@@ -74,7 +74,7 @@ class DockerImage(object):
         self.image=self.dockerClient.client.images.pull(self.name,tag=self.version)
         return self.image
         
-    def run(self):
+    def run(self,**kwargs):
         '''
         run this image in a container
         '''
@@ -82,5 +82,5 @@ class DockerImage(object):
             raise "No image initialized - you might want to e.g. pull one"
         if self.debug:
             print(f"running container for {self.image.tags[0]}")
-        container=self.dockerClient.client.containers.run(self.image.id,detach=True)
+        container=self.dockerClient.client.containers.run(self.image.id,detach=True,**kwargs)
         return container

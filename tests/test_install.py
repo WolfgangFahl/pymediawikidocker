@@ -48,7 +48,7 @@ class TestInstall(unittest.TestCase):
         mariaImage=DockerImage(self.dockerClient,name="mariadb",version="10.5")
         mariaImage.pull()
         containers=[]
-        containers.append(mariaImage.run())
+        containers.append(mariaImage.run(environment={"MYSQL_ROOT_PASSWORD":"insecurepassword"}))
         for version in versions:
             mwImage=DockerImage(self.dockerClient,version=version,debug=True)
             mwImage.pull()
@@ -67,7 +67,7 @@ class TestInstall(unittest.TestCase):
         if self.debug:
             print(cl)
         # make sure there are at least 4 running containers
-        self.assertTrue(len(cl)>=3)
+        self.assertTrue(len(cl)>=4)
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']
