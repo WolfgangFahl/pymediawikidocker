@@ -25,10 +25,16 @@ class MediaWikiCluster(object):
         self.client.ping()
         # create a network
         self.networkName=networkName
-        # TODO do we need this?
-        self.client.networks.prune()
-        self.network=self.client.networks.create(self.networkName, driver="bridge")
+        self.createNetwork()
         self.containers=[]
+        
+    def createNetwork(self):
+        '''
+        create my network if it does not exist yet
+        '''
+        self.network=self.client.networks.get(self.networkName)
+        if self.network is None:
+            self.network=self.client.networks.create(self.networkName, driver="bridge")
         
     def prepareImages(self):
         '''

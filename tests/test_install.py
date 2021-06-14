@@ -4,7 +4,6 @@ Created on 2021-01-25
 @author: wf
 '''
 import unittest
-import docker
 from mwdocker.mwcluster import MediaWikiCluster
 from mwdocker.dimage import DockerClient,DockerImage
 import warnings
