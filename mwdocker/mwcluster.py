@@ -32,7 +32,14 @@ class MediaWikiCluster(object):
         '''
         create my network if it does not exist yet
         '''
-        self.network=self.client.networks.get(self.networkName)
+        self.network=None
+        # get the current list of networks
+        nlist=self.client.networks.list()
+        # if network is available use it
+        for network in nlist:
+            if network.name==self.networkName:
+                self.network=network
+                break
         if self.network is None:
             self.network=self.client.networks.create(self.networkName, driver="bridge")
         
@@ -46,6 +53,7 @@ class MediaWikiCluster(object):
             environment={"MYSQL_ROOT_PASSWORD":self.mySQLRootPassword},
             network=self.networkName,
             hostname="mariadb",
+            name=self.mariaImage.defaultContainerName(),
             ports={'3306/tcp': self.sqlPort}
         ))
         for i,version in enumerate(self.versions):
@@ -56,7 +64,13 @@ class MediaWikiCluster(object):
             self.containers.append(mwImage.run(
                 network=self.networkName,
                 ports={'80/tcp': port},
+                name=mwImage.defaultContainerName(),
                 hostname=f"mw{mwname}"
             ))
+            
+    def runContainer(self,dockerImage:DockerImage):
+        '''
+        run a container for the given docker image
+        '''
         
     

@@ -49,6 +49,9 @@ class DockerImage(object):
         self.debug=debug
         if doCheckDocker:
             self.checkDocker()
+            
+    def defaultContainerName(self):
+        return f"{self.name}_{self.version}"
     
     def checkCredentialsDesktop(self):
         cmd="docker-credential-desktop"
