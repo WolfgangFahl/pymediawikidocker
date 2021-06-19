@@ -17,15 +17,26 @@ class DockerClient(object):
         self.client = docker.from_env()
         
     def getImageMap(self):
+        '''
+        get a map/dict of images by firstTag
+        
+        Returns:
+            dict: a map of images by first Tag
+        '''
         imageList=self.client.images.list()
         imageMap={}
         for image in imageList:
-            imageMap[image.tags[0]]=image
+            if len(image.tags)>0:
+                firstTag=image.tags[0]
+                imageMap[firstTag]=image
         return imageMap
     
     def getContainerMap(self):
         '''
         get a map of running containers for this image
+        
+        Returns:
+            dict: a map of containers by name
         '''
         containerMap={}
         for container in self.client.containers.list():
