@@ -122,7 +122,7 @@ class DockerImage(object):
         self.dockerFilePath=f"{self.dockerPath}/Dockerfile"
         os.makedirs(self.dockerPath,exist_ok=True)
         env = Environment(loader=FileSystemLoader(template_dir))
-        template = env.get_template("mwDockerFile")
+        template = env.get_template("mwDockerfile")
         dockerFileContent=template.render(mwVersion=self.version,**kwArgs)
         with open(self.dockerFilePath, "w") as dockerFile:
             dockerFile.write(dockerFileContent)
