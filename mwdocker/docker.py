@@ -86,8 +86,9 @@ class DockerApplication(object):
         generate the composer file for 
         '''
         password_length = 13
-        password=secrets.token_urlsafe(password_length)
-        self.generate("mwCompose.yml",f"{self.dockerPath}/docker-compose.yml",mySQL_Password=password,**kwArgs)       
+        mySQL_Password=secrets.token_urlsafe(password_length)
+        mySQL_RootPassword=secrets.token_urlsafe(password_length)
+        self.generate("mwCompose.yml",f"{self.dockerPath}/docker-compose.yml",mySQL_RootPassword=mySQL_RootPassword,mySQL_Password=mySQL_Password,**kwArgs)       
         
         
     def genDockerFile(self,**kwArgs):

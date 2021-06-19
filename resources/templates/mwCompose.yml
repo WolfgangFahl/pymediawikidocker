@@ -19,7 +19,7 @@ services:
       MYSQL_DATABASE: wiki
       MYSQL_USER: wikiuser
       MYSQL_PASSWORD: "{{mySQL_Password}}"
-      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+      MYSQL_ROOT_PASSWORD: "{{mySQL_RootPassword}}"
     ports:
       - {{sqlPort}}:3306
     volumes:
