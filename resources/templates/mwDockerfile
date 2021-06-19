@@ -8,6 +8,7 @@ MAINTAINER Wolfgang Fahl <wf@bitplan.com>
 # install some more utilities
 RUN apt-get update && apt-get install -y \
   mariadb-client \
+  inetutils-ping \
   vim \
   unzip \
   zip

@@ -1,0 +1,49 @@
+#
+# MediaWiki with MariaDB
+#
+# Access via "http://localhost:{{port}}"
+#   (or "http://docker-machine ip:{{port}}" if using docker-machine)
+version: "3"
+
+# 2 services
+#   db - database
+#   mw - mediawiki
+services:
+
+#  MySQL compatible relational database
+  db:
+# use original image
+    image: mariadb:{{mariaDBVersion}}
+    restart: always
+    environment:
+      MYSQL_DATABASE: wiki
+      MYSQL_USER: wikiuser
+      MYSQL_PASSWORD: "{{mySQL_Password}}"
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+    ports:
+      - {{sqlPort}}:3306
+    volumes:
+      - mysqldata:/var/lib/mysql
+      
+# mediawiki
+  mw:
+    #image: mediawiki:{{mwVersion}}
+    # use the Dockerfile in this directory
+    build: .
+    restart: always
+    ports:
+      - {{port}}:80
+    links:
+      - db
+    volumes:
+      - wikiimages:/var/www/html/images
+    # After initial setup, download LocalSettings.php to the same directory as
+    # this yaml and uncomment the following line and use compose to restart
+    # the mediawiki service
+    # - ./LocalSettings.php:/var/www/html/LocalSettings.php
+    
+volumes:
+  mysqldata:
+    driver: local
+  wikiimages:
+    driver: local
