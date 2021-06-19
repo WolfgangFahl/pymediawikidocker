@@ -32,6 +32,7 @@ class MediaWikiCluster(object):
             mwApp=self.getDockerApplication(i,version)
             mwApp.genDockerFile()
             mwApp.genComposerFile()
+            mwApp.genLocalSettings()
             mwApp.up()         
             
     def getDockerApplication(self,i,version):
@@ -48,4 +49,5 @@ class MediaWikiCluster(object):
             mwApp=self.getDockerApplication(i,version)
             mwApp.genDockerFile()
             mwApp.genComposerFile()
+            mwApp.genLocalSettings()
     

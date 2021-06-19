@@ -131,3 +131,4 @@ dmypy.json
 # docker files
 resources/**/docker-compose.yml
 resources/**/dockerfile
+resources/**/LocalSettings.php

@@ -7,6 +7,8 @@ from python_on_whales import docker
 import os
 import datetime
 import secrets
+import socket
+import re
 from jinja2 import Environment, FileSystemLoader
     
 class DockerMap():
@@ -85,15 +87,23 @@ class DockerApplication(object):
         '''
         password_length = 13
         password=secrets.token_urlsafe(password_length)
-        self.generate("mwCompose",f"{self.dockerPath}/docker-compose.yml",mySQL_Password=password,**kwArgs)       
+        self.generate("mwCompose.yml",f"{self.dockerPath}/docker-compose.yml",mySQL_Password=password,**kwArgs)       
         
         
     def genDockerFile(self,**kwArgs):
         '''
         generate the docker files for this cluster
         '''
-       
         self.generate("mwDockerfile",f"{self.dockerPath}/Dockerfile",**kwArgs)
+        
+    def genLocalSettings(self,**kwArgs):
+        '''
+        generate the local settings file
+        '''
+        hostname=socket.getfqdn()
+        versionMatch=re.match("(?P<major>[0-9]+)\.(?P<minor>[0-9]+)",self.version)
+        shortVersion=f"{versionMatch.group('major')}{versionMatch.group('minor')}"
+        self.generate(f"mwLocalSettings{shortVersion}.php",f"{self.dockerPath}/LocalSettings.php",hostname=hostname,**kwArgs)
     
     def up(self):
         '''
