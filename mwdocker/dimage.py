@@ -117,6 +117,7 @@ class DockerImage(object):
         scriptpath=os.path.realpath(__file__)
         resourcePath=os.path.realpath(f"{scriptpath}/../../resources")
         template_dir = os.path.realpath(f'{resourcePath}/templates')
+        print(f"jinja template directory is {template_dir}")
         self.dockerPath=f'{resourcePath}/mw{self.version.replace(".","_")}'
         self.dockerFilePath=f"{self.dockerPath}/Dockerfile"
         os.makedirs(self.dockerPath,exist_ok=True)
