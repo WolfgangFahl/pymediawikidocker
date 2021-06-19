@@ -22,6 +22,15 @@ class DockerClient(object):
         for image in imageList:
             imageMap[image.tags[0]]=image
         return imageMap
+    
+    def getContainerMap(self):
+        '''
+        get a map of running containers for this image
+        '''
+        containerMap={}
+        for container in self.client.containers.list():
+            containerMap[container.name]=container
+        return containerMap
         
     @classmethod
     def getInstance(cls):
@@ -35,7 +44,7 @@ class DockerImage(object):
     MediaWiki Docker image
     '''
 
-    def __init__(self,dockerClient=None,name="mediawiki",version="1.35.2",debug=False,doCheckDocker=True):
+    def __init__(self,dockerClient=None,name="mediawiki",version="1.35.2",debug=False,verbose=True,doCheckDocker=True):
         '''
         Constructor
         '''
@@ -47,10 +56,18 @@ class DockerImage(object):
         self.version=version
         self.image=None
         self.debug=debug
+        self.verbose=verbose
         if doCheckDocker:
             self.checkDocker()
             
     def defaultContainerName(self):
+        '''
+        return the default container name which consists of the 
+        my name with the version appended
+        
+        Returns
+            str: the default container name
+        '''
         return f"{self.name}_{self.version}"
     
     def checkCredentialsDesktop(self):
@@ -59,21 +76,34 @@ class DockerImage(object):
         return path
     
     def addPath(self,path):
+        '''
+        add the given path to the operating system PATH
+        
+        Args:
+            path(str): the path to add
+        '''
         ospath=os.environ["PATH"]
         if not path in ospath:
             os.environ["PATH"]=f"{ospath}{os.pathsep}{path}"
     
     def checkDocker(self):
+        '''
+        check docker 
+            make sure docker-credential-desktop is in operating
+            system PATH
+        '''
         if self.checkCredentialsDesktop() is None:
             self.addPath("/usr/local/bin")
         if self.debug:
             print(os.environ["PATH"])
-        
+            
+    
     def pull(self):
         '''
         pull me
         '''
-        print(f"pulling {self.name} {self.version} docker image ...")
+        if self.verbose:
+            print(f"pulling {self.name} {self.version} docker image ...")
         self.image=self.dockerClient.client.images.pull(self.name,tag=self.version)
         return self.image
         

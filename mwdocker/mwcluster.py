@@ -26,7 +26,7 @@ class MediaWikiCluster(object):
         # create a network
         self.networkName=networkName
         self.createNetwork()
-        self.containers=[]
+        self.containers={}
         
     def createNetwork(self):
         '''
@@ -49,28 +49,31 @@ class MediaWikiCluster(object):
         '''
         self.mariaImage=DockerImage(self.dockerClient,name="mariadb",version=self.mariaDBVersion)
         self.mariaImage.pull()
-        self.containers.append(self.mariaImage.run(
+        self.runContainer(name=self.mariaImage.defaultContainerName(),dockerImage=self.mariaImage,
             environment={"MYSQL_ROOT_PASSWORD":self.mySQLRootPassword},
             network=self.networkName,
             hostname="mariadb",
-            name=self.mariaImage.defaultContainerName(),
             ports={'3306/tcp': self.sqlPort}
-        ))
+        )
         for i,version in enumerate(self.versions):
             port=self.basePort+i
             mwImage=DockerImage(self.dockerClient,version=version,debug=True)
             mwImage.pull()
             mwname=version.replace(".","")
-            self.containers.append(mwImage.run(
-                network=self.networkName,
+            name=mwImage.defaultContainerName()
+            self.runContainer(name, mwImage,network=self.networkName,
                 ports={'80/tcp': port},
-                name=mwImage.defaultContainerName(),
                 hostname=f"mw{mwname}"
-            ))
+            )
             
-    def runContainer(self,dockerImage:DockerImage):
+    def runContainer(self,name,dockerImage:DockerImage,**kwArgs):
         '''
         run a container for the given docker image
         '''
-        
+        containerMap=self.dockerClient.getContainerMap()
+        if name in containerMap:
+            container=containerMap[name]
+        else:
+            container=dockerImage.run(name=name,**kwArgs)
+        self.containers[name]=container
     

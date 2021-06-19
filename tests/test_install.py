@@ -50,7 +50,7 @@ class TestInstall(unittest.TestCase):
         # make sure there are 4 containers
         self.assertEqual(4,len(mwCluster.containers))
         # make sure the images of all containers are in the imageMap
-        for container in mwCluster.containers:
+        for container in mwCluster.containers.values():
             tag=container.image.tags[0]
             self.assertTrue(tag in imageMap)
        
