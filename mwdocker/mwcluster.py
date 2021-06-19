@@ -4,6 +4,7 @@ Created on 2021-08-06
 '''
 from mwdocker.dimage import DockerClient,DockerImage
 
+
 class MediaWikiCluster(object):
     '''
     a cluster of mediawiki 
@@ -58,13 +59,22 @@ class MediaWikiCluster(object):
         for i,version in enumerate(self.versions):
             port=self.basePort+i
             mwImage=DockerImage(self.dockerClient,version=version,debug=True)
-            mwImage.pull()
+            mwImage.genDockerFile()
+            mwImage.build()
+            #mwImage.pull()
             mwname=version.replace(".","")
             name=mwImage.defaultContainerName()
             self.runContainer(name, mwImage,network=self.networkName,
                 ports={'80/tcp': port},
                 hostname=f"mw{mwname}"
             )
+            
+            
+    def genDockerFiles(self):
+        for version in self.versions:
+            mwImage=DockerImage(self.dockerClient,version=version,debug=self.debug)
+            mwImage.genDockerFile()
+            
             
     def runContainer(self,name,dockerImage:DockerImage,**kwArgs):
         '''

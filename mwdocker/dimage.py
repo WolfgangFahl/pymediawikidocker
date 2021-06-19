@@ -6,6 +6,7 @@ Created on 2021-08-06
 import docker
 import distutils.spawn
 import os
+from jinja2 import Environment, FileSystemLoader
 
 class DockerClient(object):
     '''
@@ -108,10 +109,42 @@ class DockerImage(object):
         if self.debug:
             print(os.environ["PATH"])
             
+        
+    def genDockerFile(self):
+        '''
+        generate the docker files for this cluster
+        '''
+        scriptpath=os.path.realpath(__file__)
+        resourcePath=os.path.realpath(f"{scriptpath}/../../resources")
+        template_dir = os.path.realpath(f'{resourcePath}/templates')
+        self.dockerPath=f'{resourcePath}/mw{self.version.replace(".","_")}'
+        self.dockerFilePath=f"{self.dockerPath}/Dockerfile"
+        os.makedirs(self.dockerPath,exist_ok=True)
+        env = Environment(loader=FileSystemLoader(template_dir))
+        template = env.get_template("mwDockerFile")
+        dockerFileContent=template.render(mwVersion=self.version)
+        with open(self.dockerFilePath, "w") as dockerFile:
+            dockerFile.write(dockerFileContent)
+    
+    def build(self):
+        '''
+        build me and return my image
+        
+        Returns:
+            Docker image
+        '''
+        if self.verbose:
+            print(f"building {self.name} {self.version} docker image ...")
+        self.image,tee=self.dockerClient.client.images.build(path=self.dockerPath,dockerfile=self.dockerFilePath,tag=self.version)
+        return self.image
+            
     
     def pull(self):
         '''
-        pull me
+        pull me and return my image
+        
+        Returns:
+            Docker image
         '''
         if self.verbose:
             print(f"pulling {self.name} {self.version} docker image ...")

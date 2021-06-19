@@ -36,6 +36,13 @@ class TestInstall(unittest.TestCase):
         dockerClient=DockerClient.getInstance()
         mwImage=DockerImage(dockerClient,debug=self.debug,doCheckDocker=False)
         mwImage.checkDocker()
+        
+    def testGenerateDockerFiles(self):
+        '''
+        test generating the docker files
+        '''
+        mwCluster=MediaWikiCluster()
+        mwCluster.genDockerFiles()
     
     def testInstallation(self):
         '''

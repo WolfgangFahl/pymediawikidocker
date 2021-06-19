@@ -3,6 +3,8 @@
 # Docker SDK for Python
 #https://pypi.org/project/docker/
 docker
+# https://pypi.org/project/Jinja2/
+Jinja2
 #
 # avoid ModuleNotFoundError: No module named 'six'
 six
