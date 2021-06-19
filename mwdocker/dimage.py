@@ -4,8 +4,10 @@ Created on 2021-08-06
 @author: wf
 '''
 import docker
+from docker.errors import BuildError
 import distutils.spawn
 import os
+import datetime
 from jinja2 import Environment, FileSystemLoader
 
 class DockerClient(object):
@@ -117,13 +119,15 @@ class DockerImage(object):
         scriptpath=os.path.realpath(__file__)
         resourcePath=os.path.realpath(f"{scriptpath}/../../resources")
         template_dir = os.path.realpath(f'{resourcePath}/templates')
-        print(f"jinja template directory is {template_dir}")
+        #print(f"jinja template directory is {template_dir}")
         self.dockerPath=f'{resourcePath}/mw{self.version.replace(".","_")}'
         self.dockerFilePath=f"{self.dockerPath}/Dockerfile"
         os.makedirs(self.dockerPath,exist_ok=True)
         env = Environment(loader=FileSystemLoader(template_dir))
         template = env.get_template("mwDockerfile")
-        dockerFileContent=template.render(mwVersion=self.version,**kwArgs)
+        timestamp=datetime.datetime.now().isoformat()
+
+        dockerFileContent=template.render(mwVersion=self.version,timestamp=timestamp,**kwArgs)
         with open(self.dockerFilePath, "w") as dockerFile:
             dockerFile.write(dockerFileContent)
     
@@ -136,9 +140,20 @@ class DockerImage(object):
         '''
         if self.verbose:
             print(f"building {self.name} {self.version} docker image ...")
-        self.image,tee=self.dockerClient.client.images.build(path=self.dockerPath,dockerfile=self.dockerFilePath,tag=self.version)
+        self.image=None
+        try:
+            self.image,log=self.dockerClient.client.images.build(path=self.dockerPath,dockerfile=self.dockerFilePath,tag=self.version)
+            if self.verbose:
+                self.showLog(log)
+        except BuildError as e:
+            self.showLog(e.build_log)
+            
         return self.image
             
+    def showLog(self,log):
+        for line in log:
+                if 'stream' in line:
+                    print(line['stream'].strip())
     
     def pull(self):
         '''
