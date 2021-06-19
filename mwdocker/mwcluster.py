@@ -44,10 +44,24 @@ class MediaWikiCluster(object):
         if self.network is None:
             self.network=self.client.networks.create(self.networkName, driver="bridge")
         
-    def prepareImages(self):
+    def prepareImages(self,forceRebuild=False):
         '''
         prepare the images
-        '''
+        '''           
+        for i,version in enumerate(self.versions):
+            port=self.basePort+i
+            mwImage=DockerImage(self.dockerClient,version=version,debug=True)
+            mwImage.genDockerFile()
+            containerName=mwImage.defaultContainerName()
+            if forceRebuild:
+                self.stopAndRemoveContainer(containerName)
+            mwImage.build()
+            #mwImage.pull()
+            mwname=version.replace(".","")
+            self.runContainer(containerName, mwImage,network=self.networkName,
+                ports={'80/tcp': port},
+                hostname=f"mw{mwname}"
+            )
         self.mariaImage=DockerImage(self.dockerClient,name="mariadb",version=self.mariaDBVersion)
         self.mariaImage.pull()
         self.runContainer(name=self.mariaImage.defaultContainerName(),dockerImage=self.mariaImage,
@@ -56,18 +70,6 @@ class MediaWikiCluster(object):
             hostname="mariadb",
             ports={'3306/tcp': self.sqlPort}
         )
-        for i,version in enumerate(self.versions):
-            port=self.basePort+i
-            mwImage=DockerImage(self.dockerClient,version=version,debug=True)
-            mwImage.genDockerFile()
-            mwImage.build()
-            #mwImage.pull()
-            mwname=version.replace(".","")
-            name=mwImage.defaultContainerName()
-            self.runContainer(name, mwImage,network=self.networkName,
-                ports={'80/tcp': port},
-                hostname=f"mw{mwname}"
-            )
             
             
     def genDockerFiles(self):
@@ -75,6 +77,21 @@ class MediaWikiCluster(object):
             mwImage=DockerImage(self.dockerClient,version=version,debug=self.debug)
             mwImage.genDockerFile()
             
+    
+    def stopAndRemoveContainer(self,containerName):
+        container=self.getRunningContainer(containerName)
+        if container is not None:
+            container.stop()
+            container.remove()
+        
+            
+    def getRunningContainer(self,containerName):
+        containerMap=self.dockerClient.getContainerMap()
+        if containerName in containerMap:
+            container=containerMap[containerName]
+        else:
+            container=None
+        return container
             
     def runContainer(self,name,dockerImage:DockerImage,**kwArgs):
         '''

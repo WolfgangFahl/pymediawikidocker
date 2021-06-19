@@ -49,7 +49,7 @@ class TestInstall(unittest.TestCase):
         test the MediaWiki docker image installation
         '''
         mwCluster=MediaWikiCluster()
-        mwCluster.prepareImages()
+        mwCluster.prepareImages(forceRebuild=True)
             
         imageMap=mwCluster.dockerClient.getImageMap()
         if self.debug:
