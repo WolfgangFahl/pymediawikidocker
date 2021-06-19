@@ -110,7 +110,7 @@ class DockerImage(object):
             print(os.environ["PATH"])
             
         
-    def genDockerFile(self):
+    def genDockerFile(self,**kwArgs):
         '''
         generate the docker files for this cluster
         '''
@@ -122,7 +122,7 @@ class DockerImage(object):
         os.makedirs(self.dockerPath,exist_ok=True)
         env = Environment(loader=FileSystemLoader(template_dir))
         template = env.get_template("mwDockerFile")
-        dockerFileContent=template.render(mwVersion=self.version)
+        dockerFileContent=template.render(mwVersion=self.version,**kwArgs)
         with open(self.dockerFilePath, "w") as dockerFile:
             dockerFile.write(dockerFileContent)
     

@@ -51,7 +51,7 @@ class MediaWikiCluster(object):
         for i,version in enumerate(self.versions):
             port=self.basePort+i
             mwImage=DockerImage(self.dockerClient,version=version,debug=True)
-            mwImage.genDockerFile()
+            mwImage.genDockerFile(mariaDBVersion=self.mariaDBVersion)
             containerName=mwImage.defaultContainerName()
             if forceRebuild:
                 self.stopAndRemoveContainer(containerName)
@@ -73,9 +73,12 @@ class MediaWikiCluster(object):
             
             
     def genDockerFiles(self):
+        '''
+        generate all docker files
+        '''
         for version in self.versions:
             mwImage=DockerImage(self.dockerClient,version=version,debug=self.debug)
-            mwImage.genDockerFile()
+            mwImage.genDockerFile(mariaDBVersion=self.mariaDBVersion)
             
     
     def stopAndRemoveContainer(self,containerName):
