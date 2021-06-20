@@ -16,6 +16,7 @@ installDockerComposeCLIPlugin() {
    mv  docker-compose-linux-amd64 docker-compose
    # try out plugin
    chmod +x docker-compose
+   docker --version
    docker  2>&1 | grep compose
    cd $wd
 }
