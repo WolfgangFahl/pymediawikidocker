@@ -167,7 +167,8 @@ class DockerApplication(object):
         # change directory so that docker CLI will find the relevant dockerfile and docker-compose.yml
         os.chdir(self.dockerPath)
         #project_config = docker.compose.config()
-         
+        if forceRebuild:
+            docker.compose.build()
         # run docker compose up
         docker.compose.up(detach=True)    
         self.getContainers()
