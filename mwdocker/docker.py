@@ -33,15 +33,22 @@ class DockerApplication(object):
         Constructor
         '''
         self.name=name
+        # Versions
         self.version=version
         self.underscoreVersion=version.replace(".","_")
         self.shortVersion=self.getShortVersion()
-        
         self.mariaDBVersion=mariaDBVersion
+        # ports
         self.port=port
         self.sqlPort=sqlPort
+        # debug and verbosity
         self.debug=debug
         self.verbose=verbose
+        # passwords
+        password_length = 13
+        self.mySQL_Password=secrets.token_urlsafe(password_length)
+        self.mySQL_RootPassword=secrets.token_urlsafe(password_length)
+        # jinja and docker prerequisites
         self.env=self.getJinjaEnv()
         self.getContainers()
             
@@ -103,10 +110,7 @@ class DockerApplication(object):
         '''
         generate the composer file for 
         '''
-        password_length = 13
-        mySQL_Password=secrets.token_urlsafe(password_length)
-        mySQL_RootPassword=secrets.token_urlsafe(password_length)
-        self.generate("mwCompose.yml",f"{self.dockerPath}/docker-compose.yml",mySQL_RootPassword=mySQL_RootPassword,mySQL_Password=mySQL_Password,**kwArgs)       
+        self.generate("mwCompose.yml",f"{self.dockerPath}/docker-compose.yml",mySQL_RootPassword=self.mySQL_RootPassword,mySQL_Password=self.mySQL_Password,**kwArgs)       
         
     def getShortVersion(self):
         '''
@@ -130,7 +134,7 @@ class DockerApplication(object):
         generate the local settings file
         '''
         hostname=socket.getfqdn()
-        self.generate(f"mwLocalSettings{self.shortVersion}.php",f"{self.dockerPath}/LocalSettings.php",hostname=hostname,**kwArgs)
+        self.generate(f"mwLocalSettings{self.shortVersion}.php",f"{self.dockerPath}/LocalSettings.php",mySQL_Password=self.mySQL_Password,hostname=hostname,**kwArgs)
     
     def genWikiSQLDump(self,**kwArgs):
         '''
