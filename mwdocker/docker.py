@@ -141,6 +141,12 @@ class DockerApplication(object):
         '''
         self.generate(f"mwWiki{self.shortVersion}.sql",f"{self.dockerPath}/wiki.sql",**kwArgs)
         
+    def genInitDB(self):
+        '''
+        generate the initialize database script (in fact just copying)
+        '''
+        self.generate("initdb.sh",f"{self.dockerPath}/initdb.sh",**kwArgs)
+        
     def generateAll(self):
         '''
         generate all files needed for the docker handling
@@ -149,6 +155,7 @@ class DockerApplication(object):
         self.genComposerFile()
         self.genLocalSettings()
         self.genWikiSQLDump()
+        self.genInitDB()
         
     def up(self,forceRebuild:bool=False):
         '''

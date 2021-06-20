@@ -28,3 +28,9 @@ COPY LocalSettings.php /var/www/html
 
 # copy the SQL dump
 COPY wiki.sql /tmp
+
+# copy the initdb.sh script
+COPY initdb.sh /tmp
+
+# RUN the initdb.sh script
+RUN /tmp/initdb.sh
