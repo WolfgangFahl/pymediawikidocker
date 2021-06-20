@@ -90,6 +90,16 @@ class DockerApplication(object):
         mySQL_RootPassword=secrets.token_urlsafe(password_length)
         self.generate("mwCompose.yml",f"{self.dockerPath}/docker-compose.yml",mySQL_RootPassword=mySQL_RootPassword,mySQL_Password=mySQL_Password,**kwArgs)       
         
+    def getShortVersion(self):
+        '''
+        get my short version e.g. convert 1.27.7 to 127
+        
+        Returns:
+            str: the short version string
+        '''
+        versionMatch=re.match("(?P<major>[0-9]+)\.(?P<minor>[0-9]+)",self.version)
+        shortVersion=f"{versionMatch.group('major')}{versionMatch.group('minor')}"
+        return shortVersion
         
     def genDockerFile(self,**kwArgs):
         '''
@@ -102,10 +112,21 @@ class DockerApplication(object):
         generate the local settings file
         '''
         hostname=socket.getfqdn()
-        versionMatch=re.match("(?P<major>[0-9]+)\.(?P<minor>[0-9]+)",self.version)
-        shortVersion=f"{versionMatch.group('major')}{versionMatch.group('minor')}"
+        shortVersion=self.getShortVersion()
         self.generate(f"mwLocalSettings{shortVersion}.php",f"{self.dockerPath}/LocalSettings.php",hostname=hostname,**kwArgs)
     
+    def genWikiSQLDump(self,**kwArgs):
+        '''
+        generate the wiki SQL Dump
+        '''
+        shortVersion=self.getShortVersion()
+        self.generate(f"mwWiki{shortVersion}.sql",f"{self.dockerPath}/wiki.sql",**kwArgs)
+        
+    def generateAll(self):
+        self.genDockerFile()
+        self.genComposerFile()
+        self.genLocalSettings()
+        self.genWikiSQLDump()
     def up(self):
         '''
         
@@ -114,6 +135,8 @@ class DockerApplication(object):
             print(f"starting {self.name} {self.version} docker application ...")
         # change directory so that docker CLI will find the relevant dockerfile and docker-compose.yml
         os.chdir(self.dockerPath)
+        #project_config = docker.compose.config()
+         
         # run docker compose up
         docker.compose.up(detach=True)
             

@@ -132,3 +132,4 @@ dmypy.json
 resources/**/docker-compose.yml
 resources/**/dockerfile
 resources/**/LocalSettings.php
+resources/**/wiki.sql

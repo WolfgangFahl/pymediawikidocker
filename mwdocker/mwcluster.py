@@ -26,16 +26,24 @@ class MediaWikiCluster(object):
                 
     def start(self,forceRebuild=False):
         '''
-        prepare the images
+        create and start the composer applications
         '''           
         for i,version in enumerate(self.versions):
             mwApp=self.getDockerApplication(i,version)
-            mwApp.genDockerFile()
-            mwApp.genComposerFile()
-            mwApp.genLocalSettings()
+            mwApp.generateAll
             mwApp.up()         
             
     def getDockerApplication(self,i,version):
+        '''
+        get the docker application for the given version index and version
+        
+        Args:
+            i(int): the index of the version
+            version(str): the mediawiki version to use
+        
+        Returns:
+            DockerApplication: the docker application
+        '''
         port=self.basePort+i
         sqlPort=self.baseSqlPort+i
         mwApp=DockerApplication(version=version,debug=True,mariaDBVersion=self.mariaDBVersion,port=port,sqlPort=sqlPort)
@@ -47,7 +55,5 @@ class MediaWikiCluster(object):
         '''
         for i,version in enumerate(self.versions):
             mwApp=self.getDockerApplication(i,version)
-            mwApp.genDockerFile()
-            mwApp.genComposerFile()
-            mwApp.genLocalSettings()
+            mwApp.generateAll()
     
