@@ -31,6 +31,10 @@ case $os in
      pip="pip"
      useroption=""
    fi
+   if [ "$USER" = "travis" ] || [ "$USER" = "runner" ]
+   then
+      echo "installing for user $USER with operating system $os ... in public CI Environment"
+   fi
    install="sudo apt-get install"
    ;;
 esac
