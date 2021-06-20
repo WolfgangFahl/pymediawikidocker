@@ -7,6 +7,7 @@ useroption="--user"
 # workaround https://github.com/gabrieldemarmiesse/python-on-whales/issues/188
 #  
 installDockerComposeCLIPlugin() {
+   docker --version
    # remember working directory
    wd=$(pwd)
    cliplugindir=$HOME/.docker/cli-plugins
@@ -16,7 +17,9 @@ installDockerComposeCLIPlugin() {
    mv  docker-compose-linux-amd64 docker-compose
    # try out plugin
    chmod +x docker-compose
-   docker --version
+   pwd
+   ls -l
+   docker
    docker  2>&1 | grep compose
    cd $wd
 }
