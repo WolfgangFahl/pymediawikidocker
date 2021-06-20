@@ -19,6 +19,13 @@ class TestInstall(unittest.TestCase):
         
     def tearDown(self):
         pass
+    
+    def testComposePluginInstalled(self):
+        '''
+        make sure the docker compose command is available
+        '''
+        self.assertTrue(docker.compose.is_installed())
+        
         
     def testGenerateDockerFiles(self):
         '''
@@ -33,8 +40,11 @@ class TestInstall(unittest.TestCase):
         '''
         mwCluster=MediaWikiCluster()
         mwCluster.start(forceRebuild=True)
-        imageMap=DockerMap.getImageMap()
-        print(imageMap)
+        containerMap=DockerMap.getContainerMap()
+        if self.debug:
+            print(containerMap)
+        for mwApp in mwCluster.apps.values():
+            print(mwApp)
         
    
 if __name__ == "__main__":

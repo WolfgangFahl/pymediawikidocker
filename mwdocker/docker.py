@@ -13,13 +13,14 @@ from jinja2 import Environment, FileSystemLoader
     
 class DockerMap():
     @staticmethod
-    def getImageMap():
+    def getContainerMap():
         '''
         '''
-        imageMap={}
-        for image in docker.image.list():
+        containerMap={}
+        for container in docker.container.list():
+            containerMap[container.name]=container
             pass
-        return imageMap
+        return containerMap
     
 class DockerApplication(object):
     '''
@@ -127,9 +128,10 @@ class DockerApplication(object):
         self.genComposerFile()
         self.genLocalSettings()
         self.genWikiSQLDump()
+        
     def up(self):
         '''
-        
+        start this docker application
         '''
         if self.verbose:
             print(f"starting {self.name} {self.version} docker application ...")
@@ -138,5 +140,5 @@ class DockerApplication(object):
         #project_config = docker.compose.config()
          
         # run docker compose up
-        docker.compose.up(detach=True)
+        docker.compose.up(detach=True)        
             
