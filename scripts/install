@@ -4,6 +4,23 @@ os=$(uname -a)
 useroption="--user"
 
 #
+# workaround https://github.com/gabrieldemarmiesse/python-on-whales/issues/188
+#  
+installDockerComposeCLIPlugin() {
+   # remember working directory
+   wd=$(pwd)
+   $cliplugindir=$HOME/.docker/cli-plugins
+   mkdir -p $cliplugindir
+   cd $cliplugindir
+   wget https://github.com/docker/compose-cli/releases/download/v2.0.0-beta.3/docker-compose-linux-amd64
+   mv  docker-compose-linux-amd64 docker-compose
+   # try out plugin
+   chmod +x docker-compose
+   docker  2>&1 | grep compose
+   cd $wd
+}
+
+#
 # autoinstall the package for the given command
 #
 autoinstall() {
@@ -31,11 +48,17 @@ case $os in
      pip="pip"
      useroption=""
    fi
+   install="sudo apt-get install"
+   ;;
+esac
+
+case $os in
+   Linux*)
    if [ "$USER" = "travis" ] || [ "$USER" = "runner" ]
    then
       echo "installing for user $USER with operating system $os ... in public CI Environment"
+      installDockerComposeCLIPlugin
    fi
-   install="sudo apt-get install"
    ;;
 esac
 #$install python3-pip
