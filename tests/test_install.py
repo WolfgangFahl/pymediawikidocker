@@ -40,11 +40,11 @@ class TestInstall(unittest.TestCase):
         '''
         mwCluster=MediaWikiCluster()
         mwCluster.start(forceRebuild=True)
-        containerMap=DockerMap.getContainerMap()
-        if self.debug:
-            print(containerMap)
-        for mwApp in mwCluster.apps.values():
-            print(mwApp)
+        apps=mwCluster.apps.values()
+        self.assertEqual(len(mwCluster.versions),len(apps))
+        for mwApp in apps:
+            self.assertTrue(mwApp.dbContainer is not None)
+            self.assertTrue(mwApp.mwContainer is not None)
         
    
 if __name__ == "__main__":

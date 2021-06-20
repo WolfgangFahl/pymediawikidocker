@@ -23,14 +23,14 @@ class MediaWikiCluster(object):
         self.networkName=networkName
         self.apps={}
                 
-    def start(self,forceRebuild=False):
+    def start(self,forceRebuild:bool=False):
         '''
         create and start the composer applications
         '''           
         for i,version in enumerate(self.versions):
             mwApp=self.getDockerApplication(i,version)
             mwApp.generateAll
-            mwApp.up() 
+            mwApp.up(forceRebuild=forceRebuild) 
             self.apps[version]=mwApp        
             
     def getDockerApplication(self,i,version):
