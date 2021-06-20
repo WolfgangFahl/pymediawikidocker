@@ -128,8 +128,5 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# docker files
-resources/**/docker-compose.yml
-resources/**/Dockerfile
-resources/**/LocalSettings.php
-resources/**/wiki.sql
+# docker related files
+resources/mw*

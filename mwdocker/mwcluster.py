@@ -29,7 +29,7 @@ class MediaWikiCluster(object):
         '''           
         for i,version in enumerate(self.versions):
             mwApp=self.getDockerApplication(i,version)
-            mwApp.generateAll
+            mwApp.generateAll()
             mwApp.up(forceRebuild=forceRebuild) 
             self.apps[version]=mwApp        
             

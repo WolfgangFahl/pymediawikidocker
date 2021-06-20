@@ -14,14 +14,18 @@ services:
   db:
 # use original image
     image: mariadb:{{mariaDBVersion}}
+    
     restart: always
+    
     environment:
       MYSQL_DATABASE: wiki
       MYSQL_USER: wikiuser
       MYSQL_PASSWORD: "{{mySQL_Password}}"
       MYSQL_ROOT_PASSWORD: "{{mySQL_RootPassword}}"
+    
     ports:
       - {{sqlPort}}:3306
+    
     volumes:
        - etc:/etc
       
@@ -30,11 +34,18 @@ services:
     #image: mediawiki:{{mwVersion}}
     # use the Dockerfile in this directory
     build: .
+       
     restart: always
+    
     ports:
       - {{port}}:80
+    
     links:
       - db
+      
+    depends_on:
+      - db
+    
     volumes:
       - wikiimages:/var/www/html/images
     # After initial setup, download LocalSettings.php to the same directory as

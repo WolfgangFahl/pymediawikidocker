@@ -32,5 +32,10 @@ COPY wiki.sql /tmp
 # copy the initdb.sh script
 COPY initdb.sh /tmp
 
-# RUN the initdb.sh script
-RUN /tmp/initdb.sh
+# make the initdb.sh script executable
+RUN chmod +x /tmp/initdb.sh
+
+# restore the mediawiki initial database backup
+# can not do this before SQL server is up see https://docs.docker.com/compose/startup-order/
+# RUN /tmp/initdb.sh
+ 
