@@ -22,8 +22,8 @@ services:
       MYSQL_ROOT_PASSWORD: "{{mySQL_RootPassword}}"
     ports:
       - {{sqlPort}}:3306
-    volumes:
-       - tmp:/tmp
+#    volumes:
+#       - tmp:/tmp
 #      - mysqldata:/var/lib/mysql
       
 # mediawiki
@@ -44,7 +44,7 @@ services:
     # - ./LocalSettings.php:/var/www/html/LocalSettings.php
     
 volumes:
-  mysqldata:
-    driver: local
+#  mysqldata:
+#    driver: local
   wikiimages:
     driver: local
