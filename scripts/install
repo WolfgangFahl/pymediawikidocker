@@ -9,7 +9,7 @@ useroption="--user"
 installDockerComposeCLIPlugin() {
    # remember working directory
    wd=$(pwd)
-   $cliplugindir=$HOME/.docker/cli-plugins
+   cliplugindir=$HOME/.docker/cli-plugins
    mkdir -p $cliplugindir
    cd $cliplugindir
    wget https://github.com/docker/compose-cli/releases/download/v2.0.0-beta.3/docker-compose-linux-amd64
