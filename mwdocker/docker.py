@@ -10,7 +10,6 @@ import secrets
 import socket
 import re
 from jinja2 import Environment, FileSystemLoader
-from pickle import NONE
     
 class DockerMap():
     @staticmethod

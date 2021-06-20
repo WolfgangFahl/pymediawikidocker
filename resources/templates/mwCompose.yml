@@ -22,7 +22,8 @@ services:
       MYSQL_ROOT_PASSWORD: "{{mySQL_RootPassword}}"
     ports:
       - {{sqlPort}}:3306
-#    volumes:
+    volumes:
+       - tmp:/tmp
 #      - mysqldata:/var/lib/mysql
       
 # mediawiki
