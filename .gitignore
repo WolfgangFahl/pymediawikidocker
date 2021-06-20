@@ -130,6 +130,6 @@ dmypy.json
 
 # docker files
 resources/**/docker-compose.yml
-resources/**/dockerfile
+resources/**/Dockerfile
 resources/**/LocalSettings.php
 resources/**/wiki.sql
