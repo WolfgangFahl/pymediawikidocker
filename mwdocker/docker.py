@@ -13,6 +13,7 @@ import re
 from jinja2 import Environment, FileSystemLoader
 import mysql.connector
 from mysql.connector import Error
+from pathlib import Path
     
 class DockerMap():
     '''
@@ -99,7 +100,8 @@ class DockerApplication(object):
         resourcePath=os.path.realpath(f"{scriptdir}/resources")
         template_dir = os.path.realpath(f'{resourcePath}/templates')
         #print(f"jinja template directory is {template_dir}")
-        self.dockerPath=f'{resourcePath}/mw{self.underscoreVersion}' 
+        home = str(Path.home())
+        self.dockerPath=f'{home}/.pymediawikidocker/mw{self.underscoreVersion}' 
         os.makedirs(self.dockerPath,exist_ok=True)
         env = Environment(loader=FileSystemLoader(template_dir))
         return env
