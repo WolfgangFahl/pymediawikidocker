@@ -6,13 +6,16 @@ FROM mediawiki:{{mwVersion}}
 MAINTAINER Wolfgang Fahl <wf@bitplan.com>
 
 # install some more utilities
-RUN apt-get update && apt-get install -y \
-  mariadb-client \
-  inetutils-ping \
-  vim \
-  unzip \
-  zip
+RUN apt-get -y update && \
+    apt-get -y --no-install-recommends --fix-missing install \
+    mariadb-client \
+    inetutils-ping \
+    vim \
+    unzip \
+    zip &&\
+    rm -rf /var/lib/apt/lists/*
 
+#  openssh-server \
 #  dialog \
 #  imagemagick \
 #  graphviz \
@@ -41,4 +44,4 @@ RUN chmod +x /tmp/initdb.sh
 # restore the mediawiki initial database backup
 # can not do this before SQL server is up see https://docs.docker.com/compose/startup-order/
 # RUN /tmp/initdb.sh
- 
+

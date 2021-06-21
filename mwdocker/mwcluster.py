@@ -35,7 +35,7 @@ class MediaWikiCluster(object):
         self.networkName=networkName
         self.apps={}
                 
-    def start(self,forceRebuild:bool=False):
+    def start(self,forceRebuild:bool=False,withInitDB=True):
         '''
         create and start the composer applications
         '''           
@@ -43,7 +43,12 @@ class MediaWikiCluster(object):
             mwApp=self.getDockerApplication(i,version)
             mwApp.generateAll()
             mwApp.up(forceRebuild=forceRebuild) 
-            self.apps[version]=mwApp        
+            self.apps[version]=mwApp     
+            if withInitDB:
+                if self.verbose:
+                    print("Initializing MediaWiki SQL tables")
+                if mwApp.checkDBConnection():
+                    mwApp.execute("/tmp/initdb.sh")
             
     def close(self):
         for mwApp in self.apps.values():

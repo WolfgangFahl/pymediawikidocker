@@ -104,6 +104,15 @@ class DockerApplication(object):
         env = Environment(loader=FileSystemLoader(template_dir))
         return env
     
+    def execute(self,command):
+        '''
+        execute the given command
+        '''
+        if self.mwContainer:
+            docker.execute(container=self.mwContainer,command=command)
+        else:
+            raise Exception(f"no mediawiki Container for {self.name}")
+    
     def close(self):
         self.dbClose()
     
