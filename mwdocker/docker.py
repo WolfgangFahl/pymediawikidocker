@@ -60,6 +60,10 @@ class DockerApplication(object):
         # jinja and docker prerequisites
         self.env=self.getJinjaEnv()
         self.getContainers()
+        self.dbConn=None
+        self.database="wiki"
+        self.host="localhost"
+        self.user="wikiuser"
             
     def defaultContainerName(self):
         '''
@@ -99,38 +103,59 @@ class DockerApplication(object):
         env = Environment(loader=FileSystemLoader(template_dir))
         return env
     
-    def checkDBConnection(self)->bool:
+    def close(self):
+        self.dbClose()
+    
+    def sqlQuery(self,query):
+        '''
+        run the given SQL query
+        '''
+        if self.dbConn and self.dbConn.is_connected():
+            cursor = self.dbConn.cursor()
+            cursor.execute(query)
+            rows = cursor.fetchall()
+            cursor.close()
+            return rows
+        else:
+            if self.verbose:
+                print (f"Connection to {self.database} on {self.host} with user {self.user} not established" )
+            return None
+        
+    def dbClose(self):
+        '''
+        close the database connection
+        '''
+        if self.dbConn and self.dbConn.is_connected():
+            self.dbConn.close()
+        
+    def dbConnect(self,timeout:int=10):
+        '''
+        connect to the database and return the connection
+        '''
+        if self.dbConn is None:
+            try:
+                self.dbConn = mysql.connector.connect(host=self.host,
+                                 database=self.database,
+                                 user=self.user,
+                                 port=self.sqlPort,
+                                 password=self.mySQLPassword,
+                                 connection_timeout=timeout)
+        
+            except Error as e :
+                print (f"Connection to {self.database} on {self.host} with user {self.user} failed error: {str(e)}" )
+        return self.dbConn
+    
+    def checkDBConnection(self,timeout:int=10)->bool:
         '''
         check the database connection of this application
-        '''
-        database="wiki"
-        host="localhost"
-        user="wikiuser"
-        password=self.mySQLPassword
-        port=self.sqlPort
+        '''       
         ok=False
-        try:
-            conn = mysql.connector.connect(host=host,
-                                 database=database,
-                                 user=user,
-                                 port=port,
-                                 password=password)
-            if conn and conn.is_connected():
-                cursor = conn.cursor()
-                cursor.execute("select database();")
-                record = cursor.fetchall()
-                ok=True
-                if self.verbose:
-                    print ("You're connected to - ", record)
-            else:
-                print (f"Connection to {database} on {host} with user {user} failed" )
-        except Error as e :
-            print (f"Connection to {database} on {host} with user {user} failed error: {str(e)}" )
-        finally:
-            #closing database connection.
-            if(conn and conn.is_connected()):
-                cursor.close()
-                conn.close()
+        self.dbConnect(timeout=timeout)
+        if self.dbConn and self.dbConn.is_connected():
+            rows=self.sqlQuery("select database();")
+            ok=True
+            if self.verbose:
+                print ("You're connected to - ", rows[0])
         return ok
     
     def generate(self,templateName:str,targetPath:str,**kwArgs):

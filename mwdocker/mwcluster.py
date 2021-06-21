@@ -45,6 +45,10 @@ class MediaWikiCluster(object):
             mwApp.up(forceRebuild=forceRebuild) 
             self.apps[version]=mwApp        
             
+    def close(self):
+        for mwApp in self.apps.values():
+            mwApp.close()
+            
     def getDockerApplication(self,i,version):
         '''
         get the docker application for the given version index and version
