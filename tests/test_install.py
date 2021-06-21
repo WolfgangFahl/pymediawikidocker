@@ -45,6 +45,8 @@ class TestInstall(unittest.TestCase):
             self.assertTrue(mwApp.dbContainer is not None)
             self.assertTrue(mwApp.mwContainer is not None)
             self.assertTrue(mwApp.checkDBConnection())
+            userCountRecords=mwApp.sqlQuery("select count(*) from user;")
+            print(userCountRecords)
         mwCluster.close()
         
    
