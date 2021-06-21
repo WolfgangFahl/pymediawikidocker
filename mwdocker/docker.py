@@ -68,7 +68,7 @@ class DockerApplication(object):
         self.user="wikiuser"
        
     @staticmethod 
-    def check(self)->str:
+    def check()->str:
         errMsg=None
         if not docker.compose.is_installed():
             errMsg="""docker composer up needs to be working
