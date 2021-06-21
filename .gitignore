@@ -129,4 +129,4 @@ dmypy.json
 .pyre/
 
 # docker related files
-resources/mw*
+mwdocker/resources/mw*
