@@ -169,7 +169,7 @@ class DockerApplication(object):
         sleep=0.5
         tries=0
         ok=False
-        while not ok or (tries>=maxTries):
+        while not ok and tries<=maxTries:
             ok=self.dbConnect(timeout=timeout)
             tries+=1
             if not ok:
