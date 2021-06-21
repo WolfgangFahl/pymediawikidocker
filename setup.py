@@ -11,11 +11,12 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='pymediawikidocker',
-    version='0.0.3',
+    version='0.0.4',
+    include_package_data=True,
 
     packages=['mwdocker',],
-    package_data={'mwdocker': ['resources/*']},
-  
+    
+
     entry_points={
       'console_scripts': [
         'mwcluster = mwdocker.mwcluster:main',   
