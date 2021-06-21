@@ -159,12 +159,13 @@ class DockerApplication(object):
                 print (f"Connection to {self.database} on {self.host} with user {self.user} established database returns: {rows[0]}")
         return ok
     
-    def checkDBConnection(self,timeout:int=10,maxTries:int=5)->bool:
+    def checkDBConnection(self,timeout:int=10,initialSleep=3,maxTries:int=5)->bool:
         '''
         check database connection with retries
         '''
         if self.debug:
-            print (f"Trying DB-Connection to {self.database} on {self.host} port {self.sqlPort} with user {self.user} with max {maxTries} tries and {timeout}s timeout per try")
+            print (f"Trying DB-Connection to {self.database} on {self.host} port {self.sqlPort} with user {self.user} with max {maxTries} tries and {timeout}s timeout per try - initial sleep {initialSleep}s")
+        time.sleep(initialSleep)
         sleep=0.5
         tries=0
         ok=False
