@@ -141,11 +141,12 @@ class DockerApplication(object):
         '''
         self.generate(f"mwWiki{self.shortVersion}.sql",f"{self.dockerPath}/wiki.sql",**kwArgs)
         
-    def genInitDB(self,**kwArgs):
+    def genOther(self,**kwArgs):
         '''
-        generate the initialize database script (in fact just copying)
+        generate other files (mostly just copying)
         '''
-        self.generate("initdb.sh",f"{self.dockerPath}/initdb.sh",**kwArgs)
+        for fileName in ["initdb.sh","phpinfo.php"]:
+            self.generate(f"{fileName}",f"{self.dockerPath}/{fileName}",**kwArgs)
         
     def generateAll(self):
         '''
@@ -155,7 +156,7 @@ class DockerApplication(object):
         self.genComposerFile()
         self.genLocalSettings()
         self.genWikiSQLDump()
-        self.genInitDB()
+        self.genOther()
         
     def up(self,forceRebuild:bool=False):
         '''
