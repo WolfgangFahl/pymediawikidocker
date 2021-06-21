@@ -6,6 +6,7 @@ Created on 2021-08-06
 from python_on_whales import docker
 import os
 import datetime
+import time
 import secrets
 import socket
 import re
@@ -145,7 +146,7 @@ class DockerApplication(object):
                 print (f"Connection to {self.database} on {self.host} with user {self.user} failed error: {str(e)}" )
         return self.dbConn
     
-    def checkDBConnection(self,timeout:int=10)->bool:
+    def doCheckDBConnection(self,timeout:int=10,sleep:int=5)->bool:
         '''
         check the database connection of this application
         '''       
@@ -155,7 +156,25 @@ class DockerApplication(object):
             rows=self.sqlQuery("select database();")
             ok=True
             if self.verbose:
-                print ("You're connected to - ", rows[0])
+                print (f"Connection to {self.database} on {self.host} with user {self.user} established database returns: {rows[0]}")
+        return ok
+    
+    def checkDBConnection(self,timeout:int=10,maxTries:int=5)->bool:
+        '''
+        check database connection with retries
+        '''
+        sleep=0.5
+        tries=0
+        ok=False
+        while not ok or tries>=maxTries:
+            ok= self.dbConnect(timeout=timeout)
+            tries+=1
+            if not ok:
+                if self.verbose:
+                    print(f"Connection attempt #{tries} failed will retry in {sleep} secs" )
+                # wait before trying
+                time.sleep(sleep)
+                sleep=sleep*2
         return ok
     
     def generate(self,templateName:str,targetPath:str,**kwArgs):
