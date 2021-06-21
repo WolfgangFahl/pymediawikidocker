@@ -11,11 +11,13 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='pymediawikidocker',
-    version='0.0.4',
-    include_package_data=True,
+    version='0.0.5',
 
     packages=['mwdocker',],
     
+    package_data={
+        "mwdocker": ["resources/templates/*"],
+    },
 
     entry_points={
       'console_scripts': [
