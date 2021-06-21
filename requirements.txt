@@ -11,3 +11,6 @@ Jinja2
 #
 # avoid ModuleNotFoundError: No module named 'six'
 six
+# Access to SQL database
+# https://pypi.org/project/mysql-connector-python/
+mysql-connector-python

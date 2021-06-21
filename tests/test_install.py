@@ -1,11 +1,10 @@
 '''
-Created on 2021-01-25
+Created on 2021-06-14
 
 @author: wf
 '''
 import unittest
 from mwdocker.mwcluster import MediaWikiCluster
-from mwdocker.docker import DockerMap
 from python_on_whales import docker
 
 class TestInstall(unittest.TestCase):
@@ -45,6 +44,7 @@ class TestInstall(unittest.TestCase):
         for mwApp in apps:
             self.assertTrue(mwApp.dbContainer is not None)
             self.assertTrue(mwApp.mwContainer is not None)
+            self.assertTrue(mwApp.checkDBConnection())
         
    
 if __name__ == "__main__":

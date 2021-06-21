@@ -20,8 +20,8 @@ services:
     environment:
       MYSQL_DATABASE: wiki
       MYSQL_USER: wikiuser
-      MYSQL_PASSWORD: "{{mySQL_Password}}"
-      MYSQL_ROOT_PASSWORD: "{{mySQL_RootPassword}}"
+      MYSQL_PASSWORD: "{{mySQLPassword}}"
+      MYSQL_ROOT_PASSWORD: "{{mySQLRootPassword}}"
     
     ports:
       - {{sqlPort}}:3306

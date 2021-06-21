@@ -10,11 +10,18 @@ import secrets
 import socket
 import re
 from jinja2 import Environment, FileSystemLoader
+import mysql.connector
+from mysql.connector import Error
     
 class DockerMap():
+    '''
+    helper class to convert lists of docker elements to maps for improved
+    lookup functionality
+    '''
     @staticmethod
     def getContainerMap():
         '''
+        get a map/dict of containers by container name
         '''
         containerMap={}
         for container in docker.container.list():
@@ -27,7 +34,7 @@ class DockerApplication(object):
     MediaWiki Docker image
     '''
 
-    def __init__(self,name="mediawiki",version="1.35.2",mariaDBVersion="10.5",port=9080,sqlPort=9306,debug=False,verbose=True):
+    def __init__(self,name="mediawiki",version="1.35.2",mariaDBVersion="10.5",port=9080,sqlPort=9306,mySQLRootPassword=None,debug=False,verbose=True):
         '''
         Constructor
         '''
@@ -45,8 +52,11 @@ class DockerApplication(object):
         self.verbose=verbose
         # passwords
         password_length = 13
-        self.mySQL_Password=secrets.token_urlsafe(password_length)
-        self.mySQL_RootPassword=secrets.token_urlsafe(password_length)
+        if mySQLRootPassword is None:
+            self.mySQLRootPassword=secrets.token_urlsafe(password_length)
+        else:
+            self.mySQLRootPassword=mySQLRootPassword
+        self.mySQLPassword=secrets.token_urlsafe(password_length)
         # jinja and docker prerequisites
         self.env=self.getJinjaEnv()
         self.getContainers()
@@ -89,6 +99,40 @@ class DockerApplication(object):
         env = Environment(loader=FileSystemLoader(template_dir))
         return env
     
+    def checkDBConnection(self)->bool:
+        '''
+        check the database connection of this application
+        '''
+        database="wiki"
+        host="localhost"
+        user="wikiuser"
+        password=self.mySQLPassword
+        port=self.sqlPort
+        ok=False
+        try:
+            conn = mysql.connector.connect(host=host,
+                                 database=database,
+                                 user=user,
+                                 port=port,
+                                 password=password)
+            if conn and conn.is_connected():
+                cursor = conn.cursor()
+                cursor.execute("select database();")
+                record = cursor.fetchall()
+                ok=True
+                if self.verbose:
+                    print ("You're connected to - ", record)
+            else:
+                print (f"Connection to {database} on {host} with user {user} failed" )
+        except Error as e :
+            print (f"Connection to {database} on {host} with user {user} failed error: {str(e)}" )
+        finally:
+            #closing database connection.
+            if(conn and conn.is_connected()):
+                cursor.close()
+                conn.close()
+        return ok
+    
     def generate(self,templateName:str,targetPath:str,**kwArgs):
         '''
         generate file at targetPath using the given templateName
@@ -109,7 +153,7 @@ class DockerApplication(object):
         '''
         generate the composer file for 
         '''
-        self.generate("mwCompose.yml",f"{self.dockerPath}/docker-compose.yml",mySQL_RootPassword=self.mySQL_RootPassword,mySQL_Password=self.mySQL_Password,**kwArgs)       
+        self.generate("mwCompose.yml",f"{self.dockerPath}/docker-compose.yml",mySQLRootPassword=self.mySQLRootPassword,mySQLPassword=self.mySQLPassword,**kwArgs)       
         
     def getShortVersion(self):
         '''
@@ -133,7 +177,7 @@ class DockerApplication(object):
         generate the local settings file
         '''
         hostname=socket.getfqdn()
-        self.generate(f"mwLocalSettings{self.shortVersion}.php",f"{self.dockerPath}/LocalSettings.php",mySQL_Password=self.mySQL_Password,hostname=hostname,**kwArgs)
+        self.generate(f"mwLocalSettings{self.shortVersion}.php",f"{self.dockerPath}/LocalSettings.php",mySQLPassword=self.mySQLPassword,hostname=hostname,**kwArgs)
     
     def genWikiSQLDump(self,**kwArgs):
         '''
