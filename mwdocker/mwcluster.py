@@ -12,7 +12,7 @@ class MediaWikiCluster(object):
     a cluster of mediawiki docker Applications
     '''
 
-    def __init__(self,debug=False,sqlPort=9306,basePort=9080,versions=["1.27.7","1.31.14","1.35.2"],networkName="mwNetwork",mariaDBVersion="10.5",mySQLRootPassword=None):
+    def __init__(self,sqlPort=9306,basePort=9080,versions=["1.27.7","1.31.14","1.35.2"],networkName="mwNetwork",mariaDBVersion="10.5",mySQLRootPassword=None,debug=False,verbose=True):
         '''
         Constructor
         
@@ -26,6 +26,7 @@ class MediaWikiCluster(object):
             mySQLRootPassword(str): the mySQL root password to use for the database containers - if None a random password is generated
         '''
         self.debug=debug
+        self.verbose=verbose
         self.baseSqlPort=sqlPort
         self.basePort=basePort
         self.versions=versions

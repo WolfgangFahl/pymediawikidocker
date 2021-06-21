@@ -1,5 +1,5 @@
 # pymediawikidocker
-Python controlled mediawiki docker image installation
+Python controlled mediawiki docker application cluster installation
 
 [![Github Actions Build](https://github.com/WolfgangFahl/pymediawikidocker/workflows/Build/badge.svg?branch=main)](https://github.com/WolfgangFahl/pymediawikidocker/actions?query=workflow%3ABuild+branch%3Amain)
 [![GitHub open issues](https://img.shields.io/github/issues/WolfgangFahl/pymediawikidocker.svg)](https://github.com/WolfgangFahl/pymediawikidocker/issues)
