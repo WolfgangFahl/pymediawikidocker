@@ -37,7 +37,7 @@ class TestInstall(unittest.TestCase):
         '''
         test the MediaWiki docker image installation
         '''
-        mwCluster=MediaWikiCluster()
+        mwCluster=MediaWikiCluster(debug=True)
         mwCluster.start(forceRebuild=True)
         apps=mwCluster.apps.values()
         self.assertEqual(len(mwCluster.versions),len(apps))

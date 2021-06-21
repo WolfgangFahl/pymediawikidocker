@@ -163,11 +163,13 @@ class DockerApplication(object):
         '''
         check database connection with retries
         '''
+        if self.debug:
+            print (f"Trying DB-Connection to {self.database} on {self.host} port {self.sqlPort} with user {self.user} with max {maxTries} tries and {timeout}s timeout per try")
         sleep=0.5
         tries=0
         ok=False
-        while not ok or tries>=maxTries:
-            ok= self.dbConnect(timeout=timeout)
+        while not ok or (tries>=maxTries):
+            ok=self.dbConnect(timeout=timeout)
             tries+=1
             if not ok:
                 if self.verbose:
