@@ -95,8 +95,8 @@ class DockerApplication(object):
         '''
         get a Jinja2 environment
         '''
-        scriptpath=os.path.realpath(__file__)
-        resourcePath=os.path.realpath(f"{scriptpath}/resources")
+        scriptdir=os.path.dirname(os.path.realpath(__file__))
+        resourcePath=os.path.realpath(f"{scriptdir}/resources")
         template_dir = os.path.realpath(f'{resourcePath}/templates')
         #print(f"jinja template directory is {template_dir}")
         self.dockerPath=f'{resourcePath}/mw{self.underscoreVersion}' 
