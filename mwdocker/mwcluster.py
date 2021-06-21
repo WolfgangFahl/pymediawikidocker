@@ -36,10 +36,19 @@ class MediaWikiCluster(object):
         self.networkName=networkName
         self.apps={}
                 
-    def start(self,forceRebuild:bool=False,withInitDB=True):
+    def start(self,forceRebuild:bool=False,withInitDB=True)->int:
         '''
         create and start the composer applications
+        
+        Returns:
+            int: exitCode - 0 if ok 1 if failed
         '''           
+        errMsg=DockerApplication.check()
+        if errMsg is not None:
+            print(errMsg,file=sys.stderr)
+            return 1
+            
+        
         for i,version in enumerate(self.versions):
             mwApp=self.getDockerApplication(i,version)
             mwApp.generateAll()
@@ -50,6 +59,7 @@ class MediaWikiCluster(object):
                     print("Initializing MediaWiki SQL tables")
                 if mwApp.checkDBConnection():
                     mwApp.execute("/tmp/initdb.sh")
+        return 0
             
     def close(self):
         for mwApp in self.apps.values():
@@ -110,14 +120,15 @@ def main(argv=None): # IGNORE:C0111
 
 ''' % (program_shortdesc,user_name, str(__date__))
     try:
-        forceRebuild=False
         # Setup argument parser
         parser = ArgumentParser(description=program_license, formatter_class=RawDescriptionHelpFormatter)
         parser.add_argument("-d", "--debug", dest="debug",   action="store_true", help="set debug level [default: %(default)s]")
         parser.add_argument('-V', '--version', action='version', version=program_version_message)
         parser.add_argument("-f", "--forceRebuild", dest="forceRebuild",   action="store_true", help="shall the applications rebuild be forced (with stop and remove of existing containers)")
+        args = parser.parse_args(argv)
+        # create a MediaWiki Cluster
         mwCluster=MediaWikiCluster()
-        mwCluster.start(forceRebuild)
+        return mwCluster.start(forceRebuild=args.forceRebuild)
     except KeyboardInterrupt:
         ### handle keyboard interrupt ###
         return 1
