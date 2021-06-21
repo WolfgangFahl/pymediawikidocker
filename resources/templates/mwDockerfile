@@ -26,6 +26,9 @@ RUN apt-get update && apt-get install -y \
 # copy the LocalSettings
 COPY LocalSettings.php /var/www/html
 
+# copy phpinfo.php
+COPY phpinfo.php /var/www/html
+
 # copy the SQL dump
 COPY wiki.sql /tmp
 
