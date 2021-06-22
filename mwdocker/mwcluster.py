@@ -12,18 +12,18 @@ class MediaWikiCluster(object):
     a cluster of mediawiki docker Applications
     '''
 
-    def __init__(self,sqlPort=9306,basePort=9080,versions=["1.27.7","1.31.14","1.35.2"],networkName="mwNetwork",mariaDBVersion="10.5",mySQLRootPassword=None,debug=False,verbose=True):
+    def __init__(self,versions,sqlPort=9306,basePort=9080,networkName="mwNetwork",mariaDBVersion="10.5",mySQLRootPassword=None,debug=False,verbose=True):
         '''
         Constructor
         
         Args:
-            debug(bool): if True debugging is enabled
+            versions(list): the list of MediaWiki versions to create docker applications for
             sqlPort(int): the base port to be used for  publishing the SQL port (3306) for the docker applications
             basePort(int): the base port to be used for publishing the HTML port (80) for the docker applications
-            versions(list): the list of MediaWiki versions to create docker applications for
             networkName(str): the name to use for the docker network to be shared by the cluster participants
             mariaDBVersion(str): the Maria DB version to install as the SQL database provider for the docker applications
             mySQLRootPassword(str): the mySQL root password to use for the database containers - if None a random password is generated
+            debug(bool): if True debugging is enabled
         '''
         self.debug=debug
         self.verbose=verbose
@@ -124,10 +124,15 @@ def main(argv=None): # IGNORE:C0111
         parser = ArgumentParser(description=program_license, formatter_class=RawDescriptionHelpFormatter)
         parser.add_argument("-d", "--debug", dest="debug",   action="store_true", help="set debug level [default: %(default)s]")
         parser.add_argument('-V', '--version', action='version', version=program_version_message)
+        parser.add_argument('-vl', '--versionList', dest='versions', nargs="*",default=["1.27.7","1.31.14","1.35.2"])
+        parser.add_argument('-bp', '--basePort',dest='basePort',type=int,default=9080)
+        parser.add_argument('-sp', '--sqlBasePort',dest='sqlPort',type=int,default=9306)
+        parser.add_argument('-mv', '--mariaDBVersion', dest='mariaDBVersion',default="10.5",)
         parser.add_argument("-f", "--forceRebuild", dest="forceRebuild",   action="store_true", help="shall the applications rebuild be forced (with stop and remove of existing containers)")
         args = parser.parse_args(argv)
+        print(f"mediawiki versions {args.versions}")
         # create a MediaWiki Cluster
-        mwCluster=MediaWikiCluster(debug=args.debug)
+        mwCluster=MediaWikiCluster(args.versions,basePort=args.basePort,sqlPort=args.sqlPort,mariaDBVersion=args.mariaDBVersion,debug=args.debug)
         return mwCluster.start(forceRebuild=args.forceRebuild)
     except KeyboardInterrupt:
         ### handle keyboard interrupt ###
