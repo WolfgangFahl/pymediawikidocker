@@ -37,13 +37,14 @@ class DockerApplication(object):
     MediaWiki Docker image
     '''
 
-    def __init__(self,name="mediawiki",version="1.35.2",mariaDBVersion="10.5",port=9080,sqlPort=9306,mySQLRootPassword=None,debug=False,verbose=True):
+    def __init__(self,name="mediawiki",version="1.35.2",mariaDBVersion="10.5",smwVersion=None,port=9080,sqlPort=9306,mySQLRootPassword=None,debug=False,verbose=True):
         '''
         Constructor
         '''
         self.name=name
         # Versions
         self.version=version
+        self.smwVersion=smwVersion
         self.underscoreVersion=version.replace(".","_")
         self.shortVersion=self.getShortVersion()
         self.mariaDBVersion=mariaDBVersion
@@ -102,8 +103,7 @@ class DockerApplication(object):
         if dbContainerName in containerMap:
             self.dbContainer=containerMap[dbContainerName]
         if mwContainerName in containerMap:
-            self.mwContainer=containerMap[mwContainerName]
-        
+            self.mwContainer=containerMap[mwContainerName]      
             
     def getJinjaEnv(self):
         '''
@@ -229,7 +229,7 @@ class DockerApplication(object):
         try:
             template = self.env.get_template(templateName)
             timestamp=datetime.datetime.now().isoformat()
-            content=template.render(mwVersion=self.version,mariaDBVersion=self.mariaDBVersion,port=self.port,sqlPort=self.sqlPort,timestamp=timestamp,**kwArgs)
+            content=template.render(mwVersion=self.version,mariaDBVersion=self.mariaDBVersion,port=self.port,sqlPort=self.sqlPort,smwVersion=self.smwVersion,timestamp=timestamp,**kwArgs)
             with open(targetPath, "w") as targetFile:
                 targetFile.write(content)
         except TemplateNotFound:
@@ -276,7 +276,7 @@ class DockerApplication(object):
         '''
         generate other files (mostly just copying)
         '''
-        for fileName in ["initdb.sh","phpinfo.php"]:
+        for fileName in ["initdb.sh","update.sh","phpinfo.php","composer.local.json"]:
             self.generate(f"{fileName}",f"{self.dockerPath}/{fileName}",**kwArgs)
         
     def generateAll(self):

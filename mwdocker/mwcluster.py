@@ -13,7 +13,7 @@ class MediaWikiCluster(object):
     '''
     defaultVersions=["1.27.7","1.31.14","1.35.2"]
 
-    def __init__(self,versions,sqlPort=9306,basePort=9080,networkName="mwNetwork",mariaDBVersion="10.5",mySQLRootPassword=None,debug=False,verbose=True):
+    def __init__(self,versions,sqlPort=9306,basePort=9080,networkName="mwNetwork",mariaDBVersion="10.5",smwVersion=None,mySQLRootPassword=None,debug=False,verbose=True):
         '''
         Constructor
         
@@ -23,6 +23,7 @@ class MediaWikiCluster(object):
             basePort(int): the base port to be used for publishing the HTML port (80) for the docker applications
             networkName(str): the name to use for the docker network to be shared by the cluster participants
             mariaDBVersion(str): the Maria DB version to install as the SQL database provider for the docker applications
+            smwVersion(str): Semantic MediaWiki Version to be used (if any)
             mySQLRootPassword(str): the mySQL root password to use for the database containers - if None a random password is generated
             debug(bool): if True debugging is enabled
         '''
@@ -32,6 +33,7 @@ class MediaWikiCluster(object):
         self.basePort=basePort
         self.versions=versions
         self.mariaDBVersion=mariaDBVersion
+        self.smwVersion=smwVersion
         self.mySQLRootPassword=mySQLRootPassword
         # create a network
         self.networkName=networkName
@@ -60,6 +62,7 @@ class MediaWikiCluster(object):
                     print("Initializing MediaWiki SQL tables")
                 if mwApp.checkDBConnection():
                     mwApp.execute("/tmp/initdb.sh")
+                    mwApp.execute("/tmp/update.sh")
         return 0
             
     def close(self):
@@ -79,7 +82,7 @@ class MediaWikiCluster(object):
         '''
         port=self.basePort+i
         sqlPort=self.baseSqlPort+i
-        mwApp=DockerApplication(version=version,debug=True,mariaDBVersion=self.mariaDBVersion,port=port,sqlPort=sqlPort,mySQLRootPassword=self.mySQLRootPassword)
+        mwApp=DockerApplication(version=version,debug=True,mariaDBVersion=self.mariaDBVersion,smwVersion=self.smwVersion,port=port,sqlPort=sqlPort,mySQLRootPassword=self.mySQLRootPassword)
         return mwApp
             
     def genDockerFiles(self):
@@ -90,7 +93,7 @@ class MediaWikiCluster(object):
             mwApp=self.getDockerApplication(i,version)
             mwApp.generateAll()
 
-__version__ = "0.0.8"
+__version__ = "0.0.9"
 __date__ = '2021-06-21'
 __updated__ = '2021-06-22'
 DEBUG=False

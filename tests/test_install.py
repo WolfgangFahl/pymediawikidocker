@@ -50,6 +50,13 @@ class TestInstall(unittest.TestCase):
             print(userCountRecords)
         mwCluster.close()
         
+    def testInstallationWithSemanticMediaWiki(self):
+        '''
+        test MediaWiki with SemanticMediaWiki as per 
+        '''
+        mwCluster=MediaWikiCluster(versions=["1.31.14"],smwVersion="3.2.3",basePort=9480,sqlPort=10306)
+        mwCluster.start(forceRebuild=True)
+        
     def testInstallationWithMissingLocalSettingsTemplate(self):
         '''
         test a cluster with no LocalSettingsTemplate available
