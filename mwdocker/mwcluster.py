@@ -93,7 +93,7 @@ class MediaWikiCluster(object):
             mwApp=self.getDockerApplication(i,version)
             mwApp.generateAll()
 
-__version__ = "0.0.9"
+__version__ = "0.0.10"
 __date__ = '2021-06-21'
 __updated__ = '2021-06-22'
 DEBUG=False
@@ -131,7 +131,7 @@ def main(argv=None): # IGNORE:C0111
         parser.add_argument('-vl', '--versionList', dest='versions', nargs="*",default=MediaWikiCluster.defaultVersions)
         parser.add_argument('-bp', '--basePort',dest='basePort',type=int,default=9080)
         parser.add_argument('-sp', '--sqlBasePort',dest='sqlPort',type=int,default=9306)
-        parser.add_argument('-smw','--smwVersion',dest='smwVersion',default="3.2.3")
+        parser.add_argument('-smw','--smwVersion',dest='smwVersion',default=None)
         parser.add_argument('-mv', '--mariaDBVersion', dest='mariaDBVersion',default="10.5",)
         parser.add_argument("-f", "--forceRebuild", dest="forceRebuild",   action="store_true", help="shall the applications rebuild be forced (with stop and remove of existing containers)")
         args = parser.parse_args(argv)
