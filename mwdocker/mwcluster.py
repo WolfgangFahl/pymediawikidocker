@@ -104,13 +104,13 @@ def main(argv=None): # IGNORE:C0111
     program_version = "v%s" % __version__
     program_build_date = str(__updated__)
     program_version_message = '%%(prog)s %s (%s)' % (program_version, program_build_date)
-    program_shortdesc = "wikipush"
+    program_shortdesc = "mwcluster"
     user_name="Wolfgang Fahl"
 
     program_license = '''%s
 
   Created by %s on %s.
-  Copyright 2020 Wolfgang Fahl. All rights reserved.
+  Copyright 2021 Wolfgang Fahl. All rights reserved.
 
   Licensed under the Apache License 2.0
   http://www.apache.org/licenses/LICENSE-2.0
@@ -127,7 +127,7 @@ def main(argv=None): # IGNORE:C0111
         parser.add_argument("-f", "--forceRebuild", dest="forceRebuild",   action="store_true", help="shall the applications rebuild be forced (with stop and remove of existing containers)")
         args = parser.parse_args(argv)
         # create a MediaWiki Cluster
-        mwCluster=MediaWikiCluster()
+        mwCluster=MediaWikiCluster(debug=args.debug)
         return mwCluster.start(forceRebuild=args.forceRebuild)
     except KeyboardInterrupt:
         ### handle keyboard interrupt ###
