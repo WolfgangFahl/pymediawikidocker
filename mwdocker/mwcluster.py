@@ -131,12 +131,13 @@ def main(argv=None): # IGNORE:C0111
         parser.add_argument('-vl', '--versionList', dest='versions', nargs="*",default=MediaWikiCluster.defaultVersions)
         parser.add_argument('-bp', '--basePort',dest='basePort',type=int,default=9080)
         parser.add_argument('-sp', '--sqlBasePort',dest='sqlPort',type=int,default=9306)
+        parser.add_argument('-smw','--smwVersion',dest='smwVersion',default="3.2.3")
         parser.add_argument('-mv', '--mariaDBVersion', dest='mariaDBVersion',default="10.5",)
         parser.add_argument("-f", "--forceRebuild", dest="forceRebuild",   action="store_true", help="shall the applications rebuild be forced (with stop and remove of existing containers)")
         args = parser.parse_args(argv)
         print(f"mediawiki versions {args.versions}")
         # create a MediaWiki Cluster
-        mwCluster=MediaWikiCluster(args.versions,basePort=args.basePort,sqlPort=args.sqlPort,mariaDBVersion=args.mariaDBVersion,debug=args.debug)
+        mwCluster=MediaWikiCluster(args.versions,basePort=args.basePort,sqlPort=args.sqlPort,mariaDBVersion=args.mariaDBVersion,smwVersion=args.smwVersion,debug=args.debug)
         return mwCluster.start(forceRebuild=args.forceRebuild)
     except KeyboardInterrupt:
         ### handle keyboard interrupt ###
