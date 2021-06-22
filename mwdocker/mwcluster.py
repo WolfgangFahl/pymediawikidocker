@@ -89,9 +89,9 @@ class MediaWikiCluster(object):
             mwApp=self.getDockerApplication(i,version)
             mwApp.generateAll()
 
-__version__ = "0.0.1"
+__version__ = "0.0.7"
 __date__ = '2021-06-21'
-__updated__ = '2021-06-21'
+__updated__ = '2021-06-22'
 DEBUG=False
 
 def main(argv=None): # IGNORE:C0111
