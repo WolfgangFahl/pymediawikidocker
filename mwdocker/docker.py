@@ -11,6 +11,7 @@ import secrets
 import socket
 import re
 from jinja2 import Environment, FileSystemLoader
+from jinja2.exceptions import TemplateNotFound
 import mysql.connector
 from mysql.connector import Error
 from pathlib import Path
@@ -225,12 +226,15 @@ class DockerApplication(object):
             kwArgs(): generic keyword arguments to pass on to template rendering
         
         '''
-        template = self.env.get_template(templateName)
-        timestamp=datetime.datetime.now().isoformat()
-        content=template.render(mwVersion=self.version,mariaDBVersion=self.mariaDBVersion,port=self.port,sqlPort=self.sqlPort,timestamp=timestamp,**kwArgs)
-        with open(targetPath, "w") as targetFile:
-            targetFile.write(content)
-      
+        try:
+            template = self.env.get_template(templateName)
+            timestamp=datetime.datetime.now().isoformat()
+            content=template.render(mwVersion=self.version,mariaDBVersion=self.mariaDBVersion,port=self.port,sqlPort=self.sqlPort,timestamp=timestamp,**kwArgs)
+            with open(targetPath, "w") as targetFile:
+                targetFile.write(content)
+        except TemplateNotFound:
+            print(f"no template {templateName} for {self.name} {self.version}")
+    
     def genComposerFile(self,**kwArgs):  
         '''
         generate the composer file for 
@@ -260,6 +264,7 @@ class DockerApplication(object):
         '''
         hostname=socket.getfqdn()
         self.generate(f"mwLocalSettings{self.shortVersion}.php",f"{self.dockerPath}/LocalSettings.php",mySQLPassword=self.mySQLPassword,hostname=hostname,**kwArgs)
+            
     
     def genWikiSQLDump(self,**kwArgs):
         '''

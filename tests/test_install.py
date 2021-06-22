@@ -15,6 +15,7 @@ class TestInstall(unittest.TestCase):
 
     def setUp(self):
         self.debug=True
+        self.versions=MediaWikiCluster.defaultVersions
         
     def tearDown(self):
         pass
@@ -30,14 +31,14 @@ class TestInstall(unittest.TestCase):
         '''
         test generating the docker files
         '''
-        mwCluster=MediaWikiCluster()
+        mwCluster=MediaWikiCluster(self.versions)
         mwCluster.genDockerFiles()
     
     def testInstallation(self):
         '''
         test the MediaWiki docker image installation
         '''
-        mwCluster=MediaWikiCluster(debug=True)
+        mwCluster=MediaWikiCluster(self.versions,debug=self.debug)
         mwCluster.start(forceRebuild=True)
         apps=mwCluster.apps.values()
         self.assertEqual(len(mwCluster.versions),len(apps))
@@ -49,6 +50,13 @@ class TestInstall(unittest.TestCase):
             print(userCountRecords)
         mwCluster.close()
         
+    def testInstallationWithMissingLocalSettingsTemplate(self):
+        '''
+        test a cluster with no LocalSettingsTemplate available
+        '''
+        return
+        mwCluster=MediaWikiCluster(versions=['1.36.0'])
+        mwCluster.start()
    
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']
