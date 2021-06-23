@@ -96,7 +96,7 @@ class TestInstall(unittest.TestCase):
             pass
         self.assertTrue("--wikiIdList" in stdout.getvalue())
         # just for debugging command line handling
-        mwdocker.mwcluster.main(["-f"])
+        # mwdocker.mwcluster.main(["-f"])
    
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']
