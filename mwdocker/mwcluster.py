@@ -104,7 +104,7 @@ class MediaWikiCluster(object):
         mwApp=DockerApplication(user=self.user,password=self.password,version=version,wikiId=wikiId,mariaDBVersion=self.mariaDBVersion,smwVersion=self.smwVersion,port=port,sqlPort=sqlPort,mySQLRootPassword=self.mySQLRootPassword,debug=True)
         return mwApp
 
-__version__ = "0.0.13"
+__version__ = "0.0.14"
 __date__ = '2021-06-21'
 __updated__ = '2021-06-23'
 DEBUG=False

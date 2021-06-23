@@ -11,6 +11,9 @@ RUN apt-get -y update && \
     apt-get -y --no-install-recommends --fix-missing install \
     mariadb-client \
     inetutils-ping \
+    curl \
+    graphviz \
+    imagemagick \
     vim \
     unzip \
     libzip-dev \

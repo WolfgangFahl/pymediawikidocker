@@ -15,4 +15,4 @@ six
 # https://pypi.org/project/mysql-connector-python/
 mysql-connector-python
 # https://pypi.org/project/py-3rdparty-mediawiki/
-py-3rdparty-mediawiki
+py-3rdparty-mediawiki>=0.4.9
