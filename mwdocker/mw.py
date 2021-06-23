@@ -61,12 +61,19 @@ a link to the page also shows up in their "Personal URLs", between "Talk" and "P
         Constructor
         '''
         
-    def asScript(self):
+    def asScript(self,branch):
         '''
         return me as a shell Script command line list
+        
+        Args:
+            branch(str): the branch to clone 
         '''
         if hasattr(self, "giturl"):
-            return (f"git clone {self.giturl}")
+            if "ssh://gerrit.wikimedia.org" in self.giturl:
+                # glone from the branch
+                return (f"git clone {self.giturl} --single-branch --branch {branch}")
+            else:    
+                return (f"git clone {self.giturl}")
         else:
-            return ""
+            return "# no installation script command specified"
         

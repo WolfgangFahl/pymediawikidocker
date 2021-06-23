@@ -5,5 +5,5 @@ cd /var/www/html/extensions
 {% for extension in extensions %}
 # {{ extension.name }}
 # {{ extension.url }}
-{{ extension.asScript() | safe }}
-{{ extension.localSettings }}{% endfor %}
+{{ extension.asScript(branch) | safe }}
+{% endfor %}

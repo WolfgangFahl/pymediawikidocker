@@ -34,7 +34,7 @@ class TestInstall(unittest.TestCase):
         '''
         test generating the docker files
         '''
-        mwCluster=MediaWikiCluster(self.versions,extensionNameList=["Admin Links"],smwVersion="3.2.3")
+        mwCluster=MediaWikiCluster(self.versions,extensionNameList=MediaWikiCluster.defaultExtensionNameList,smwVersion="3.2.3")
         mwCluster.createApps()
     
     def testInstallation(self):

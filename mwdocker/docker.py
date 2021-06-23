@@ -70,6 +70,8 @@ class DockerApplication(object):
         self.smwVersion=smwVersion
         self.underscoreVersion=version.replace(".","_")
         self.shortVersion=self.getShortVersion()
+        # branch as need for git clone e.g. https://gerrit.wikimedia.org/g/mediawiki/extensions/MagicNoCache
+        self.branch=f"REL{self.getShortVersion('_')}"
         self.mariaDBVersion=mariaDBVersion
         # hostname and ports
         self.hostname=socket.getfqdn()
@@ -305,7 +307,7 @@ class DockerApplication(object):
         except TemplateNotFound:
             print(f"no template {templateName} for {self.name} {self.version}")     
         
-    def getShortVersion(self):
+    def getShortVersion(self,separator=""):
         '''
         get my short version e.g. convert 1.27.7 to 127
         
@@ -313,7 +315,7 @@ class DockerApplication(object):
             str: the short version string
         '''
         versionMatch=re.match("(?P<major>[0-9]+)\.(?P<minor>[0-9]+)",self.version)
-        shortVersion=f"{versionMatch.group('major')}{versionMatch.group('minor')}"
+        shortVersion=f"{versionMatch.group('major')}{separator}{versionMatch.group('minor')}"
         return shortVersion
              
     def generateAll(self):
@@ -325,7 +327,7 @@ class DockerApplication(object):
         self.generate(f"mwLocalSettings{self.shortVersion}.php",f"{self.dockerPath}/LocalSettings.php",mySQLPassword=self.mySQLPassword,hostname=self.hostname,extensions=self.extensionMap.values())
         self.generate(f"mwWiki{self.shortVersion}.sql",f"{self.dockerPath}/wiki.sql")
         self.generate(f"addSysopUser.sh",f"{self.dockerPath}/addSysopUser.sh",user=self.user,password=self.password)
-        self.generate(f"installExtensions.sh",f"{self.dockerPath}/installExtensions.sh",extensions=self.extensionMap.values())
+        self.generate(f"installExtensions.sh",f"{self.dockerPath}/installExtensions.sh",extensions=self.extensionMap.values(),branch=self.branch)
         for fileName in ["initdb.sh","update.sh","phpinfo.php","composer.local.json"]:
             self.generate(f"{fileName}",f"{self.dockerPath}/{fileName}")
         

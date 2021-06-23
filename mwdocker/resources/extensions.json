@@ -9,13 +9,21 @@
             "url": "https://www.mediawiki.org/wiki/Extension:Admin_Links"
         },
         {
-            "giturl": "https://github.com/wikimedia/mediawiki-extensions-Variables",
-            "localSettings": "wfLoadExtension( 'Variables' );",
-            "name": "Variables",
-            "purpose": "The Variables extension allows you to define a variable on a page, use it later in that same page or included templates",
-            "since": "2011-11-13T00:00:00",
-            "url": "https://www.mediawiki.org/wiki/Extension:Variables"
-        },
+        	"giturl": "https://phabricator.wikimedia.org/diffusion/EHET/extension-headertabs.git",
+        	"localSettings": "wfLoadExtension( 'HeaderTabs' );",
+        	"purpose": "The Header Tabs extension transforms top-level MediaWiki headers into tabs using the jQuery UI JavaScript library.",
+        	"since": "2008-03-20T00:00:00",
+        	"name": "Header Tabs",
+        	"url": "https://www.mediawiki.org/wiki/Extension:Header_Tabs"
+    	},
+    	{
+    		"giturl": "ssh://gerrit.wikimedia.org:29418/mediawiki/extensions/MagicNoCache",
+    		"localSettings": "wfLoadExtension( 'MagicNoCache' );",
+    		"purpose": "The MagicNoCache extension creates a new magic word __NOCACHE__ and disables the cache for any page in which it finds it. Thus it makes sure that specific pages never get cached as they get updated extremely frequently",
+    		"since": "2012-01-01T00:00:00",
+    		"name": "MagicNoCache",
+    		"url": "https://www.mediawiki.org/wiki/Extension:MagicNoCache"
+    	},
        	{
         	"localSettings": "wfLoadExtension( 'SyntaxHighlight_GeSHi' );",
             "name": "SyntaxHighlight",
@@ -24,12 +32,12 @@
             "url": "https://www.mediawiki.org/wiki/Extension:SyntaxHighlight"        	
         },
         {
-        	"giturl": "https://phabricator.wikimedia.org/diffusion/EHET/extension-headertabs.git",
-        	"localSettings": "wfLoadExtension( 'HeaderTabs' );",
-        	"purpose": "The Header Tabs extension transforms top-level MediaWiki headers into tabs using the jQuery UI JavaScript library.",
-        	"since": "2008-03-20T00:00:00",
-        	"name": "Header Tabs",
-        	"url": "https://www.mediawiki.org/wiki/Extension:Header_Tabs"
-    	}
+            "giturl": "https://github.com/wikimedia/mediawiki-extensions-Variables",
+            "localSettings": "wfLoadExtension( 'Variables' );",
+            "name": "Variables",
+            "purpose": "The Variables extension allows you to define a variable on a page, use it later in that same page or included templates",
+            "since": "2011-11-13T00:00:00",
+            "url": "https://www.mediawiki.org/wiki/Extension:Variables"
+        }
    	]
 }
