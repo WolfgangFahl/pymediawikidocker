@@ -11,14 +11,18 @@ class MediaWikiCluster(object):
     '''
     a cluster of mediawiki docker Applications
     '''
-    defaultVersions=["1.27.7","1.31.14","1.35.2"]
+    defaultVersions=["1.27.7","1.31.14","1.35.2","1.36.0"]
+    defaultUser="Sysop"
+    defaultPassword="sysop-1234!"
 
-    def __init__(self,versions,sqlPort=9306,basePort=9080,networkName="mwNetwork",mariaDBVersion="10.5",smwVersion=None,mySQLRootPassword=None,debug=False,verbose=True):
+    def __init__(self,versions,user:str=None,password:str=None,sqlPort:int=9306,basePort:int=9080,networkName="mwNetwork",mariaDBVersion="10.5",smwVersion=None,mySQLRootPassword=None,debug=False,verbose=True):
         '''
         Constructor
         
         Args:
             versions(list): the list of MediaWiki versions to create docker applications for
+            user(str): the initial sysop user to create
+            password(str): the initial sysop password to user
             sqlPort(int): the base port to be used for  publishing the SQL port (3306) for the docker applications
             basePort(int): the base port to be used for publishing the HTML port (80) for the docker applications
             networkName(str): the name to use for the docker network to be shared by the cluster participants
@@ -29,6 +33,12 @@ class MediaWikiCluster(object):
         '''
         self.debug=debug
         self.verbose=verbose
+        if user is None:
+            user=MediaWikiCluster.defaultUser
+        self.user=user
+        if password is None:
+            password=MediaWikiCluster.defaultPassword
+        self.password=password
         self.baseSqlPort=sqlPort
         self.basePort=basePort
         self.versions=versions
@@ -61,8 +71,7 @@ class MediaWikiCluster(object):
                 if self.verbose:
                     print("Initializing MediaWiki SQL tables")
                 if mwApp.checkDBConnection():
-                    mwApp.execute("/tmp/initdb.sh")
-                    mwApp.execute("/tmp/update.sh")
+                    mwApp.initDB()
         return 0
             
     def close(self):
@@ -82,7 +91,7 @@ class MediaWikiCluster(object):
         '''
         port=self.basePort+i
         sqlPort=self.baseSqlPort+i
-        mwApp=DockerApplication(version=version,debug=True,mariaDBVersion=self.mariaDBVersion,smwVersion=self.smwVersion,port=port,sqlPort=sqlPort,mySQLRootPassword=self.mySQLRootPassword)
+        mwApp=DockerApplication(user=self.user,password=self.password,version=version,debug=True,mariaDBVersion=self.mariaDBVersion,smwVersion=self.smwVersion,port=port,sqlPort=sqlPort,mySQLRootPassword=self.mySQLRootPassword)
         return mwApp
             
     def genDockerFiles(self):
@@ -93,9 +102,9 @@ class MediaWikiCluster(object):
             mwApp=self.getDockerApplication(i,version)
             mwApp.generateAll()
 
-__version__ = "0.0.10"
+__version__ = "0.0.11"
 __date__ = '2021-06-21'
-__updated__ = '2021-06-22'
+__updated__ = '2021-06-23'
 DEBUG=False
 
 def main(argv=None): # IGNORE:C0111
@@ -129,6 +138,8 @@ def main(argv=None): # IGNORE:C0111
         parser.add_argument("-d", "--debug", dest="debug",   action="store_true", help="set debug level [default: %(default)s]")
         parser.add_argument('-V', '--version', action='version', version=program_version_message)
         parser.add_argument('-vl', '--versionList', dest='versions', nargs="*",default=MediaWikiCluster.defaultVersions)
+        parser.add_argument('-u','--user',dest='user',default=MediaWikiCluster.defaultUser)
+        parser.add_argument('-p','--password',dest='password',default=MediaWikiCluster.defaultPassword)
         parser.add_argument('-bp', '--basePort',dest='basePort',type=int,default=9080)
         parser.add_argument('-sp', '--sqlBasePort',dest='sqlPort',type=int,default=9306)
         parser.add_argument('-smw','--smwVersion',dest='smwVersion',default=None)
@@ -137,7 +148,7 @@ def main(argv=None): # IGNORE:C0111
         args = parser.parse_args(argv)
         print(f"mediawiki versions {args.versions}")
         # create a MediaWiki Cluster
-        mwCluster=MediaWikiCluster(args.versions,basePort=args.basePort,sqlPort=args.sqlPort,mariaDBVersion=args.mariaDBVersion,smwVersion=args.smwVersion,debug=args.debug)
+        mwCluster=MediaWikiCluster(args.versions,user=args.user,password=args.password,basePort=args.basePort,sqlPort=args.sqlPort,mariaDBVersion=args.mariaDBVersion,smwVersion=args.smwVersion,debug=args.debug)
         return mwCluster.start(forceRebuild=args.forceRebuild)
     except KeyboardInterrupt:
         ### handle keyboard interrupt ###

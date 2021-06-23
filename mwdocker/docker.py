@@ -37,13 +37,28 @@ class DockerApplication(object):
     MediaWiki Docker image
     '''
 
-    def __init__(self,name="mediawiki",version="1.35.2",mariaDBVersion="10.5",smwVersion=None,port=9080,sqlPort=9306,mySQLRootPassword=None,debug=False,verbose=True):
+    def __init__(self,user:str,password:str,name="mediawiki",version="1.35.2",mariaDBVersion="10.5",smwVersion=None,port=9080,sqlPort=9306,mySQLRootPassword=None,debug=False,verbose=True):
         '''
         Constructor
+        
+        Args:
+            user(str): the initial sysop user to create
+            password(str): the initial sysop password to user
+            versions(str): the  MediaWiki version to create docker applications for
+            sqlPort(int): the base port to be used for  publishing the SQL port (3306) for the docker applications
+            port(int): the port to be used for publishing the HTML port (80) for the docker applications
+            networkName(str): the name to use for the docker network to be shared by the cluster participants
+            mariaDBVersion(str): the Maria DB version to install as the SQL database provider for the docker applications
+            smwVersion(str): Semantic MediaWiki Version to be used (if any)
+            mySQLRootPassword(str): the mySQL root password to use for the database containers - if None a random password is generated
+            debug(bool): if True debugging is enabled
+            verbose(bool): if True output is verbose
         '''
         self.name=name
         # Versions
         self.version=version
+        self.user=user
+        self.password=password
         self.smwVersion=smwVersion
         self.underscoreVersion=version.replace(".","_")
         self.shortVersion=self.getShortVersion()
@@ -67,7 +82,7 @@ class DockerApplication(object):
         self.dbConn=None
         self.database="wiki"
         self.host="localhost"
-        self.user="wikiuser"
+        self.dbUser="wikiuser"
        
     @staticmethod 
     def check()->str:
@@ -119,6 +134,17 @@ class DockerApplication(object):
         env = Environment(loader=FileSystemLoader(template_dir))
         return env
     
+    def initDB(self):
+        '''
+        initialize my SQL database
+        '''
+        # restore the mySQL dump data
+        self.execute("/tmp/initdb.sh")
+        # update the database e.g. to initialize Semantic MediaWiki tables
+        self.execute("/tmp/update.sh")
+        # add an initial sysop user as specified
+        self.execute("/tmp/addSysopUser.sh")
+    
     def execute(self,command):
         '''
         execute the given command
@@ -143,7 +169,7 @@ class DockerApplication(object):
             return rows
         else:
             if self.verbose:
-                print (f"Connection to {self.database} on {self.host} with user {self.user} not established" )
+                print (f"Connection to {self.database} on {self.host} with user {self.dbUser} not established" )
             return None
         
     def dbClose(self):
@@ -164,13 +190,13 @@ class DockerApplication(object):
             try:
                 self.dbConn = mysql.connector.connect(host=self.host,
                                  database=self.database,
-                                 user=self.user,
+                                 user=self.dbUser,
                                  port=self.sqlPort,
                                  password=self.mySQLPassword,
                                  connection_timeout=timeout)
         
             except Error as e :
-                print (f"Connection to {self.database} on {self.host} with user {self.user} failed error: {str(e)}" )
+                print (f"Connection to {self.database} on {self.host} with user {self.dbUser} failed error: {str(e)}" )
         return self.dbConn
     
     def doCheckDBConnection(self,timeout:int=10)->bool:
@@ -183,7 +209,7 @@ class DockerApplication(object):
             rows=self.sqlQuery("select database();")
             ok=True
             if self.verbose:
-                print (f"Connection to {self.database} on {self.host} with user {self.user} established database returns: {rows[0]}")
+                print (f"Connection to {self.database} on {self.host} with user {self.dbUser} established database returns: {rows[0]}")
         return ok
     
     def checkDBConnection(self,timeout:float=10,initialSleep:float=2.5,maxTries:int=6)->bool:
@@ -200,7 +226,7 @@ class DockerApplication(object):
             bool: if connection was successful
         '''
         if self.debug:
-            print (f"Trying DB-Connection to {self.database} on {self.host} port {self.sqlPort} with user {self.user} with max {maxTries} tries and {timeout}s timeout per try - initial sleep {initialSleep}s")
+            print (f"Trying DB-Connection to {self.database} on {self.host} port {self.sqlPort} with user {self.dbUser} with max {maxTries} tries and {timeout}s timeout per try - initial sleep {initialSleep}s")
         time.sleep(initialSleep)
         sleep=0.5
         tries=1
@@ -233,13 +259,7 @@ class DockerApplication(object):
             with open(targetPath, "w") as targetFile:
                 targetFile.write(content)
         except TemplateNotFound:
-            print(f"no template {templateName} for {self.name} {self.version}")
-    
-    def genComposerFile(self,**kwArgs):  
-        '''
-        generate the composer file for 
-        '''
-        self.generate("mwCompose.yml",f"{self.dockerPath}/docker-compose.yml",mySQLRootPassword=self.mySQLRootPassword,mySQLPassword=self.mySQLPassword,**kwArgs)       
+            print(f"no template {templateName} for {self.name} {self.version}")     
         
     def getShortVersion(self):
         '''
@@ -251,43 +271,20 @@ class DockerApplication(object):
         versionMatch=re.match("(?P<major>[0-9]+)\.(?P<minor>[0-9]+)",self.version)
         shortVersion=f"{versionMatch.group('major')}{versionMatch.group('minor')}"
         return shortVersion
-        
-    def genDockerFile(self,**kwArgs):
-        '''
-        generate the docker files for this cluster
-        '''
-        self.generate("mwDockerfile",f"{self.dockerPath}/Dockerfile",**kwArgs)
-        
-    def genLocalSettings(self,**kwArgs):
-        '''
-        generate the local settings file
-        '''
-        hostname=socket.getfqdn()
-        self.generate(f"mwLocalSettings{self.shortVersion}.php",f"{self.dockerPath}/LocalSettings.php",mySQLPassword=self.mySQLPassword,hostname=hostname,**kwArgs)
-            
-    
-    def genWikiSQLDump(self,**kwArgs):
-        '''
-        generate the wiki SQL Dump
-        '''
-        self.generate(f"mwWiki{self.shortVersion}.sql",f"{self.dockerPath}/wiki.sql",**kwArgs)
-        
-    def genOther(self,**kwArgs):
-        '''
-        generate other files (mostly just copying)
-        '''
-        for fileName in ["initdb.sh","update.sh","phpinfo.php","composer.local.json"]:
-            self.generate(f"{fileName}",f"{self.dockerPath}/{fileName}",**kwArgs)
-        
+             
     def generateAll(self):
         '''
         generate all files needed for the docker handling
         '''
-        self.genDockerFile()
-        self.genComposerFile()
-        self.genLocalSettings()
-        self.genWikiSQLDump()
-        self.genOther()
+        self.generate("mwDockerfile",f"{self.dockerPath}/Dockerfile")
+        self.generate("mwCompose.yml",f"{self.dockerPath}/docker-compose.yml",mySQLRootPassword=self.mySQLRootPassword,mySQLPassword=self.mySQLPassword)
+        hostname=socket.getfqdn()
+        self.generate(f"mwLocalSettings{self.shortVersion}.php",f"{self.dockerPath}/LocalSettings.php",mySQLPassword=self.mySQLPassword,hostname=hostname)
+        self.generate(f"mwWiki{self.shortVersion}.sql",f"{self.dockerPath}/wiki.sql")
+        self.generate(f"addSysopUser.sh",f"{self.dockerPath}/addSysopUser.sh",user=self.user,password=self.password)
+        for fileName in ["initdb.sh","update.sh","phpinfo.php","composer.local.json"]:
+            self.generate(f"{fileName}",f"{self.dockerPath}/{fileName}")
+        
         
     def up(self,forceRebuild:bool=False):
         '''
