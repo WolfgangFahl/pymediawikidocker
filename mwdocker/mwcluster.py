@@ -13,6 +13,7 @@ class MediaWikiCluster(object):
     a cluster of mediawiki docker Applications
     '''
     defaultVersions=["1.27.7","1.31.14","1.35.2","1.36.0"]
+    defaultExtensionNameList=["Admin Links","Header Tabs","SyntaxHighlight","Variables"]
     defaultUser="Sysop"
     defaultPassword="sysop-1234!"
 
@@ -141,7 +142,7 @@ class MediaWikiCluster(object):
         mwApp=DockerApplication(user=self.user,password=self.password,version=version,extensionMap=self.extensionMap,wikiId=wikiId,mariaDBVersion=self.mariaDBVersion,smwVersion=self.smwVersion,port=port,sqlPort=sqlPort,mySQLRootPassword=self.mySQLRootPassword,debug=True)
         return mwApp
 
-__version__ = "0.0.18"
+__version__ = "0.0.19"
 __date__ = '2021-06-21'
 __updated__ = '2021-06-23'
 DEBUG=False
@@ -178,7 +179,7 @@ def main(argv=None): # IGNORE:C0111
         parser.add_argument('-V', '--version', action='version', version=program_version_message)
         parser.add_argument('-vl', '--versionList', dest='versions', nargs="*",default=MediaWikiCluster.defaultVersions,help="mediawiki versions to create docker applications for [default: %(default)s] ")
         parser.add_argument('-wl', '--wikiIdList', dest='wikiIdList', nargs="*",default=None,help="list of wikiIDs to be used for for py-3rdparty-mediawiki wikiuser quick access")   
-        parser.add_argument('-el', '--extensionList', dest='extensionNameList', nargs="*",default="[Admin Links,Variables,SyntaxHighlight]",help="list of extensions to be installed [default: %(default)s]")
+        parser.add_argument('-el', '--extensionList', dest='extensionNameList', nargs="*",default=MediaWikiCluster.defaultExtensionNameList,help="list of extensions to be installed [default: %(default)s]")
         parser.add_argument('-ej', '--extensionJson',dest='extensionJsonFile',default=None,help="additional extension descriptions default: None")
         parser.add_argument('-u','--user',dest='user',default=MediaWikiCluster.defaultUser, help="set username of initial user with sysop rights [default: %(default)s] ")
         parser.add_argument('-p','--password',dest='password',default=MediaWikiCluster.defaultPassword, help="set password for initial user [default: %(default)s] ")

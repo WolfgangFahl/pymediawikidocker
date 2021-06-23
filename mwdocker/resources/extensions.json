@@ -22,6 +22,14 @@
             "purpose": "syntax highlighting of diverse programming languages",
             "since": "2007-04-03T00:00:00",
             "url": "https://www.mediawiki.org/wiki/Extension:SyntaxHighlight"        	
-        }
-    ]
+        },
+        {
+        	"giturl": "https://phabricator.wikimedia.org/diffusion/EHET/extension-headertabs.git",
+        	"localSettings": "wfLoadExtension( 'HeaderTabs' );",
+        	"purpose": "The Header Tabs extension transforms top-level MediaWiki headers into tabs using the jQuery UI JavaScript library.",
+        	"since": "2008-03-20T00:00:00",
+        	"name": "Header Tabs",
+        	"url": "https://www.mediawiki.org/wiki/Extension:Header_Tabs"
+    	}
+   	]
 }
