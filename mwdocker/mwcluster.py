@@ -3,6 +3,7 @@ Created on 2021-08-06
 @author: wf
 '''
 from mwdocker.docker import DockerApplication
+from mwdocker.mw import ExtensionList
 import sys
 from argparse import ArgumentParser
 from argparse import ArgumentDefaultsHelpFormatter
@@ -15,7 +16,7 @@ class MediaWikiCluster(object):
     defaultUser="Sysop"
     defaultPassword="sysop-1234!"
 
-    def __init__(self,versions:list,user:str=None,password:str=None,wikiIdList:list=None,sqlPort:int=9306,basePort:int=9080,networkName="mwNetwork",mariaDBVersion="10.5",smwVersion=None,mySQLRootPassword=None,debug=False,verbose=True):
+    def __init__(self,versions:list,user:str=None,password:str=None,extensionNameList:list=None,wikiIdList:list=None,sqlPort:int=9306,basePort:int=9080,networkName="mwNetwork",mariaDBVersion="10.5",smwVersion=None,mySQLRootPassword=None,debug=False,verbose=True):
         '''
         Constructor
         
@@ -23,6 +24,7 @@ class MediaWikiCluster(object):
             versions(list): the list of MediaWiki versions to create docker applications for
             user(str): the initial sysop user to create
             password(str): the initial sysop password to user
+            extensionNameList(list): a list of names of extensions to be installed
             wikiIdList(list): a list of wikiIds to be used to create corresponding wikiUsers for simplified access to the wiki
             sqlPort(int): the base port to be used for  publishing the SQL port (3306) for the docker applications
             basePort(int): the base port to be used for publishing the HTML port (80) for the docker applications
@@ -39,6 +41,7 @@ class MediaWikiCluster(object):
         self.user=user
         if password is None:
             password=MediaWikiCluster.defaultPassword
+        self.extensionNameList=extensionNameList
         self.wikiIdList=wikiIdList
         if wikiIdList is not None and len(versions)!=len(wikiIdList):
             raise Exception(f"versionList and wikiIdList must have the same length but versions={versions} and wikiIdList={wikiIdList}")
@@ -52,8 +55,20 @@ class MediaWikiCluster(object):
         # create a network
         self.networkName=networkName
         self.apps={}
+        extensionList=ExtensionList.restore()
+        extByName,duplicates=extensionList.getLookup("name")
+        if len(duplicates)>0:
+            print(f"duplicate extensions: {duplicates}")
+        self.extensionMap={}
+        if self.extensionNameList is not None:
+            for extensionName in self.extensionNameList:
+                if extensionName in extByName:
+                    self.extensionMap[extensionName]=extByName[extensionName]
         
     def createApps(self):
+        '''
+        create my apps
+        '''
         for i,version in enumerate(self.versions):
             mwApp=self.getDockerApplication(i,version)
             mwApp.generateAll()
@@ -79,9 +94,13 @@ class MediaWikiCluster(object):
                     print("Initializing MediaWiki SQL tables")
                 if mwApp.checkDBConnection():
                     mwApp.initDB()
+                    mwApp.installExtensions()
         return 0
             
     def close(self):
+        '''
+        close my apps
+        '''
         for mwApp in self.apps.values():
             mwApp.close()
             
@@ -100,8 +119,8 @@ class MediaWikiCluster(object):
         sqlPort=self.baseSqlPort+i
         wikiId=None
         if self.wikiIdList is not None:
-            wikiId=self.wikiIdList[i-1]
-        mwApp=DockerApplication(user=self.user,password=self.password,version=version,wikiId=wikiId,mariaDBVersion=self.mariaDBVersion,smwVersion=self.smwVersion,port=port,sqlPort=sqlPort,mySQLRootPassword=self.mySQLRootPassword,debug=True)
+            wikiId=self.wikiIdList[i-1]                    
+        mwApp=DockerApplication(user=self.user,password=self.password,version=version,extensionMap=self.extensionMap,wikiId=wikiId,mariaDBVersion=self.mariaDBVersion,smwVersion=self.smwVersion,port=port,sqlPort=sqlPort,mySQLRootPassword=self.mySQLRootPassword,debug=True)
         return mwApp
 
 __version__ = "0.0.14"
@@ -141,6 +160,7 @@ def main(argv=None): # IGNORE:C0111
         parser.add_argument('-V', '--version', action='version', version=program_version_message)
         parser.add_argument('-vl', '--versionList', dest='versions', nargs="*",default=MediaWikiCluster.defaultVersions,help="mediawiki versions to create docker applications for [default: %(default)s] ")
         parser.add_argument('-wl', '--wikiIdList', dest='wikiIdList', nargs="*",default=None,help="list of wikiIDs to be used for for py-3rdparty-mediawiki wikiuser quick access")   
+        parser.add_argument('-el', '--extensionList', dest='extensionNameList', nargs="*",default="[AdminLinks]",help="list of extensions to be installed [default: %(default)s]")
         parser.add_argument('-u','--user',dest='user',default=MediaWikiCluster.defaultUser, help="set username of initial user with sysop rights [default: %(default)s] ")
         parser.add_argument('-p','--password',dest='password',default=MediaWikiCluster.defaultPassword, help="set password for initial user [default: %(default)s] ")
         parser.add_argument('-bp', '--basePort',dest='basePort',type=int,default=9080,help="set how base html port 80 to be exposed - incrementing by one for each version [default: %(default)s]")
@@ -151,7 +171,7 @@ def main(argv=None): # IGNORE:C0111
         args = parser.parse_args(argv)
         print(f"creating docker applications for mediawiki versions {args.versions}")
         # create a MediaWiki Cluster
-        mwCluster=MediaWikiCluster(args.versions,user=args.user,password=args.password,wikiIdList=args.wikiIdList,basePort=args.basePort,sqlPort=args.sqlPort,mariaDBVersion=args.mariaDBVersion,smwVersion=args.smwVersion,debug=args.debug)
+        mwCluster=MediaWikiCluster(args.versions,user=args.user,password=args.password,extensionNameList=args.extensionNameList,wikiIdList=args.wikiIdList,basePort=args.basePort,sqlPort=args.sqlPort,mariaDBVersion=args.mariaDBVersion,smwVersion=args.smwVersion,debug=args.debug)
         mwCluster.createApps()
         return mwCluster.start(forceRebuild=args.forceRebuild)
     except KeyboardInterrupt:

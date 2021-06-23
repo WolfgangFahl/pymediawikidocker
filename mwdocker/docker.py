@@ -38,7 +38,7 @@ class DockerApplication(object):
     MediaWiki Docker image
     '''
 
-    def __init__(self,user:str,password:str,name="mediawiki",version="1.35.2",wikiId:str=None,mariaDBVersion="10.5",smwVersion=None,port=9080,sqlPort=9306,mySQLRootPassword=None,debug=False,verbose=True):
+    def __init__(self,user:str,password:str,name="mediawiki",version="1.35.2",extensionMap:dict={},wikiId:str=None,mariaDBVersion="10.5",smwVersion=None,port=9080,sqlPort=9306,mySQLRootPassword=None,debug=False,verbose=True):
         '''
         Constructor
         
@@ -46,6 +46,7 @@ class DockerApplication(object):
             user(str): the initial sysop user to create
             password(str): the initial sysop password to user
             version(str): the  MediaWiki version to create docker applications for
+            extensionMap(dict): a map of extensions to be installed
             wikiId(str): the wikiId to create a py-3rdparty-mediawiki user for (if any)
             sqlPort(int): the base port to be used for  publishing the SQL port (3306) for the docker applications
             port(int): the port to be used for publishing the HTML port (80) for the docker applications
@@ -61,6 +62,8 @@ class DockerApplication(object):
         self.user=user
         self.password=password
         self.wikiId=wikiId
+        # extensions
+        self.extensionMap=extensionMap
         # Versions
         self.version=version
         self.fullVersion=f"MediaWiki {self.version}"
@@ -155,6 +158,13 @@ class DockerApplication(object):
         # if wikiId is specified create a wikiuser
         if self.wikiId is not None:
             self.wikiUser=self.createWikiUser(store=True)
+            
+    def installExtensions(self):
+        '''
+        install all extensions
+        '''
+        self.execute("/tmp/installExtensions.sh")
+            
             
     def createWikiUser(self,store:bool=False):
         '''
@@ -312,9 +322,10 @@ class DockerApplication(object):
         '''
         self.generate("mwDockerfile",f"{self.dockerPath}/Dockerfile")
         self.generate("mwCompose.yml",f"{self.dockerPath}/docker-compose.yml",mySQLRootPassword=self.mySQLRootPassword,mySQLPassword=self.mySQLPassword)
-        self.generate(f"mwLocalSettings{self.shortVersion}.php",f"{self.dockerPath}/LocalSettings.php",mySQLPassword=self.mySQLPassword,hostname=self.hostname)
+        self.generate(f"mwLocalSettings{self.shortVersion}.php",f"{self.dockerPath}/LocalSettings.php",mySQLPassword=self.mySQLPassword,hostname=self.hostname,extensions=self.extensionMap.values())
         self.generate(f"mwWiki{self.shortVersion}.sql",f"{self.dockerPath}/wiki.sql")
         self.generate(f"addSysopUser.sh",f"{self.dockerPath}/addSysopUser.sh",user=self.user,password=self.password)
+        self.generate(f"installExtensions.sh",f"{self.dockerPath}/installExtensions.sh",extensions=self.extensionMap.values())
         for fileName in ["initdb.sh","update.sh","phpinfo.php","composer.local.json"]:
             self.generate(f"{fileName}",f"{self.dockerPath}/{fileName}")
         

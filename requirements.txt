@@ -15,4 +15,6 @@ six
 # https://pypi.org/project/mysql-connector-python/
 mysql-connector-python
 # https://pypi.org/project/py-3rdparty-mediawiki/
-py-3rdparty-mediawiki>=0.4.9
+py-3rdparty-mediawiki>=0.4.10
+# https://pypi.org/project/pylodstorage/
+pylodstorage>=0.0.29

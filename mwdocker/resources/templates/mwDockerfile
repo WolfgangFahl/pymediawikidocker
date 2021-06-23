@@ -12,6 +12,7 @@ RUN apt-get -y update && \
     mariadb-client \
     inetutils-ping \
     curl \
+    git \
     graphviz \
     imagemagick \
     vim \
@@ -56,6 +57,9 @@ COPY wiki.sql /tmp
 # copy the initdb.sh script
 COPY initdb.sh /tmp
 
+# copy the installExtensions.sh script
+COPY installExtensions.sh /tmp
+
 # copy the update.sh script
 COPY update.sh /tmp
 
@@ -63,7 +67,7 @@ COPY update.sh /tmp
 COPY addSysopUser.sh /tmp
 
 # make the scripts executable
-RUN chmod +x /tmp/initdb.sh /tmp/update.sh /tmp/addSysopUser.sh
+RUN chmod +x /tmp/initdb.sh /tmp/update.sh /tmp/addSysopUser.sh /tmp/installExtensions.sh
 
 # restore the mediawiki initial database backup
 # can not do this before SQL server is up see https://docs.docker.com/compose/startup-order/

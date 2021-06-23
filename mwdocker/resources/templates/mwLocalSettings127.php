@@ -129,11 +129,5 @@ wfLoadSkin( 'Vector' );
 
 
 # End of automatically generated settings.
-# Add more configuration options below.
-{% if smwVersion %}
-# enable Support for Semantic MediaWiki
-# see https://www.semantic-mediawiki.org/wiki/Help:EnableSemantics
-# Version of SemanticMediaWiki at install time: {{smwVersion}}
-enableSemantics();     
-{% endif %}
-  
+# Add more configuration options below.  
+{% include 'mwLocalSettings.php' %}
