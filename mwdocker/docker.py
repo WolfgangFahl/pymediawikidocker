@@ -71,7 +71,7 @@ class DockerApplication(object):
         # hostname and ports
         self.hostname=socket.getfqdn()
         self.port=port
-        self.url="http://{self.hostname}:{self.port}"
+        self.url=f"http://{self.hostname}:{self.port}"
         self.sqlPort=sqlPort
         # debug and verbosity
         self.debug=debug
