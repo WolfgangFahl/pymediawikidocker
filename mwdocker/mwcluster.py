@@ -16,7 +16,7 @@ class MediaWikiCluster(object):
     defaultUser="Sysop"
     defaultPassword="sysop-1234!"
 
-    def __init__(self,versions:list,user:str=None,password:str=None,extensionNameList:list=None,wikiIdList:list=None,sqlPort:int=9306,basePort:int=9080,networkName="mwNetwork",mariaDBVersion="10.5",smwVersion=None,mySQLRootPassword=None,debug=False,verbose=True):
+    def __init__(self,versions:list,user:str=None,password:str=None,extensionNameList:list=None,extensionJsonFile:str=None,wikiIdList:list=None,sqlPort:int=9306,basePort:int=9080,networkName="mwNetwork",mariaDBVersion="10.5",smwVersion=None,mySQLRootPassword=None,debug=False,verbose=True):
         '''
         Constructor
         
@@ -25,6 +25,7 @@ class MediaWikiCluster(object):
             user(str): the initial sysop user to create
             password(str): the initial sysop password to user
             extensionNameList(list): a list of names of extensions to be installed
+            extensonJsonFile(str): name of an additional jsonFile to load extensions from
             wikiIdList(list): a list of wikiIds to be used to create corresponding wikiUsers for simplified access to the wiki
             sqlPort(int): the base port to be used for  publishing the SQL port (3306) for the docker applications
             basePort(int): the base port to be used for publishing the HTML port (80) for the docker applications
@@ -42,6 +43,7 @@ class MediaWikiCluster(object):
         if password is None:
             password=MediaWikiCluster.defaultPassword
         self.extensionNameList=extensionNameList
+        self.extensionJsonFile=extensionJsonFile
         self.wikiIdList=wikiIdList
         if wikiIdList is not None and len(versions)!=len(wikiIdList):
             raise Exception(f"versionList and wikiIdList must have the same length but versions={versions} and wikiIdList={wikiIdList}")
@@ -55,16 +57,32 @@ class MediaWikiCluster(object):
         # create a network
         self.networkName=networkName
         self.apps={}
+        self.extensionMap=self.getExtensionMap(self.extensionNameList,self.extensionJsonFile)     
+         
+    @staticmethod
+    def getExtensionMap(extensionNameList:list=None,extensionJsonFile:str=None):
+        '''
+        get map of extensions to handle
+        
+        Args:
+            extensionJsonFile(str): the name of an extra extensionJsonFile (if any)
+        '''
+        extensionMap={}
         extensionList=ExtensionList.restore()
+        if extensionJsonFile is not None:
+            extraExtensionList=ExtensionList()
+            extraExtensionList.restoreFromJsonFile(extensionJsonFile.replace(".json",""))
+            for ext in extraExtensionList.extensions:
+                extensionList.extensions.append(ext)
         extByName,duplicates=extensionList.getLookup("name")
         if len(duplicates)>0:
             print(f"duplicate extensions: {duplicates}")
-        self.extensionMap={}
-        if self.extensionNameList is not None:
-            for extensionName in self.extensionNameList:
+        if extensionNameList is not None:
+            for extensionName in extensionNameList:
                 if extensionName in extByName:
-                    self.extensionMap[extensionName]=extByName[extensionName]
-        
+                    extensionMap[extensionName]=extByName[extensionName]
+        return extensionMap
+  
     def createApps(self):
         '''
         create my apps
@@ -123,7 +141,7 @@ class MediaWikiCluster(object):
         mwApp=DockerApplication(user=self.user,password=self.password,version=version,extensionMap=self.extensionMap,wikiId=wikiId,mariaDBVersion=self.mariaDBVersion,smwVersion=self.smwVersion,port=port,sqlPort=sqlPort,mySQLRootPassword=self.mySQLRootPassword,debug=True)
         return mwApp
 
-__version__ = "0.0.15"
+__version__ = "0.0.16"
 __date__ = '2021-06-21'
 __updated__ = '2021-06-23'
 DEBUG=False
@@ -161,6 +179,7 @@ def main(argv=None): # IGNORE:C0111
         parser.add_argument('-vl', '--versionList', dest='versions', nargs="*",default=MediaWikiCluster.defaultVersions,help="mediawiki versions to create docker applications for [default: %(default)s] ")
         parser.add_argument('-wl', '--wikiIdList', dest='wikiIdList', nargs="*",default=None,help="list of wikiIDs to be used for for py-3rdparty-mediawiki wikiuser quick access")   
         parser.add_argument('-el', '--extensionList', dest='extensionNameList', nargs="*",default="[AdminLinks]",help="list of extensions to be installed [default: %(default)s]")
+        parser.add_aregumet('-ej', '--extensionJson',dest='extensionJsonFile',default=None,help="additional extension descriptions default: None")
         parser.add_argument('-u','--user',dest='user',default=MediaWikiCluster.defaultUser, help="set username of initial user with sysop rights [default: %(default)s] ")
         parser.add_argument('-p','--password',dest='password',default=MediaWikiCluster.defaultPassword, help="set password for initial user [default: %(default)s] ")
         parser.add_argument('-bp', '--basePort',dest='basePort',type=int,default=9080,help="set how base html port 80 to be exposed - incrementing by one for each version [default: %(default)s]")
@@ -171,7 +190,7 @@ def main(argv=None): # IGNORE:C0111
         args = parser.parse_args(argv)
         print(f"creating docker applications for mediawiki versions {args.versions}")
         # create a MediaWiki Cluster
-        mwCluster=MediaWikiCluster(args.versions,user=args.user,password=args.password,extensionNameList=args.extensionNameList,wikiIdList=args.wikiIdList,basePort=args.basePort,sqlPort=args.sqlPort,mariaDBVersion=args.mariaDBVersion,smwVersion=args.smwVersion,debug=args.debug)
+        mwCluster=MediaWikiCluster(args.versions,user=args.user,password=args.password,extensionJsonFile=args.extensionJsonFile,extensionNameList=args.extensionNameList,wikiIdList=args.wikiIdList,basePort=args.basePort,sqlPort=args.sqlPort,mariaDBVersion=args.mariaDBVersion,smwVersion=args.smwVersion,debug=args.debug)
         mwCluster.createApps()
         return mwCluster.start(forceRebuild=args.forceRebuild)
     except KeyboardInterrupt:
