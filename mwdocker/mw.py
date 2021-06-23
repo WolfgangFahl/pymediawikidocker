@@ -71,9 +71,9 @@ a link to the page also shows up in their "Personal URLs", between "Talk" and "P
         if hasattr(self, "giturl"):
             if "ssh://gerrit.wikimedia.org" in self.giturl:
                 # glone from the branch
-                return (f"git clone {self.giturl} --single-branch --branch {branch}")
+                return (f"git clone {self.giturl} --single-branch --branch {branch} {self.extension}")
             else:    
-                return (f"git clone {self.giturl}")
+                return (f"git clone {self.giturl} {self.extension}")
         else:
             return "# no installation script command specified"
         

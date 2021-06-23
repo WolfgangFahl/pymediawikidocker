@@ -45,7 +45,7 @@ class TestExtensions(unittest.TestCase):
         self.assertEqual("https://www.mediawiki.org/wiki/Extension:Admin_Links",adminLinks.url)
         if self.debug:
             print (adminLinks.asScript())
-        self.assertEqual(adminLinks.asScript(),"git clone https://gerrit.wikimedia.org/r/mediawiki/extensions/AdminLinks.git")
+        self.assertEqual(adminLinks.asScript(),"git clone https://gerrit.wikimedia.org/r/mediawiki/extensions/AdminLinks.git AdminLinks")
         pass
 
 
