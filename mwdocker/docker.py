@@ -15,6 +15,7 @@ from jinja2.exceptions import TemplateNotFound
 import mysql.connector
 from mysql.connector import Error
 from pathlib import Path
+from wikibot.wikiuser import WikiUser
     
 class DockerMap():
     '''
@@ -37,14 +38,15 @@ class DockerApplication(object):
     MediaWiki Docker image
     '''
 
-    def __init__(self,user:str,password:str,name="mediawiki",version="1.35.2",mariaDBVersion="10.5",smwVersion=None,port=9080,sqlPort=9306,mySQLRootPassword=None,debug=False,verbose=True):
+    def __init__(self,user:str,password:str,name="mediawiki",version="1.35.2",wikiId:str=None,mariaDBVersion="10.5",smwVersion=None,port=9080,sqlPort=9306,mySQLRootPassword=None,debug=False,verbose=True):
         '''
         Constructor
         
         Args:
             user(str): the initial sysop user to create
             password(str): the initial sysop password to user
-            versions(str): the  MediaWiki version to create docker applications for
+            version(str): the  MediaWiki version to create docker applications for
+            wikiId(str): the wikiId to create a py-3rdparty-mediawiki user for (if any)
             sqlPort(int): the base port to be used for  publishing the SQL port (3306) for the docker applications
             port(int): the port to be used for publishing the HTML port (80) for the docker applications
             networkName(str): the name to use for the docker network to be shared by the cluster participants
@@ -54,17 +56,22 @@ class DockerApplication(object):
             debug(bool): if True debugging is enabled
             verbose(bool): if True output is verbose
         '''
+        # identifications
         self.name=name
-        # Versions
-        self.version=version
         self.user=user
         self.password=password
+        self.wikiId=wikiId
+        # Versions
+        self.version=version
+        self.fullVersion=f"MediaWiki {self.version}"
         self.smwVersion=smwVersion
         self.underscoreVersion=version.replace(".","_")
         self.shortVersion=self.getShortVersion()
         self.mariaDBVersion=mariaDBVersion
-        # ports
+        # hostname and ports
+        self.hostname=socket.getfqdn()
         self.port=port
+        self.url="http://{self.hostname}:{self.port}"
         self.sqlPort=sqlPort
         # debug and verbosity
         self.debug=debug
@@ -83,6 +90,7 @@ class DockerApplication(object):
         self.database="wiki"
         self.host="localhost"
         self.dbUser="wikiuser"
+        self.wikiUser=None
        
     @staticmethod 
     def check()->str:
@@ -144,6 +152,32 @@ class DockerApplication(object):
         self.execute("/tmp/update.sh")
         # add an initial sysop user as specified
         self.execute("/tmp/addSysopUser.sh")
+        # if wikiId is specified create a wikiuser
+        if self.wikiId is not None:
+            self.wikiUser=self.createWikiUser(store=True)
+            
+    def createWikiUser(self,store:bool=False):
+        '''
+        create my wikiUser and optionally save it
+        
+        Args:
+           store(bool): if True save my user data to the relevant ini File
+        '''
+        if self.wikiId is None:
+            raise("createWikiUser needs wikiId to be set but it is None")
+        userDict={
+            "wikiId":f"{self.wikiId}",
+            "url": f"{self.url}",
+            "scriptPath": "",
+            "user": f"{self.user}",
+            "email":"noreply@nouser.com",
+            "version": f"{self.fullVersion}",
+            "password": f"{self.password}"
+        }
+        wikiUser=WikiUser.ofDict(userDict,encrypted=False)
+        if store:
+            wikiUser.save()
+        return wikiUser
     
     def execute(self,command):
         '''
@@ -278,8 +312,7 @@ class DockerApplication(object):
         '''
         self.generate("mwDockerfile",f"{self.dockerPath}/Dockerfile")
         self.generate("mwCompose.yml",f"{self.dockerPath}/docker-compose.yml",mySQLRootPassword=self.mySQLRootPassword,mySQLPassword=self.mySQLPassword)
-        hostname=socket.getfqdn()
-        self.generate(f"mwLocalSettings{self.shortVersion}.php",f"{self.dockerPath}/LocalSettings.php",mySQLPassword=self.mySQLPassword,hostname=hostname)
+        self.generate(f"mwLocalSettings{self.shortVersion}.php",f"{self.dockerPath}/LocalSettings.php",mySQLPassword=self.mySQLPassword,hostname=self.hostname)
         self.generate(f"mwWiki{self.shortVersion}.sql",f"{self.dockerPath}/wiki.sql")
         self.generate(f"addSysopUser.sh",f"{self.dockerPath}/addSysopUser.sh",user=self.user,password=self.password)
         for fileName in ["initdb.sh","update.sh","phpinfo.php","composer.local.json"]:

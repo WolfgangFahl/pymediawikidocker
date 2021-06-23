@@ -5,7 +5,7 @@ Created on 2021-08-06
 from mwdocker.docker import DockerApplication
 import sys
 from argparse import ArgumentParser
-from argparse import RawDescriptionHelpFormatter
+from argparse import ArgumentDefaultsHelpFormatter
 
 class MediaWikiCluster(object):
     '''
@@ -15,7 +15,7 @@ class MediaWikiCluster(object):
     defaultUser="Sysop"
     defaultPassword="sysop-1234!"
 
-    def __init__(self,versions,user:str=None,password:str=None,sqlPort:int=9306,basePort:int=9080,networkName="mwNetwork",mariaDBVersion="10.5",smwVersion=None,mySQLRootPassword=None,debug=False,verbose=True):
+    def __init__(self,versions:list,user:str=None,password:str=None,wikiIdList:list=None,sqlPort:int=9306,basePort:int=9080,networkName="mwNetwork",mariaDBVersion="10.5",smwVersion=None,mySQLRootPassword=None,debug=False,verbose=True):
         '''
         Constructor
         
@@ -23,6 +23,7 @@ class MediaWikiCluster(object):
             versions(list): the list of MediaWiki versions to create docker applications for
             user(str): the initial sysop user to create
             password(str): the initial sysop password to user
+            wikiIdList(list): a list of wikiIds to be used to create corresponding wikiUsers for simplified access to the wiki
             sqlPort(int): the base port to be used for  publishing the SQL port (3306) for the docker applications
             basePort(int): the base port to be used for publishing the HTML port (80) for the docker applications
             networkName(str): the name to use for the docker network to be shared by the cluster participants
@@ -38,6 +39,9 @@ class MediaWikiCluster(object):
         self.user=user
         if password is None:
             password=MediaWikiCluster.defaultPassword
+        self.wikiIdList=wikiIdList
+        if wikiIdList is not None and len(versions)!=len(wikiIdList):
+            raise Exception(f"versionList and wikiIdList must have the same length but versions={versions} and wikiIdList={wikiIdList}")
         self.password=password
         self.baseSqlPort=sqlPort
         self.basePort=basePort
@@ -48,6 +52,12 @@ class MediaWikiCluster(object):
         # create a network
         self.networkName=networkName
         self.apps={}
+        
+    def createApps(self):
+        for i,version in enumerate(self.versions):
+            mwApp=self.getDockerApplication(i,version)
+            mwApp.generateAll()
+            self.apps[version]=mwApp     
                 
     def start(self,forceRebuild:bool=False,withInitDB=True)->int:
         '''
@@ -60,13 +70,10 @@ class MediaWikiCluster(object):
         if errMsg is not None:
             print(errMsg,file=sys.stderr)
             return 1
-            
         
-        for i,version in enumerate(self.versions):
-            mwApp=self.getDockerApplication(i,version)
-            mwApp.generateAll()
+        for version in self.versions:
+            mwApp=self.apps[version]
             mwApp.up(forceRebuild=forceRebuild) 
-            self.apps[version]=mwApp     
             if withInitDB:
                 if self.verbose:
                     print("Initializing MediaWiki SQL tables")
@@ -91,18 +98,13 @@ class MediaWikiCluster(object):
         '''
         port=self.basePort+i
         sqlPort=self.baseSqlPort+i
-        mwApp=DockerApplication(user=self.user,password=self.password,version=version,debug=True,mariaDBVersion=self.mariaDBVersion,smwVersion=self.smwVersion,port=port,sqlPort=sqlPort,mySQLRootPassword=self.mySQLRootPassword)
+        wikiId=None
+        if self.wikiIdList is not None:
+            wikiId=self.wikiIdList[i-1]
+        mwApp=DockerApplication(user=self.user,password=self.password,version=version,wikiId=wikiId,mariaDBVersion=self.mariaDBVersion,smwVersion=self.smwVersion,port=port,sqlPort=sqlPort,mySQLRootPassword=self.mySQLRootPassword,debug=True)
         return mwApp
-            
-    def genDockerFiles(self):
-        '''
-        generate all docker files
-        '''
-        for i,version in enumerate(self.versions):
-            mwApp=self.getDockerApplication(i,version)
-            mwApp.generateAll()
 
-__version__ = "0.0.11"
+__version__ = "0.0.12"
 __date__ = '2021-06-21'
 __updated__ = '2021-06-23'
 DEBUG=False
@@ -134,21 +136,23 @@ def main(argv=None): # IGNORE:C0111
 ''' % (program_shortdesc,user_name, str(__date__))
     try:
         # Setup argument parser
-        parser = ArgumentParser(description=program_license, formatter_class=RawDescriptionHelpFormatter)
+        parser = ArgumentParser(description=program_license, formatter_class=ArgumentDefaultsHelpFormatter)
         parser.add_argument("-d", "--debug", dest="debug",   action="store_true", help="set debug level [default: %(default)s]")
         parser.add_argument('-V', '--version', action='version', version=program_version_message)
-        parser.add_argument('-vl', '--versionList', dest='versions', nargs="*",default=MediaWikiCluster.defaultVersions)
-        parser.add_argument('-u','--user',dest='user',default=MediaWikiCluster.defaultUser)
-        parser.add_argument('-p','--password',dest='password',default=MediaWikiCluster.defaultPassword)
-        parser.add_argument('-bp', '--basePort',dest='basePort',type=int,default=9080)
-        parser.add_argument('-sp', '--sqlBasePort',dest='sqlPort',type=int,default=9306)
-        parser.add_argument('-smw','--smwVersion',dest='smwVersion',default=None)
-        parser.add_argument('-mv', '--mariaDBVersion', dest='mariaDBVersion',default="10.5",)
+        parser.add_argument('-vl', '--versionList', dest='versions', nargs="*",default=MediaWikiCluster.defaultVersions,help="mediawiki versions to create docker applications for [default: %(default)s] ")
+        parser.add_argument('-wl', '--wikiIdList', dest='wikiIdList', nargs="*",default=None,help="list of wikiIDs to be used for for py-3rdparty-mediawiki wikiuser quick access")   
+        parser.add_argument('-u','--user',dest='user',default=MediaWikiCluster.defaultUser, help="set username of initial user with sysop rights [default: %(default)s] ")
+        parser.add_argument('-p','--password',dest='password',default=MediaWikiCluster.defaultPassword, help="set password for initial user [default: %(default)s] ")
+        parser.add_argument('-bp', '--basePort',dest='basePort',type=int,default=9080,help="set how base html port 80 to be exposed - incrementing by one for each version [default: %(default)s]")
+        parser.add_argument('-sp', '--sqlBasePort',dest='sqlPort',type=int,default=9306,help="set base mySql port 3306 to be exposed - incrementing by one for each version [default: %(default)s]")
+        parser.add_argument('-smw','--smwVersion',dest='smwVersion',default=None,help="set SemanticMediaWiki Version to be installed default is None - no installation of SMW")
+        parser.add_argument('-mv', '--mariaDBVersion', dest='mariaDBVersion',default="10.5",help="mariaDB Version to be installed [default: %(default)s]")
         parser.add_argument("-f", "--forceRebuild", dest="forceRebuild",   action="store_true", help="shall the applications rebuild be forced (with stop and remove of existing containers)")
         args = parser.parse_args(argv)
-        print(f"mediawiki versions {args.versions}")
+        print(f"creating docker applications for mediawiki versions {args.versions}")
         # create a MediaWiki Cluster
-        mwCluster=MediaWikiCluster(args.versions,user=args.user,password=args.password,basePort=args.basePort,sqlPort=args.sqlPort,mariaDBVersion=args.mariaDBVersion,smwVersion=args.smwVersion,debug=args.debug)
+        mwCluster=MediaWikiCluster(args.versions,user=args.user,password=args.password,wikiIdList=args.wikiIdList,basePort=args.basePort,sqlPort=args.sqlPort,mariaDBVersion=args.mariaDBVersion,smwVersion=args.smwVersion,debug=args.debug)
+        mwCluster.createApps()
         return mwCluster.start(forceRebuild=args.forceRebuild)
     except KeyboardInterrupt:
         ### handle keyboard interrupt ###
