@@ -61,7 +61,7 @@ a link to the page also shows up in their "Personal URLs", between "Talk" and "P
         Constructor
         '''
         
-    def asScript(self,branch):
+    def asScript(self,branch="main"):
         '''
         return me as a shell Script command line list
         
