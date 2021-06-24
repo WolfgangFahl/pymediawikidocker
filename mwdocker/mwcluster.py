@@ -141,11 +141,11 @@ class MediaWikiCluster(object):
         sqlPort=self.baseSqlPort+i
         wikiId=None
         if self.wikiIdList is not None:
-            wikiId=self.wikiIdList[i-1]                    
+            wikiId=self.wikiIdList[i]                    
         mwApp=DockerApplication(user=self.user,password=self.password,version=version,extensionMap=self.extensionMap,wikiId=wikiId,mariaDBVersion=self.mariaDBVersion,smwVersion=self.smwVersion,port=port,sqlPort=sqlPort,mySQLRootPassword=self.mySQLRootPassword,debug=True)
         return mwApp
 
-__version__ = "0.0.24"
+__version__ = "0.0.25"
 __date__ = '2021-06-21'
 __updated__ = '2021-06-23'
 DEBUG=False
