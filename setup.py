@@ -11,7 +11,7 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='pymediawikidocker',
-    version='0.0.22',
+    version='0.0.23',
 
     packages=['mwdocker',],
     
