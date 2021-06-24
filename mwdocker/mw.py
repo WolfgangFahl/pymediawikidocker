@@ -69,7 +69,7 @@ a link to the page also shows up in their "Personal URLs", between "Talk" and "P
             branch(str): the branch to clone 
         '''
         if hasattr(self, "giturl"):
-            if "ssh://gerrit.wikimedia.org" in self.giturl:
+            if "//github.com/wikimedia/" in self.giturl:
                 # glone from the branch
                 return (f"git clone {self.giturl} --single-branch --branch {branch} {self.extension}")
             else:    

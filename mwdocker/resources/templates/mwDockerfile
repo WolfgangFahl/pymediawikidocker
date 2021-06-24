@@ -61,9 +61,6 @@ COPY initdb.sh /tmp
 # copy the installExtensions.sh script
 COPY installExtensions.sh /tmp
 
-# disable hostkey checking to enable non interactive git ssh checkout
-RUN echo "StrictHostKeyChecking no" >> /etc/ssh_config
-
 # copy the update.sh script
 COPY update.sh /tmp
 

@@ -19,7 +19,7 @@
         	"url": "https://www.mediawiki.org/wiki/Extension:Header_Tabs"
     	},
     	{
-    		"giturl": "ssh://gerrit.wikimedia.org:29418/mediawiki/extensions/MagicNoCache",
+    		"giturl": "https://github.com/wikimedia/mediawiki-extensions-MagicNoCache",
     		"extension": "MagicNoCache",
     		"localSettings": "wfLoadExtension( 'MagicNoCache' );",
     		"purpose": "The MagicNoCache extension creates a new magic word __NOCACHE__ and disables the cache for any page in which it finds it. Thus it makes sure that specific pages never get cached as they get updated extremely frequently",
