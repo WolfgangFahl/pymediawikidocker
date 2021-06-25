@@ -74,7 +74,7 @@ a link to the page also shows up in their "Personal URLs", between "Talk" and "P
         localSettingsLine=f"wfLoadExtension( '{self.extension}' );"
         if hasattr(self,"require_once_until"):
             if self.require_once_until<=mwShortVersion:
-                localSettingsLine=f"require_once '$IP/extensions/{self.extension}/{self.extension}.php'';",
+                localSettingsLine=f"require_once '$IP/extensions/{self.extension}/{self.extension}.php';"
 
         if hasattr(self,"localSettings"):
             localSettingsLine+=f"\n  {self.localSettings}"
