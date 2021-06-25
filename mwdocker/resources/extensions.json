@@ -10,6 +10,14 @@
 			"url": "https://www.mediawiki.org/wiki/Extension:Admin_Links"
 		},
 		{
+			"name": "Data Transfer",
+			"extension": "DataTransfer",
+			"giturl": "https://github.com/wikimedia/mediawiki-extensions-DataTransfer",
+			"purpose": " Data Transfer is an extension to MediaWiki that allows users to both export and import data from and to the wiki, with export done in XML format and import possible in both XML, CSV and some spreadsheet formats. ",
+			"since": "2008-02-19T00:00:00",
+			"url": "https://www.mediawiki.org/wiki/Extension:Data_Transfer"
+		},
+		{
 			"name": "Header Tabs",
 			"extension": "HeaderTabs",
 			"giturl": "https://github.com/wikimedia/mediawiki-extensions-HeaderTabs",
@@ -48,14 +56,12 @@
 			"extension": "SemanticResultFormats",
 			"composer": "\"mediawiki\/semantic-result-formats\": \"~3.1\"",
 			"purpose": "Additional result formats for Semantic MediaWiki queries",
-			"localSettings": "wfLoadExtension( 'SemanticResultFormats' );",
 			"url": "https://www.semantic-mediawiki.org/wiki/Extension:Semantic_Result_Formats"
 		},
 		{
 			"name": "Page Forms",
 			"extension": "PageForms",
 			"composer": "\"mediawiki\/page-forms\": \"^5.2.1\"",
-			"localSettings": "wfLoadExtension( 'PageForms' );",
 			"purpose": "(known before 2016 as Semantic Forms) is an extension to MediaWiki that allows users to add, edit and query data using forms",
 			"since": "2016-09-07T00:00:00",
 			"url": "https://www.mediawiki.org/wiki/Extension:Page_Forms"
