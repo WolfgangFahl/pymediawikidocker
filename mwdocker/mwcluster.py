@@ -43,6 +43,8 @@ class MediaWikiCluster(object):
         self.user=user
         if password is None:
             password=MediaWikiCluster.defaultPassword
+        if extensionNameList is None:
+            extensionNameList=MediaWikiCluster.defaultExtensionNameList
         self.extensionNameList=extensionNameList
         self.extensionJsonFile=extensionJsonFile
         self.wikiIdList=wikiIdList
@@ -58,7 +60,6 @@ class MediaWikiCluster(object):
         # create a network
         self.networkName=networkName
         self.apps={}
-        self.extensionMap=self.getExtensionMap(self.extensionNameList,self.extensionJsonFile)     
          
     @staticmethod
     def getExtensionMap(extensionNameList:list=None,extensionJsonFile:str=None):
@@ -88,6 +89,7 @@ class MediaWikiCluster(object):
         '''
         create my apps
         '''
+        self.extensionMap=self.getExtensionMap(self.extensionNameList,self.extensionJsonFile)     
         for i,version in enumerate(self.versions):
             mwApp=self.getDockerApplication(i,version)
             mwApp.generateAll()
@@ -145,9 +147,9 @@ class MediaWikiCluster(object):
         mwApp=DockerApplication(user=self.user,password=self.password,version=version,extensionMap=self.extensionMap,wikiId=wikiId,mariaDBVersion=self.mariaDBVersion,smwVersion=self.smwVersion,port=port,sqlPort=sqlPort,mySQLRootPassword=self.mySQLRootPassword,debug=True)
         return mwApp
 
-__version__ = "0.0.25"
+__version__ = "0.0.26"
 __date__ = '2021-06-21'
-__updated__ = '2021-06-23'
+__updated__ = '2021-06-25'
 DEBUG=False
 
 def main(argv=None): # IGNORE:C0111

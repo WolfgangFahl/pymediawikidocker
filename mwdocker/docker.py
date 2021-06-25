@@ -317,6 +317,41 @@ class DockerApplication(object):
         versionMatch=re.match("(?P<major>[0-9]+)\.(?P<minor>[0-9]+)",self.version)
         shortVersion=f"{versionMatch.group('major')}{separator}{versionMatch.group('minor')}"
         return shortVersion
+    
+    def getComposerRequire(self):
+        '''
+        get the json string for the composer require e.g. composer.local.json
+        '''
+        requires=[]
+        for ext in self.extensionMap.values():
+            if hasattr(ext,"composer"):
+                requires.append(ext.composer)
+        indent="     "
+        delim="" if len(requires)==0 else ",\n"
+        requireList=""
+        if self.smwVersion:
+            requireList+=f'{indent}"mediawiki/semantic-media-wiki": "~{self.smwVersion}"{delim}'
+        for i,require in enumerate(requires):
+            delim="" if i>=len(requires)-1 else ",\n"
+            requireList+=f"{indent}{require}{delim}"
+        requireJson=f"""{{   
+  "require": {{
+{requireList} 
+  }} 
+}}"""
+        return requireJson
+        
+    def genComposerRequire(self,composerFilePath):
+        '''
+        gen the composer.local.json require file
+        
+        Args:
+            composerFilePath(str): the name of the file to generate
+        '''
+        requireJson=self.getComposerRequire()
+        with open(composerFilePath, "w") as composerFile:
+                composerFile.write(requireJson)
+                
              
     def generateAll(self):
         '''
@@ -328,7 +363,8 @@ class DockerApplication(object):
         self.generate(f"mwWiki{self.shortVersion}.sql",f"{self.dockerPath}/wiki.sql")
         self.generate(f"addSysopUser.sh",f"{self.dockerPath}/addSysopUser.sh",user=self.user,password=self.password)
         self.generate(f"installExtensions.sh",f"{self.dockerPath}/installExtensions.sh",extensions=self.extensionMap.values(),branch=self.branch)
-        for fileName in ["initdb.sh","update.sh","phpinfo.php","composer.local.json"]:
+        self.genComposerRequire(f"{self.dockerPath}/composer.local.json")
+        for fileName in ["initdb.sh","update.sh","phpinfo.php"]:
             self.generate(f"{fileName}",f"{self.dockerPath}/{fileName}")
         
         

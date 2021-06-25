@@ -1,8 +1,0 @@
-{   
-  "require": {     
-  {% if smwVersion %}
-     "mediawiki/semantic-media-wiki": "~{{smwVersion}}"  
-  {% endif %}    
-  } 
-}
-

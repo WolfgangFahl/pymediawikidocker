@@ -56,9 +56,11 @@ class TestInstall(unittest.TestCase):
         
     def testInstallationWithSemanticMediaWiki(self):
         '''
-        test MediaWiki with SemanticMediaWiki as per 
+        test MediaWiki with SemanticMediaWiki 
+        and composer
         '''
         mwCluster=MediaWikiCluster(versions=["1.31.14"],smwVersion="3.2.3",basePort=9480,sqlPort=10306)
+        mwCluster.extensionNameList.extend(["Page Forms","Semantic Result Formats"])
         mwCluster.createApps()
         mwCluster.start(forceRebuild=True)
         
