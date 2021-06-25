@@ -8,4 +8,4 @@ enableSemantics();
 {% for extension in extensions %}
 # {{ extension.name }}
 # {{ extension.url }}
-{{ extension.localSettings }}{% endfor %}
+{{ extension.getLocalSettingsLine(mwShortVersion) }}{% endfor %}

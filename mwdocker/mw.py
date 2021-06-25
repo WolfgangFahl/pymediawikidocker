@@ -61,6 +61,25 @@ a link to the page also shows up in their "Personal URLs", between "Talk" and "P
         Constructor
         '''
         
+    def getLocalSettingsLine(self,mwShortVersion:str):
+        '''
+        get my local settings line
+        
+        Args:
+            mwShortVersion(str): the MediaWiki short version e.g. 127
+        
+        Returns:
+            entry for LocalSettings
+        '''
+        localSettingsLine=f"wfLoadExtension( '{self.extension}' );"
+        if hasattr(self,"require_once_until"):
+            if self.require_once_until<=mwShortVersion:
+                localSettingsLine=f"require_once '$IP/extensions/{self.extension}/{self.extension}.php'';",
+
+        if hasattr(self,"localSettings"):
+            localSettingsLine+=f"\n  {self.localSettings}"
+        return localSettingsLine
+    
     def asScript(self,branch="main"):
         '''
         return me as a shell Script command line list

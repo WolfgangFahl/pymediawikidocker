@@ -60,7 +60,17 @@ class TestInstall(unittest.TestCase):
         and composer
         '''
         mwCluster=MediaWikiCluster(versions=["1.31.14"],smwVersion="3.2.3",basePort=9480,sqlPort=10306)
-        mwCluster.extensionNameList.extend(["Page Forms","Semantic Result Formats"])
+        mwCluster.extensionNameList.extend(["MagicNoCache","Page Forms","Semantic Result Formats"])
+        mwCluster.createApps()
+        mwCluster.start(forceRebuild=True)
+        
+    def testInstallationWithRequireOnce(self):
+        '''
+        https://github.com/WolfgangFahl/pymediawikidocker/issues/15
+        support legacy require_once extension registration
+        '''
+        mwCluster=MediaWikiCluster(versions=["1.27.7"],basePort=9481,sqlPort=10307)
+        mwCluster.extensionNameList.extend(["MagicNoCache"])
         mwCluster.createApps()
         mwCluster.start(forceRebuild=True)
         
