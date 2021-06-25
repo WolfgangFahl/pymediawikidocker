@@ -3,7 +3,8 @@
 		{
 			"name": "Admin Links",
 			"extension": "AdminLinks",
-			"giturl": "https://gerrit.wikimedia.org/r/mediawiki/extensions/AdminLinks.git",
+			"giturl": "https://github.com/wikimedia/mediawiki-extensions-AdminLinks",
+			"require_once_until": "127",
 			"purpose": "Admin Links is an extension to MediaWiki that defines a special page, \"Special:AdminLinks\",\nthat holds links meant to be helpful for wiki administrators;\nit is meant to serve as a \"control panel\" for the functions an administrator would typically perform in a wiki.\nAll users can view this page; however, for those with the 'adminlinks' permission (sysops/administrators, by default),\na link to the page also shows up in their \"Personal URLs\", between \"Talk\" and \"Preferences\".",
 			"since": "2009-05-13T00:00:00",
 			"url": "https://www.mediawiki.org/wiki/Extension:Admin_Links"
@@ -11,7 +12,8 @@
 		{
 			"name": "Header Tabs",
 			"extension": "HeaderTabs",
-			"giturl": "https://phabricator.wikimedia.org/diffusion/EHET/extension-headertabs.git",
+			"giturl": "https://github.com/wikimedia/mediawiki-extensions-HeaderTabs",
+			"require_once_until": "127",
 			"purpose": "The Header Tabs extension transforms top-level MediaWiki headers into tabs using the jQuery UI JavaScript library.",
 			"since": "2008-03-20T00:00:00",
 			"url": "https://www.mediawiki.org/wiki/Extension:Header_Tabs"
