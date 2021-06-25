@@ -78,7 +78,9 @@ class MediaWikiCluster(object):
                 extensionList.extensions.append(ext)
         extByName,duplicates=extensionList.getLookup("name")
         if len(duplicates)>0:
-            print(f"duplicate extensions: {duplicates}")
+            print(f"{len(duplicates)} duplicate extensions: ")
+            for duplicate in duplicates:
+                print(duplicate.name)
         if extensionNameList is not None:
             for extensionName in extensionNameList:
                 if extensionName in extByName:
