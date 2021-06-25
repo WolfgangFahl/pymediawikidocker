@@ -80,7 +80,7 @@ a link to the page also shows up in their "Personal URLs", between "Talk" and "P
             localSettingsLine+=f"\n  {self.localSettings}"
         return localSettingsLine
     
-    def asScript(self,branch="main"):
+    def asScript(self,branch="master"):
         '''
         return me as a shell Script command line list
         

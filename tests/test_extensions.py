@@ -4,7 +4,6 @@ Created on 2021-06-23
 @author: wf
 '''
 import unittest
-from mwdocker.mw import ExtensionList
 from mwdocker.mwcluster import MediaWikiCluster
 
 class TestExtensions(unittest.TestCase):
