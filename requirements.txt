@@ -17,7 +17,7 @@ mysql-connector-python
 # https://pypi.org/project/py-3rdparty-mediawiki/
 py-3rdparty-mediawiki>=0.4.10
 # https://pypi.org/project/pylodstorage/
-pylodstorage>=0.0.29
+pylodstorage>=0.0.33
 # Beautiful Soup HTML parser
 # https://pypi.org/project/beautifulsoup4/
 beautifulsoup4

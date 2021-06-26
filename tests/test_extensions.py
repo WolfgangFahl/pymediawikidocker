@@ -5,7 +5,7 @@ Created on 2021-06-23
 '''
 import unittest
 from mwdocker.mwcluster import MediaWikiCluster
-from mwdocker.mw import ExtensionList
+from mwdocker.mw import ExtensionList, Extension
 
 class TestExtensions(unittest.TestCase):
     '''
@@ -19,6 +19,20 @@ class TestExtensions(unittest.TestCase):
 
     def tearDown(self):
         pass
+    
+    def testExtensionDetailsFromUrl(self):
+        '''
+        test getting details of an extension
+        '''
+        ext=Extension()
+        ext.name="UrlGetParameters"
+        ext.url="https://www.mediawiki.org/wiki/Extension:UrlGetParameters"
+        debug=False
+        ext.getDetailsFromUrl(showHtml=debug)
+        if debug:
+            print(ext)
+        self.assertEqual("https://github.com/wikimedia/mediawiki-extensions-UrlGetParameters",ext.giturl)
+        
 
 
     def testExtensionHandling(self):
@@ -54,15 +68,19 @@ class TestExtensions(unittest.TestCase):
         Option to Extract extension.json / extensionNameList contents from Special:Version 
         '''
         debug=self.debug
-        debug=False
+        #debug=False
         for url in [
             "https://wiki.bitplan.com/index.php/Special:Version",
             "https://www.openresearch.org/wiki/Special:Version"
         ]:
             extList=ExtensionList.fromSpecialVersion(url,showHtml=debug)
             print(f"found {len(extList.extensions)} extensions for {url}")
-            for ext in extList.extensions:
+            for ext in sorted(extList.extensions,key=lambda ext:ext.name):
                 print (ext)
+            for ext in sorted(extList.extensions,key=lambda ext:ext.name):
+                print (ext.asWikiMarkup())
+            print(extList.toJSON())    
+                
 
 
 if __name__ == "__main__":

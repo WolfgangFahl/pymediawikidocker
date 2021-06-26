@@ -4,9 +4,11 @@ Created on 2021-06-23
 @author: wf
 '''
 from lodstorage.jsonable import JSONAble, JSONAbleList
+from lodstorage.lod import LOD
 from datetime import datetime
 from mwdocker.webscrape import WebScrape
 import os
+import urllib
 
 class ExtensionList(JSONAbleList):
     '''
@@ -52,10 +54,8 @@ class ExtensionList(JSONAbleList):
         for exttr in exttrs:
             if showHtml:
                 print (exttr)
-            extNameTag=exttr.find(attrs={"class" : "mw-version-ext-name"})
-            if extNameTag:
-                ext=Extension()
-                ext.url=extNameTag.get("href")
+            ext=Extension.fromSpecialVersionTR(exttr)
+            if ext:
                 extList.extensions.append(ext)
         return extList
         
@@ -94,6 +94,24 @@ a link to the page also shows up in their "Personal URLs", between "Talk" and "P
             "localSettings": "wfLoadExtension( 'AdminLinks' );"
         }]
         return samplesLOD
+    
+    @classmethod
+    def fromSpecialVersionTR(cls,exttr):
+        '''
+        Construct an extension from a beautifl soup TR tag
+        derived from Special:Version
+        '''
+        ext=None
+        extNameTag=exttr.find(attrs={"class" : "mw-version-ext-name"})
+        extPurposeTag=exttr.find(attrs={"class" : "mw-version-ext-description"})
+        if extNameTag:
+            ext=Extension()
+            ext.name=extNameTag.string
+            ext.url=extNameTag.get("href")
+            if extPurposeTag and extPurposeTag.string:
+                ext.purpose=extPurposeTag.string
+            ext.getDetailsFromUrl()
+        return ext
 
     def __init__(self):
         '''
@@ -102,9 +120,43 @@ a link to the page also shows up in their "Personal URLs", between "Talk" and "P
         
     def __str__(self):
         text=""
-        if hasattr(self, "url"):
-            text+=self.url
+        delim=""
+        samples=self.getJsonTypeSamples()
+        for attr in LOD.getFields(samples):
+            if hasattr(self, attr):
+                text+=f"{delim}{attr}={self.__dict__[attr]}"
+                delim="\n"
         return text
+    
+    def getDetailsFromUrl(self,showHtml=False,debug=False):
+        '''
+        get more details from my url
+        '''
+        webscrape=WebScrape()
+        try:
+            soup=webscrape.getSoup(self.url, showHtml=showHtml)
+            for link in soup.findAll('a',attrs={"class" : "external text"}):
+                if "GitHub" == link.string:
+                    self.giturl=link.get('href')
+        except urllib.error.HTTPError as herr:
+            if debug:
+                print(f"HTTPError {str(herr)} for {self.url}")
+        
+    
+    def asWikiMarkup(self):
+        '''
+        return me as wiki Markup
+        '''
+        samples=self.getJsonTypeSamples()
+        nameValues=""
+        for attr in LOD.getFields(samples):        
+            if hasattr(self, attr):
+                nameValues+=f"|{attr}={self.__dict__[attr]}\n"
+        wikison=f"""{{{{Extension
+{nameValues}
+}}}}"""
+        return wikison
+    
     
     def getLocalSettingsLine(self,mwShortVersion:str):
         '''
