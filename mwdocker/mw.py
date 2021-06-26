@@ -34,12 +34,15 @@ class ExtensionList(JSONAbleList):
         return storeFilePrefix
     
     @classmethod
-    def fromSpecialVersion(cls,url:str,showHtml=False):
+    def fromSpecialVersion(cls,url:str,excludes=["skin","editor"],showHtml=False,debug=False):
         '''
         get an extension List from the given url
         
         Args:
-            url: the Special:Version MediaWiki page to read the information from
+            url(str): the Special:Version MediaWiki page to read the information from
+            exclude (list): a list of types of extensions to exclude
+            showHtml(bool): True if the html code should be printed for debugging
+            debug(bool): True if debugging should be active
             
         Returns:
             ExtensionList: an extension list derived from the url
@@ -54,9 +57,14 @@ class ExtensionList(JSONAbleList):
         for exttr in exttrs:
             if showHtml:
                 print (exttr)
-            ext=Extension.fromSpecialVersionTR(exttr)
-            if ext:
-                extList.extensions.append(ext)
+            doExclude=False
+            for exclude in excludes:
+                if f"-{exclude}-" in exttr.get("id"):
+                    doExclude=True
+            if not doExclude:
+                ext=Extension.fromSpecialVersionTR(exttr,debug=debug)
+                if ext:
+                    extList.extensions.append(ext)
         return extList
         
         
@@ -83,6 +91,7 @@ class Extension(JSONAble):
     def getSamples(cls):
         samplesLOD = [{
             "name": "Admin Links",
+            "extension": "AdminLinks",
             "url": "https://www.mediawiki.org/wiki/Extension:Admin_Links",
             "purpose": """Admin Links is an extension to MediaWiki that defines a special page, "Special:AdminLinks",
 that holds links meant to be helpful for wiki administrators;
@@ -91,15 +100,19 @@ All users can view this page; however, for those with the 'adminlinks' permissio
 a link to the page also shows up in their "Personal URLs", between "Talk" and "Preferences".""",
             "since": datetime.fromisoformat("2009-05-13"),
             "giturl":"https://gerrit.wikimedia.org/r/mediawiki/extensions/AdminLinks.git",
-            "localSettings": "wfLoadExtension( 'AdminLinks' );"
+            "localSettings": ""
         }]
         return samplesLOD
     
     @classmethod
-    def fromSpecialVersionTR(cls,exttr):
+    def fromSpecialVersionTR(cls,exttr,debug=False):
         '''
         Construct an extension from a beautifl soup TR tag
         derived from Special:Version
+        
+        Args:
+            exttr: the beautiful soup TR tag
+            debug(bool): if True show debugging information
         '''
         ext=None
         extNameTag=exttr.find(attrs={"class" : "mw-version-ext-name"})
@@ -107,10 +120,11 @@ a link to the page also shows up in their "Personal URLs", between "Talk" and "P
         if extNameTag:
             ext=Extension()
             ext.name=extNameTag.string
+            ext.extension=ext.name.replace(" ","")
             ext.url=extNameTag.get("href")
             if extPurposeTag and extPurposeTag.string:
                 ext.purpose=extPurposeTag.string
-            ext.getDetailsFromUrl()
+            ext.getDetailsFromUrl(debug=debug)
         return ext
 
     def __init__(self):

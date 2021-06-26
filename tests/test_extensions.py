@@ -73,11 +73,12 @@ class TestExtensions(unittest.TestCase):
             "https://wiki.bitplan.com/index.php/Special:Version",
             "https://www.openresearch.org/wiki/Special:Version"
         ]:
-            extList=ExtensionList.fromSpecialVersion(url,showHtml=debug)
+            extList=ExtensionList.fromSpecialVersion(url,showHtml=False,debug=True)
+            extList.extensions=sorted(extList.extensions,key=lambda ext:ext.name)
             print(f"found {len(extList.extensions)} extensions for {url}")
-            for ext in sorted(extList.extensions,key=lambda ext:ext.name):
+            for ext in extList.extensions:
                 print (ext)
-            for ext in sorted(extList.extensions,key=lambda ext:ext.name):
+            for ext in extList.extensions:
                 print (ext.asWikiMarkup())
             print(extList.toJSON())    
                 
