@@ -205,5 +205,8 @@ a link to the page also shows up in their "Personal URLs", between "Talk" and "P
             else:    
                 return (f"git clone {self.giturl} {self.extension}")
         else:
-            return "# no installation script command specified"
+            text = "# no installation script command specified"
+            if hasattr(self,"composer"):
+                text+=f"\n# installed with composer require {self.composer}"
+            return text
         

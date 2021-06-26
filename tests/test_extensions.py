@@ -34,7 +34,6 @@ class TestExtensions(unittest.TestCase):
         self.assertEqual("https://github.com/wikimedia/mediawiki-extensions-UrlGetParameters",ext.giturl)
         
 
-
     def testExtensionHandling(self):
         '''
         test extension handling
@@ -54,12 +53,27 @@ class TestExtensions(unittest.TestCase):
         extensionJsonFile="/tmp/extensions4Mw.json"
         with open(extensionJsonFile, "w") as jsonFile:
                 jsonFile.write(jsonStr)
-        extMap=MediaWikiCluster.getExtensionMap(["Admin Links","Variables"],extensionJsonFile)
-        adminLinks=extMap["Admin Links"]
-        self.assertEqual("https://www.mediawiki.org/wiki/Extension:Admin_Links",adminLinks.url)
-        if self.debug:
-            print (adminLinks.asScript())
-        self.assertEqual(adminLinks.asScript(),"git clone https://github.com/wikimedia/mediawiki-extensions-AdminLinks --single-branch --branch master AdminLinks")
+        extensionNames=["Admin Links","BreadCrumbs2","Variables","ImageMap"]
+        extMap=MediaWikiCluster.getExtensionMap(extensionNames,extensionJsonFile)
+        mwShortVersion="131"
+        expectedUrl={
+            "Admin Links": "https://www.mediawiki.org/wiki/Extension:Admin_Links",
+            "BreadCrumbs2": "https://www.mediawiki.org/wiki/Extension:BreadCrumbs2"
+        }
+        expectedScript={
+            "Admin Links":"git clone https://github.com/wikimedia/mediawiki-extensions-AdminLinks --single-branch --branch master AdminLinks"
+        }
+        for extensionName in extensionNames:
+            ext=extMap[extensionName]
+            if self.debug:
+                print (ext)
+                print (ext.asScript())
+                localSettingsLine=ext.getLocalSettingsLine(mwShortVersion)
+                print(localSettingsLine)
+            if extensionName in expectedUrl:
+                self.assertEqual(expectedUrl[extensionName],ext.url)
+            if extensionName in expectedScript:
+                self.assertEqual(expectedScript[extensionName],ext.asScript())
         pass
     
     def testSpecialVersionHandling(self):

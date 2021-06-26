@@ -9,40 +9,41 @@
 			"since": "2009-05-13T00:00:00",
 			"url": "https://www.mediawiki.org/wiki/Extension:Admin_Links"
 		},
-		 {
-            "extension": "BreadCrumbs2",
-            "giturl": "https://github.com/wikimedia/mediawiki-extensions-BreadCrumbs2",
-            "name": "BreadCrumbs2",
-            "purpose": "Implements a breadcrumb navigation based on categories",
-            "url": "https://www.mediawiki.org/wiki/Extension:BreadCrumbs2"
-        },
-        {
-            "extension": "Cargo",
-            "name": "Cargo",
-            "purpose": "Storage and querying of template data",
-            "giturl": "https://github.com/wikimedia/mediawiki-extensions-Cargo",
-            "url": "https://www.mediawiki.org/wiki/Extension:Cargo"
-        },
-        {
-            "extension": "CategoryTree",
-            "giturl": "https://github.com/wikimedia/mediawiki-extensions-CategoryTree",
-            "name": "CategoryTree",
-            "url": "https://www.mediawiki.org/wiki/Extension:CategoryTree"
-        },
-        {
-            "extension": "ConfirmUserAccounts",
-            "giturl": "https://github.com/wikimedia/mediawiki-extensions-ConfirmAccount",
-            "name": "Confirm User Accounts",
-            "purpose": "Gives bureaucrats the ability to confirm account requests",
-            "url": "https://www.mediawiki.org/wiki/Extension:ConfirmAccount"
-        },
-        {
-            "extension": "ConfirmEdit",
-            "giturl": "https://github.com/wikimedia/mediawiki-extensions-ConfirmEdit",
-            "name": "ConfirmEdit",
-            "purpose": "Provides CAPTCHA techniques to protect against spam and password-guessing",
-            "url": "https://www.mediawiki.org/wiki/Extension:ConfirmEdit"
-        },
+		{
+			"name": "BreadCrumbs2",
+			"extension": "BreadCrumbs2",
+			"giturl": "https://github.com/wikimedia/mediawiki-extensions-BreadCrumbs2",
+			"require_once_until": "131",
+			"purpose": "Implements a breadcrumb navigation based on categories",
+			"url": "https://www.mediawiki.org/wiki/Extension:BreadCrumbs2"
+		},
+		{
+			"extension": "Cargo",
+			"name": "Cargo",
+			"purpose": "Storage and querying of template data",
+			"giturl": "https://github.com/wikimedia/mediawiki-extensions-Cargo",
+			"url": "https://www.mediawiki.org/wiki/Extension:Cargo"
+		},
+		{
+			"extension": "CategoryTree",
+			"giturl": "https://github.com/wikimedia/mediawiki-extensions-CategoryTree",
+			"name": "CategoryTree",
+			"url": "https://www.mediawiki.org/wiki/Extension:CategoryTree"
+		},
+		{
+			"extension": "ConfirmUserAccounts",
+			"giturl": "https://github.com/wikimedia/mediawiki-extensions-ConfirmAccount",
+			"name": "Confirm User Accounts",
+			"purpose": "Gives bureaucrats the ability to confirm account requests",
+			"url": "https://www.mediawiki.org/wiki/Extension:ConfirmAccount"
+		},
+		{
+			"extension": "ConfirmEdit",
+			"giturl": "https://github.com/wikimedia/mediawiki-extensions-ConfirmEdit",
+			"name": "ConfirmEdit",
+			"purpose": "Provides CAPTCHA techniques to protect against spam and password-guessing",
+			"url": "https://www.mediawiki.org/wiki/Extension:ConfirmEdit"
+		},
 		{
 			"name": "Data Transfer",
 			"extension": "DataTransfer",
@@ -61,12 +62,19 @@
 			"url": "https://www.mediawiki.org/wiki/Extension:Header_Tabs"
 		},
 		{
-            "extension": "InputBox",
-            "giturl": "https://github.com/wikimedia/mediawiki-extensions-InputBox",
-            "name": "InputBox",
-            "purpose": "Allow inclusion of predefined HTML forms",
-            "url": "https://www.mediawiki.org/wiki/Extension:InputBox"
-        },
+			"name": "ImageMap",
+			"extension": "ImageMap",
+			"giturl": "https://github.com/wikimedia/mediawiki-extensions-ImageMap",
+			"url": "https://www.mediawiki.org/wiki/Extension:ImageMap",
+			"localSettings": "$wgEnableUploads = true;\r\n$wgUseImageMagick = true;\r\n$wgImageMagickConvertCommand = \"\/usr\/bin\/convert\";"
+		},
+		{
+			"extension": "InputBox",
+			"giturl": "https://github.com/wikimedia/mediawiki-extensions-InputBox",
+			"name": "InputBox",
+			"purpose": "Allow inclusion of predefined HTML forms",
+			"url": "https://www.mediawiki.org/wiki/Extension:InputBox"
+		},
 		{
 			"name": "MagicNoCache",
 			"extension": "MagicNoCache",
