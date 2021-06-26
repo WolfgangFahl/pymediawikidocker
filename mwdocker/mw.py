@@ -5,6 +5,7 @@ Created on 2021-06-23
 '''
 from lodstorage.jsonable import JSONAble, JSONAbleList
 from datetime import datetime
+from mwdocker.webscrape import WebScrape
 import os
 
 class ExtensionList(JSONAbleList):
@@ -12,14 +13,51 @@ class ExtensionList(JSONAbleList):
     represents a list of MediaWiki extensions
     '''
     def __init__(self):
+        '''
+        constructor
+        '''
         super(ExtensionList, self).__init__('extensions', Extension)
     
     @staticmethod
     def storeFilePrefix():
+        '''
+        get my storeFilePrefix
+        
+        Returns:
+            str: the path to where my stored files (e.g. JSON) should be kept
+        '''
         scriptdir=os.path.dirname(os.path.realpath(__file__))
         resourcePath=os.path.realpath(f"{scriptdir}/resources")
         storeFilePrefix=f"{resourcePath}/extensions"
         return storeFilePrefix
+    
+    @classmethod
+    def fromSpecialVersion(cls,url:str,showHtml=False):
+        '''
+        get an extension List from the given url
+        
+        Args:
+            url: the Special:Version MediaWiki page to read the information from
+            
+        Returns:
+            ExtensionList: an extension list derived from the url
+        '''
+        webscrape=WebScrape()
+        soup=webscrape.getSoup(url, showHtml=showHtml)
+        
+        # search for
+        # <tr class="mw-version-ext" id="mw-version-ext-media-PDF_Handler">
+        exttrs=soup.findAll(attrs={"class" : "mw-version-ext"})
+        extList=ExtensionList()
+        for exttr in exttrs:
+            if showHtml:
+                print (exttr)
+            extNameTag=exttr.find(attrs={"class" : "mw-version-ext-name"})
+            ext=Extension()
+            ext.url=extNameTag.get("href")
+            extList.extensions.append(ext)
+        return extList
+        
         
     @classmethod 
     def restore(cls):
@@ -61,6 +99,12 @@ a link to the page also shows up in their "Personal URLs", between "Talk" and "P
         Constructor
         '''
         
+    def __str__(self):
+        text=""
+        if hasattr(self, "url"):
+            text+=self.url
+        return text
+    
     def getLocalSettingsLine(self,mwShortVersion:str):
         '''
         get my local settings line

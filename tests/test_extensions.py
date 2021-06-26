@@ -5,6 +5,7 @@ Created on 2021-06-23
 '''
 import unittest
 from mwdocker.mwcluster import MediaWikiCluster
+from mwdocker.mw import ExtensionList
 
 class TestExtensions(unittest.TestCase):
     '''
@@ -46,6 +47,19 @@ class TestExtensions(unittest.TestCase):
             print (adminLinks.asScript())
         self.assertEqual(adminLinks.asScript(),"git clone https://github.com/wikimedia/mediawiki-extensions-AdminLinks --single-branch --branch master AdminLinks")
         pass
+    
+    def testSpecialVersionHandling(self):
+        '''
+        https://github.com/WolfgangFahl/pymediawikidocker/issues/16
+        Option to Extract extension.json / extensionNameList contents from Special:Version 
+        '''
+        url="https://wiki.bitplan.com/index.php/Special:Version"
+        debug=self.debug
+        debug=False
+        extList=ExtensionList.fromSpecialVersion(url,showHtml=debug)
+        print(f"found {len(extList.extensions)} extensions")
+        for ext in extList.extensions:
+            print (ext)
 
 
 if __name__ == "__main__":
