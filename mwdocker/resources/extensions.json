@@ -34,7 +34,6 @@
 			"extension": "ConfirmUserAccounts",
 			"giturl": "https://github.com/wikimedia/mediawiki-extensions-ConfirmAccount",
 			"name": "Confirm User Accounts",
-			"require_once_until": "131",
 			"purpose": "Gives bureaucrats the ability to confirm account requests",
 			"url": "https://www.mediawiki.org/wiki/Extension:ConfirmAccount"
 		},
@@ -112,6 +111,13 @@
 			"purpose": "(known before 2016 as Semantic Forms) is an extension to MediaWiki that allows users to add, edit and query data using forms",
 			"since": "2016-09-07T00:00:00",
 			"url": "https://www.mediawiki.org/wiki/Extension:Page_Forms"
+		},
+		{
+			"name": "ParserFunctions",
+			"extension": "ParserFunctions",
+			"giturl": "https://github.com/wikimedia/mediawiki-extensions-ParserFunctions",
+			"purpose": "Enhance parser with logical functions",
+			"url": "https://www.mediawiki.org/wiki/Extension:ParserFunctions"
 		},
 		{
 			"name": "PDFEmbed",
