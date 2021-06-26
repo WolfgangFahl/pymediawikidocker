@@ -142,7 +142,8 @@
 			"extension": "SemanticCite",
 			"name": "Semantic Cite",
 			"url": "https://github.com/SemanticMediaWiki/SemanticCite/",
-			"purpose": "Semantic Cite (a.k.a. SCI) is a Semantic Mediawiki extension that provides a simple way of organizing citation resources with the help of semantic annotations."
+			"purpose": "Semantic Cite (a.k.a. SCI) is a Semantic Mediawiki extension that provides a simple way of organizing citation resources with the help of semantic annotations.",
+			"composer": "\"mediawiki\/semantic-cite\": \"~2.1\""
 		},
 		{
 			"name": "Semantic Result Formats",
