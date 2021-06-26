@@ -107,12 +107,12 @@
 			"url": "https://www.mediawiki.org/wiki/Extension:Page_Forms"
 		},
 		{
-            "name": "PDFEmbed",
-            "extension": "PDFEmbed",
-            "giturl": "https://github.com/WolfgangFahl/PDFEmbed",
-            "purpose": "Media handler extension for PDF files.",
-            "url": "https://www.mediawiki.org/wiki/Extension:PDFEmbed"
-        },
+			"name": "PDFEmbed",
+			"extension": "PDFEmbed",
+			"giturl": "https://github.com/WolfgangFahl/PDFEmbed",
+			"purpose": "Media handler extension for PDF files.",
+			"url": "https://www.mediawiki.org/wiki/Extension:PDFEmbed"
+		},
 		{
 			"name": "Semantic Result Formats",
 			"extension": "SemanticResultFormats",
@@ -126,6 +126,19 @@
 			"purpose": "syntax highlighting of diverse programming languages",
 			"since": "2007-04-03T00:00:00",
 			"url": "https://www.mediawiki.org/wiki/Extension:SyntaxHighlight"
+		},
+		{
+			"name": "TitleBlacklist",
+			"extension": "TitleBlacklist",
+			"giturl": "https://github.com/wikimedia/mediawiki-extensions-TitleBlacklist",
+			"url": "https://www.mediawiki.org/wiki/Extension:TitleBlacklist"
+		},
+		{
+			"name": "UrlGetParameters",
+			"extension": "UrlGetParameters",
+			"giturl": "https://github.com/wikimedia/mediawiki-extensions-UrlGetParameters",
+			"purpose": "Allows to use and/or display the \"GET\" parameters of the URL on a wiki page",
+			"url": "https://www.mediawiki.org/wiki/Extension:UrlGetParameters"
 		},
 		{
 			"name": "Variables",
