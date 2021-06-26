@@ -34,6 +34,7 @@
 			"extension": "ConfirmUserAccounts",
 			"giturl": "https://github.com/wikimedia/mediawiki-extensions-ConfirmAccount",
 			"name": "Confirm User Accounts",
+			"require_once_until": "131",
 			"purpose": "Gives bureaucrats the ability to confirm account requests",
 			"url": "https://www.mediawiki.org/wiki/Extension:ConfirmAccount"
 		},
@@ -96,7 +97,13 @@
 			"extension": "Maps",
 			"purpose": "Enables embedding of dynamic maps into wiki pages, geocoding of addresses and other geographical operations",
 			"url": "https://github.com/JeroenDeDauw/Maps/blob/master/README.md#maps",
-			"composer": "\"mediawiki\/maps:~7.0\""
+			"composer": "\"mediawiki\/maps\": \"~7.0\""
+		},
+		{
+			"name": "Nuke",
+			"extension": "Nuke",
+			"url": "https://www.mediawiki.org/wiki/Extension:Nuke",
+			"purpose": "The Nuke extension makes it possible for sysops to mass delete pages. "
 		},
 		{
 			"name": "Page Forms",
@@ -112,6 +119,18 @@
 			"giturl": "https://github.com/WolfgangFahl/PDFEmbed",
 			"purpose": "Media handler extension for PDF files.",
 			"url": "https://www.mediawiki.org/wiki/Extension:PDFEmbed"
+		},
+		{
+			"name": "Renameuser",
+			"extension": "Renameuser",
+			"url": "https://www.mediawiki.org/wiki/Extension:Renameuser",
+			"purpose": "Adds a special page to rename a user (need renameuser right)"
+		},
+		{
+			"name": "Replace Text",
+			"extension": "ReplaceText",
+			"url": "https://www.mediawiki.org/wiki/Extension:ReplaceText",
+			"purpose": "Provides a special page to allow administrators to do a global string find-and-replace on all the content pages of a wiki"
 		},
 		{
 			"name": "Semantic Result Formats",
