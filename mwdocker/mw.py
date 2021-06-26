@@ -150,7 +150,7 @@ a link to the page also shows up in their "Personal URLs", between "Talk" and "P
         try:
             soup=webscrape.getSoup(self.url, showHtml=showHtml)
             for link in soup.findAll('a',attrs={"class" : "external text"}):
-                if "GitHub" == link.string:
+                if ("GitHub" == link.string) or ("git repository URL") == link.string:
                     self.giturl=link.get('href')
         except urllib.error.HTTPError as herr:
             if debug:

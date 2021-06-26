@@ -84,8 +84,9 @@ class TestExtensions(unittest.TestCase):
         debug=self.debug
         #debug=False
         for url in [
-            "https://wiki.bitplan.com/index.php/Special:Version",
-            "https://www.openresearch.org/wiki/Special:Version"
+            "https://www.openresearch.org/wiki/Special:Version",
+            "https://wiki.bitplan.com/index.php/Special:Version"
+            
         ]:
             extList=ExtensionList.fromSpecialVersion(url,showHtml=False,debug=True)
             extList.extensions=sorted(extList.extensions,key=lambda ext:ext.name)

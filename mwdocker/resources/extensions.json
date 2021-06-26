@@ -139,11 +139,29 @@
 			"purpose": "Provides a special page to allow administrators to do a global string find-and-replace on all the content pages of a wiki"
 		},
 		{
+			"extension": "SemanticCite",
+			"name": "Semantic Cite",
+			"url": "https://github.com/SemanticMediaWiki/SemanticCite/",
+			"purpose": "Semantic Cite (a.k.a. SCI) is a Semantic Mediawiki extension that provides a simple way of organizing citation resources with the help of semantic annotations."
+		},
+		{
 			"name": "Semantic Result Formats",
 			"extension": "SemanticResultFormats",
 			"composer": "\"mediawiki\/semantic-result-formats\": \"~3.1\"",
 			"purpose": "Additional result formats for Semantic MediaWiki queries",
 			"url": "https://www.semantic-mediawiki.org/wiki/Extension:Semantic_Result_Formats"
+		},
+		{
+			"extension": "SimpleMathJax",
+			"name": "SimpleMathJax",
+			"url": "https://www.mediawiki.org/wiki/Extension:SimpleMathJax"
+		},
+		{
+			"extension": "SparqlResultFormat",
+			"name": "SparqlResultFormat",
+			"giturl": "https://github.com/imolainformatica/SparqlResultFormat",
+			"purpose": "Enable the execution of sparql query to different endpoint and produce various output format.",
+			"url": "https://www.mediawiki.org/wiki/Extension:SparqlResultFormat"
 		},
 		{
 			"name": "SyntaxHighlight",
@@ -166,6 +184,13 @@
 			"url": "https://www.mediawiki.org/wiki/Extension:UrlGetParameters"
 		},
 		{
+			"name": "UserFunctions",
+			"extension": "UserFunctions",
+			"giturl": "https://github.com/wikimedia/mediawiki-extensions-UserFunctions",
+			"purpose": "Enhance parser with user functions",
+			"url": "https://www.mediawiki.org/wiki/Extension:UserFunctions"
+		},
+		{
 			"name": "Variables",
 			"extension": "Variables",
 			"giturl": "https://github.com/wikimedia/mediawiki-extensions-Variables",
@@ -173,6 +198,13 @@
 			"purpose": "The Variables extension allows you to define a variable on a page, use it later in that same page or included templates",
 			"since": "2011-11-13T00:00:00",
 			"url": "https://www.mediawiki.org/wiki/Extension:Variables"
+		},
+		{
+			"name": "YouTube",
+			"extension": "YouTube",
+			"giturl": "https://github.com/wikimedia/mediawiki-extensions-YouTube",
+			"purpose": "Embeds YouTube movies, Archive.org audio and video, WeGame and Gametrailers video, and Tangler forum",
+			"url": "https://www.mediawiki.org/wiki/Extension:YouTube"
 		}
 	]
 }
