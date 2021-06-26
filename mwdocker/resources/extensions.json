@@ -31,9 +31,10 @@
 			"url": "https://www.mediawiki.org/wiki/Extension:CategoryTree"
 		},
 		{
-			"extension": "ConfirmUserAccounts",
+			"extension": "ConfirmAccount",
 			"giturl": "https://github.com/wikimedia/mediawiki-extensions-ConfirmAccount",
-			"name": "Confirm User Accounts",
+			"name": "ConfirmAccount",
+			"require_once_until": "134",
 			"purpose": "Gives bureaucrats the ability to confirm account requests",
 			"url": "https://www.mediawiki.org/wiki/Extension:ConfirmAccount"
 		},
