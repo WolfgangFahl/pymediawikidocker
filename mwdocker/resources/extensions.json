@@ -76,6 +76,13 @@
 			"url": "https://www.mediawiki.org/wiki/Extension:InputBox"
 		},
 		{
+			"name": "Language Selector",
+			"extension": "LanguageSelector",
+			"giturl": "https://github.com/wikimedia/mediawiki-extensions-LanguageSelector",
+			"purpose": "Language selector on every page, also for visitors",
+			"url": "https://mediawiki.org/wiki/Extension:LanguageSelector"
+		},
+		{
 			"name": "MagicNoCache",
 			"extension": "MagicNoCache",
 			"giturl": "https://github.com/wikimedia/mediawiki-extensions-MagicNoCache",
@@ -83,6 +90,35 @@
 			"purpose": "The MagicNoCache extension creates a new magic word __NOCACHE__ and disables the cache for any page in which it finds it. Thus it makes sure that specific pages never get cached as they get updated extremely frequently",
 			"since": "2012-01-01T00:00:00",
 			"url": "https://www.mediawiki.org/wiki/Extension:MagicNoCache"
+		},
+		{
+			"name": "Maps7",
+			"extension": "Maps",
+			"purpose": "Enables embedding of dynamic maps into wiki pages, geocoding of addresses and other geographical operations",
+			"url": "https://github.com/JeroenDeDauw/Maps/blob/master/README.md#maps",
+			"composer": "\"mediawiki\/maps:~7.0\""
+		},
+		{
+			"name": "Page Forms",
+			"extension": "PageForms",
+			"composer": "\"mediawiki\/page-forms\": \"^5.2.1\"",
+			"purpose": "(known before 2016 as Semantic Forms) is an extension to MediaWiki that allows users to add, edit and query data using forms",
+			"since": "2016-09-07T00:00:00",
+			"url": "https://www.mediawiki.org/wiki/Extension:Page_Forms"
+		},
+		{
+            "name": "PDFEmbed",
+            "extension": "PDFEmbed",
+            "giturl": "https://github.com/WolfgangFahl/PDFEmbed",
+            "purpose": "Media handler extension for PDF files.",
+            "url": "https://www.mediawiki.org/wiki/Extension:PDFEmbed"
+        },
+		{
+			"name": "Semantic Result Formats",
+			"extension": "SemanticResultFormats",
+			"composer": "\"mediawiki\/semantic-result-formats\": \"~3.1\"",
+			"purpose": "Additional result formats for Semantic MediaWiki queries",
+			"url": "https://www.semantic-mediawiki.org/wiki/Extension:Semantic_Result_Formats"
 		},
 		{
 			"name": "SyntaxHighlight",
@@ -99,21 +135,6 @@
 			"purpose": "The Variables extension allows you to define a variable on a page, use it later in that same page or included templates",
 			"since": "2011-11-13T00:00:00",
 			"url": "https://www.mediawiki.org/wiki/Extension:Variables"
-		},
-		{
-			"name": "Semantic Result Formats",
-			"extension": "SemanticResultFormats",
-			"composer": "\"mediawiki\/semantic-result-formats\": \"~3.1\"",
-			"purpose": "Additional result formats for Semantic MediaWiki queries",
-			"url": "https://www.semantic-mediawiki.org/wiki/Extension:Semantic_Result_Formats"
-		},
-		{
-			"name": "Page Forms",
-			"extension": "PageForms",
-			"composer": "\"mediawiki\/page-forms\": \"^5.2.1\"",
-			"purpose": "(known before 2016 as Semantic Forms) is an extension to MediaWiki that allows users to add, edit and query data using forms",
-			"since": "2016-09-07T00:00:00",
-			"url": "https://www.mediawiki.org/wiki/Extension:Page_Forms"
 		}
 	]
 }

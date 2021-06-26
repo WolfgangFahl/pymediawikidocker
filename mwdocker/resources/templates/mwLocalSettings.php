@@ -9,3 +9,6 @@ enableSemantics();
 # {{ extension.name }}
 # {{ extension.url }}
 {{ extension.getLocalSettingsLine(mwShortVersion) }}{% endfor %}
+# modified defaults
+# https://www.mediawiki.org/wiki/Manual:$wgEnableUploads
+$wgEnableUploads = true;
