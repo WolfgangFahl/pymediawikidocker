@@ -182,6 +182,7 @@
 			"name": "UrlGetParameters",
 			"extension": "UrlGetParameters",
 			"giturl": "https://github.com/wikimedia/mediawiki-extensions-UrlGetParameters",
+			"require_once_until": "131",
 			"purpose": "Allows to use and/or display the \"GET\" parameters of the URL on a wiki page",
 			"url": "https://www.mediawiki.org/wiki/Extension:UrlGetParameters"
 		},
