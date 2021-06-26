@@ -53,9 +53,10 @@ class ExtensionList(JSONAbleList):
             if showHtml:
                 print (exttr)
             extNameTag=exttr.find(attrs={"class" : "mw-version-ext-name"})
-            ext=Extension()
-            ext.url=extNameTag.get("href")
-            extList.extensions.append(ext)
+            if extNameTag:
+                ext=Extension()
+                ext.url=extNameTag.get("href")
+                extList.extensions.append(ext)
         return extList
         
         

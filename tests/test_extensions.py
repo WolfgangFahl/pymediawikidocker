@@ -53,13 +53,16 @@ class TestExtensions(unittest.TestCase):
         https://github.com/WolfgangFahl/pymediawikidocker/issues/16
         Option to Extract extension.json / extensionNameList contents from Special:Version 
         '''
-        url="https://wiki.bitplan.com/index.php/Special:Version"
         debug=self.debug
         debug=False
-        extList=ExtensionList.fromSpecialVersion(url,showHtml=debug)
-        print(f"found {len(extList.extensions)} extensions")
-        for ext in extList.extensions:
-            print (ext)
+        for url in [
+            "https://wiki.bitplan.com/index.php/Special:Version",
+            "https://www.openresearch.org/wiki/Special:Version"
+        ]:
+            extList=ExtensionList.fromSpecialVersion(url,showHtml=debug)
+            print(f"found {len(extList.extensions)} extensions for {url}")
+            for ext in extList.extensions:
+                print (ext)
 
 
 if __name__ == "__main__":
