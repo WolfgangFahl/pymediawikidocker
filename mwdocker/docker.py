@@ -79,6 +79,7 @@ class DockerApplication(object):
         self.port=port
         self.url=f"http://{self.hostname}:{self.port}"
         self.sqlPort=sqlPort
+        self.logo=logo
         # debug and verbosity
         self.debug=debug
         self.verbose=verbose
