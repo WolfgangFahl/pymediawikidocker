@@ -38,7 +38,7 @@ class DockerApplication(object):
     MediaWiki Docker image
     '''
 
-    def __init__(self,user:str,password:str,name="mediawiki",version="1.35.2",extensionMap:dict={},wikiId:str=None,mariaDBVersion="10.5",smwVersion=None,port=9080,sqlPort=9306,mySQLRootPassword=None,debug=False,verbose=True):
+    def __init__(self,user:str,password:str,name="mediawiki",version="1.35.2",extensionMap:dict={},wikiId:str=None,mariaDBVersion="10.5",smwVersion=None,logo=None,port=9080,sqlPort=9306,mySQLRootPassword=None,debug=False,verbose=True):
         '''
         Constructor
         
@@ -54,6 +54,7 @@ class DockerApplication(object):
             mariaDBVersion(str): the Maria DB version to install as the SQL database provider for the docker applications
             smwVersion(str): Semantic MediaWiki Version to be used (if any)
             mySQLRootPassword(str): the mySQL root password to use for the database containers - if None a random password is generated
+            logo(str): URL of the logo to be used
             debug(bool): if True debugging is enabled
             verbose(bool): if True output is verbose
         '''
@@ -359,7 +360,7 @@ class DockerApplication(object):
         '''
         self.generate("mwDockerfile",f"{self.dockerPath}/Dockerfile")
         self.generate("mwCompose.yml",f"{self.dockerPath}/docker-compose.yml",mySQLRootPassword=self.mySQLRootPassword,mySQLPassword=self.mySQLPassword)
-        self.generate(f"mwLocalSettings{self.shortVersion}.php",f"{self.dockerPath}/LocalSettings.php",mySQLPassword=self.mySQLPassword,hostname=self.hostname,extensions=self.extensionMap.values(),mwShortVersion=self.shortVersion)
+        self.generate(f"mwLocalSettings{self.shortVersion}.php",f"{self.dockerPath}/LocalSettings.php",mySQLPassword=self.mySQLPassword,hostname=self.hostname,extensions=self.extensionMap.values(),mwShortVersion=self.shortVersion,logo=self.logo)
         self.generate(f"mwWiki{self.shortVersion}.sql",f"{self.dockerPath}/wiki.sql")
         self.generate(f"addSysopUser.sh",f"{self.dockerPath}/addSysopUser.sh",user=self.user,password=self.password)
         self.generate(f"installExtensions.sh",f"{self.dockerPath}/installExtensions.sh",extensions=self.extensionMap.values(),branch=self.branch)
