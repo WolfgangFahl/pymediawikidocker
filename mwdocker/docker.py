@@ -366,7 +366,7 @@ class DockerApplication(object):
         self.generate(f"addSysopUser.sh",f"{self.dockerPath}/addSysopUser.sh",user=self.user,password=self.password)
         self.generate(f"installExtensions.sh",f"{self.dockerPath}/installExtensions.sh",extensions=self.extensionMap.values(),branch=self.branch)
         self.genComposerRequire(f"{self.dockerPath}/composer.local.json")
-        for fileName in ["initdb.sh","update.sh","phpinfo.php"]:
+        for fileName in ["initdb.sh","update.sh","phpinfo.php","upload.ini"]:
             self.generate(f"{fileName}",f"{self.dockerPath}/{fileName}")
         
         

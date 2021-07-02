@@ -49,6 +49,9 @@ RUN composer update --no-dev
 # copy the LocalSettings
 COPY LocalSettings.php /var/www/html
 
+# COPY upload.ini
+COPY upload.ini /usr/local/etc/php/conf.d
+
 # copy phpinfo.php
 COPY phpinfo.php /var/www/html
 
