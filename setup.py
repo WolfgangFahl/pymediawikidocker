@@ -11,7 +11,7 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='pymediawikidocker',
-    version='0.1.3',
+    version='0.1.4',
 
     packages=['mwdocker',],
     
@@ -39,6 +39,7 @@ setup(
     license='Apache License',
     description='Python controlled mediawiki docker application cluster installation',
     install_requires=[
+          'beautifulsoup4',
           'Jinja2',
           'python-on-whales',
           'six',
