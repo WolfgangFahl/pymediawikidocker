@@ -11,7 +11,7 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='pymediawikidocker',
-    version='0.1.2',
+    version='0.1.3',
 
     packages=['mwdocker',],
     
@@ -43,7 +43,8 @@ setup(
           'python-on-whales',
           'six',
           'mysql-connector-python',
-          'py-3rdparty-mediawiki'
+          'py-3rdparty-mediawiki',
+          'pylodstorage'
     ],
     classifiers=[
             'Programming Language :: Python',
