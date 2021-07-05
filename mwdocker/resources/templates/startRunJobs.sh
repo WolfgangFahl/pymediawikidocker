@@ -8,4 +8,4 @@ then
 fi
 cd /var/www/html
 
-php maintenance/runJobs.php >> /var/log/mediawiki/runJobs.log 2>&1
+/usr/local/bin/php maintenance/runJobs.php >> /var/log/mediawiki/runJobs.log 2>&1
