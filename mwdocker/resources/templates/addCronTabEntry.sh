@@ -4,3 +4,4 @@
 # run startRunJobs.sh every minute
 mkdir -p /var/log/mediawiki
 (crontab -l 2>/dev/null; echo "*/1 * * * * /root/startRunJobs.sh") | crontab -
+service cron start

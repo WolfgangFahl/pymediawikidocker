@@ -168,6 +168,12 @@ class DockerApplication(object):
         install all extensions
         '''
         self.execute("/tmp/installExtensions.sh")
+        
+    def startUp(self):
+        '''
+        run startUp scripts
+        '''
+        self.execute("/root/startRunJobs.sh")
             
             
     def createWikiUser(self,store:bool=False):
