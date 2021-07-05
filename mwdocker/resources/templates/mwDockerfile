@@ -16,6 +16,7 @@ RUN apt-get -y update && \
     git \
     graphviz \
     imagemagick \
+    props \
     ssh-client \
     vim \
     unzip \
