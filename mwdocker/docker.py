@@ -173,7 +173,7 @@ class DockerApplication(object):
         '''
         run startUp scripts
         '''
-        self.execute("/root/startRunJobs.sh")
+        self.execute("/root/addCronTabEntry.sh")
             
             
     def createWikiUser(self,store:bool=False):
