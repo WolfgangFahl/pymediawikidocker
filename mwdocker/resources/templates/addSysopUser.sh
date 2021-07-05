@@ -4,9 +4,9 @@
 cd /var/www/html
 cAP=maintenance/createAndPromote.php
 php $cAP --force --sysop "{{user}}" "{{password}}"
-php $cAP --bureaucrat --interface-admin
+php $cAP --bureaucrat --interface-admin "{{user}}"
 grep enableSemantics LocalSettings.php > /dev/null
 if [ $? -eq 0 ]
 then 
-  php $caP --custom-groups smwAdminstrator 
+  php $cAP --custom-groups smwAdminstrator "{{user}}"
 fi
