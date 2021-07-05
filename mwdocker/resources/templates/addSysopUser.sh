@@ -8,5 +8,5 @@ php $cAP --force --bureaucrat --interface-admin "{{user}}"
 grep enableSemantics LocalSettings.php > /dev/null
 if [ $? -eq 0 ]
 then 
-  php $cAP --force --custom-groups smwAdminstrator "{{user}}"
+  php $cAP --force --custom-groups smwAdministrator "{{user}}"
 fi
