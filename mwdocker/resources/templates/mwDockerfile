@@ -11,6 +11,7 @@ RUN apt-get -y update && \
     apt-get -y --no-install-recommends --fix-missing install \
     mariadb-client \
     inetutils-ping \
+    cron \
     curl \
     git \
     graphviz \
@@ -69,6 +70,9 @@ COPY update.sh /tmp
 
 # copy the addSysopUser.sh script
 COPY addSysopUser.sh /tmp
+
+#copy the startRunJobs.sh script
+COPY startRunJobs.sh /root
 
 # make the scripts executable
 RUN chmod +x /tmp/initdb.sh /tmp/update.sh /tmp/addSysopUser.sh /tmp/installExtensions.sh

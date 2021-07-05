@@ -152,9 +152,9 @@ class MediaWikiCluster(object):
         mwApp=DockerApplication(user=self.user,password=self.password,version=version,extensionMap=self.extensionMap,wikiId=wikiId,mariaDBVersion=self.mariaDBVersion,smwVersion=self.smwVersion,port=port,sqlPort=sqlPort,mySQLRootPassword=self.mySQLRootPassword,logo=self.logo,debug=True)
         return mwApp
 
-__version__ = "0.1.4"
+__version__ = "0.1.5"
 __date__ = '2021-06-21'
-__updated__ = '2021-07-03'
+__updated__ = '2021-07-05'
 DEBUG=False
 
 def main(argv=None): # IGNORE:C0111
