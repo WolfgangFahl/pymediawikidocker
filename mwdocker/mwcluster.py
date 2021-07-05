@@ -12,7 +12,7 @@ class MediaWikiCluster(object):
     '''
     a cluster of mediawiki docker Applications
     '''
-    defaultVersions=["1.27.7","1.31.14","1.35.2","1.36.0"]
+    defaultVersions=["1.27.7","1.31.15","1.35.3","1.36.1"]
     defaultExtensionNameList=["Admin Links","Header Tabs","SyntaxHighlight","Variables"]
     defaultUser="Sysop"
     defaultPassword="sysop-1234!"
@@ -152,7 +152,7 @@ class MediaWikiCluster(object):
         mwApp=DockerApplication(user=self.user,password=self.password,version=version,extensionMap=self.extensionMap,wikiId=wikiId,mariaDBVersion=self.mariaDBVersion,smwVersion=self.smwVersion,port=port,sqlPort=sqlPort,mySQLRootPassword=self.mySQLRootPassword,logo=self.logo,debug=True)
         return mwApp
 
-__version__ = "0.1.5"
+__version__ = "0.1.6"
 __date__ = '2021-06-21'
 __updated__ = '2021-07-05'
 DEBUG=False
