@@ -54,6 +54,14 @@
 			"url": "https://www.mediawiki.org/wiki/Extension:Data_Transfer"
 		},
 		{
+            "name": "Diagrams",
+            "extension": "Diagrams",
+            "giturl": "https://github.com/samwilson/diagrams-extension.git",
+            "purpose": "Render Graphviz, Mscgen, and PlantUML diagrams in wiki pages.",
+            "since": "2019-12-12T00:00:00",
+            "url": "https://www.mediawiki.org/wiki/Extension:Diagrams"
+        },
+		{
 			"name": "Header Tabs",
 			"extension": "HeaderTabs",
 			"giturl": "https://github.com/wikimedia/mediawiki-extensions-HeaderTabs",
