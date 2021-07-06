@@ -54,13 +54,13 @@
 			"url": "https://www.mediawiki.org/wiki/Extension:Data_Transfer"
 		},
 		{
-            "name": "Diagrams",
-            "extension": "Diagrams",
-            "giturl": "https://github.com/samwilson/diagrams-extension.git",
-            "purpose": "Render Graphviz, Mscgen, and PlantUML diagrams in wiki pages.",
-            "since": "2019-12-12T00:00:00",
-            "url": "https://www.mediawiki.org/wiki/Extension:Diagrams"
-        },
+			"name": "Diagrams",
+			"extension": "Diagrams",
+			"giturl": "https://github.com/samwilson/diagrams-extension.git",
+			"purpose": "Render Graphviz, Mscgen, and PlantUML diagrams in wiki pages.",
+			"since": "2019-12-12T00:00:00",
+			"url": "https://www.mediawiki.org/wiki/Extension:Diagrams"
+		},
 		{
 			"name": "Header Tabs",
 			"extension": "HeaderTabs",
@@ -106,6 +106,14 @@
 			"purpose": "Enables embedding of dynamic maps into wiki pages, geocoding of addresses and other geographical operations",
 			"url": "https://github.com/JeroenDeDauw/Maps/blob/master/README.md#maps",
 			"composer": "\"mediawiki\/maps\": \"~7.0\""
+		},
+		{
+			"name": "Mermaid",
+			"extension": "Mermaid",
+			"url": "https://github.com/SemanticMediaWiki/Mermaid",
+			"purpose": "This extension provides the #mermaid parser function to support the generation of diagrams and flowcharts with the help of the mermaid script language.",
+			"since": "2017-12-30T00:00:00",
+			"composer": "\"mediawiki\/mermaid\": \"~3.0\""
 		},
 		{
 			"name": "Nuke",
