@@ -9,21 +9,18 @@ import mwdocker
 from mwdocker.mwcluster import MediaWikiCluster
 from python_on_whales import docker
 from contextlib import redirect_stdout
-from mwdocker import mwcluster
+from tests.basetest import Basetest
 
-class TestInstall(unittest.TestCase):
+class TestInstall(Basetest):
     '''
     test MediaWiki Docker images installation using
     https://pypi.org/project/python-on-whales/
     '''
 
     def setUp(self):
-        self.debug=True
+        Basetest.setUp(self, debug=False)
         self.versions=MediaWikiCluster.defaultVersions
-        
-    def tearDown(self):
-        pass
-    
+          
     def testComposePluginInstalled(self):
         '''
         make sure the docker compose command is available
@@ -129,7 +126,10 @@ class TestInstall(unittest.TestCase):
             lines+=f'''    mew{index}->mdb{index}\n'''
             lines+=f'''  }}\n'''
         lines+="}"
-        print (lines)
+        show=self.debug
+        # show only for wiki documentation
+        if show:
+            print (lines)
    
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']

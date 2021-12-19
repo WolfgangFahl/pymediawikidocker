@@ -6,18 +6,15 @@ Created on 2021-06-23
 import unittest
 from mwdocker.mwcluster import MediaWikiCluster
 from mwdocker.mw import ExtensionList, Extension
+from tests.basetest import Basetest
 
-class TestExtensions(unittest.TestCase):
+class TestExtensions(Basetest):
     '''
     test the extension handling
     '''
 
     def setUp(self):
-        self.debug=True
-        pass
-
-
-    def tearDown(self):
+        Basetest.setUp(self)
         pass
     
     def testExtensionDetailsFromUrl(self):
@@ -27,7 +24,7 @@ class TestExtensions(unittest.TestCase):
         ext=Extension()
         ext.name="UrlGetParameters"
         ext.url="https://www.mediawiki.org/wiki/Extension:UrlGetParameters"
-        debug=False
+        debug=self.debug
         ext.getDetailsFromUrl(showHtml=debug)
         if debug:
             print(ext)
@@ -91,11 +88,12 @@ class TestExtensions(unittest.TestCase):
             extList=ExtensionList.fromSpecialVersion(url,showHtml=False,debug=True)
             extList.extensions=sorted(extList.extensions,key=lambda ext:ext.name)
             print(f"found {len(extList.extensions)} extensions for {url}")
-            for ext in extList.extensions:
-                print (ext)
-            for ext in extList.extensions:
-                print (ext.asWikiMarkup())
-            print(extList.toJSON())    
+            if debug:
+                for ext in extList.extensions:
+                    print (ext)
+                for ext in extList.extensions:
+                    print (ext.asWikiMarkup())
+                print(extList.toJSON())    
                 
 
 
