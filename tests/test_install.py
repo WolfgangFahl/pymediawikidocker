@@ -9,6 +9,7 @@ import mwdocker
 from mwdocker.mwcluster import MediaWikiCluster
 from python_on_whales import docker
 from contextlib import redirect_stdout
+from mwdocker import mwcluster
 
 class TestInstall(unittest.TestCase):
     '''
@@ -109,6 +110,26 @@ class TestInstall(unittest.TestCase):
         self.assertTrue("--wikiIdList" in stdout.getvalue())
         # just for debugging command line handling
         # mwdocker.mwcluster.main(["-f"])
+        
+    def testGraphViz(self):
+        '''
+        create graphviz documentation for wiki
+        '''
+        baseport=9080
+        basesqlport=9306
+        lines="digraph mwcluster {\n"
+        for index,version in enumerate(MediaWikiCluster.defaultVersions):
+            port=baseport+index
+            sqlport=basesqlport+index
+            v=version.replace(".","_")
+            lines+=f'''  mew{index} [label="Mediawiki {version}\\nport {port}"\n'''
+            lines+=f'''  mdb{index} [ label="MariaDB 10.5\\nport {sqlport}"\n'''
+            lines+=f'''  subgraph cluster_{index}{{\n'''
+            lines+=f'''    label="mw{v}"\n'''
+            lines+=f'''    mew{index}->mdb{index}\n'''
+            lines+=f'''  }}\n'''
+        lines+="}"
+        print (lines)
    
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']

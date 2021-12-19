@@ -38,7 +38,7 @@ class DockerApplication(object):
     MediaWiki Docker image
     '''
 
-    def __init__(self,user:str,password:str,name="mediawiki",version="1.35.2",extensionMap:dict={},wikiId:str=None,mariaDBVersion="10.5",smwVersion=None,logo=None,port=9080,sqlPort=9306,mySQLRootPassword=None,debug=False,verbose=True):
+    def __init__(self,user:str,password:str,name="mediawiki",version="1.35.5",extensionMap:dict={},wikiId:str=None,mariaDBVersion="10.5",smwVersion=None,logo=None,port=9080,sqlPort=9306,mySQLRootPassword=None,debug=False,verbose=True):
         '''
         Constructor
         
