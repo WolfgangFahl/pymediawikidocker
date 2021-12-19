@@ -87,7 +87,7 @@ class TestInstall(unittest.TestCase):
         '''
         test the wikiUser handling
         '''
-        mwCluster=MediaWikiCluster(MediaWikiCluster.defaultVersions,wikiIdList=["mw27test","mw31test","mw35test","mw36test"])
+        mwCluster=MediaWikiCluster(MediaWikiCluster.defaultVersions,wikiIdList=["mw27test","mw31test","mw35test","mw36test","mw37test"])
         mwCluster.createApps()
         for mwApp in mwCluster.apps.values():
             wikiUser=mwApp.createWikiUser(store=False)
