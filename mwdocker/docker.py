@@ -333,6 +333,8 @@ class DockerApplication(object):
         requires=[]
         for ext in self.extensionMap.values():
             if hasattr(ext,"composer"):
+                # get the composer statement
+                composer=ext.composer
                 requires.append(ext.composer)
         indent="     "
         delim="" if len(requires)==0 else ",\n"

@@ -124,7 +124,7 @@
 		{
 			"name": "Page Forms",
 			"extension": "PageForms",
-			"composer": "\"mediawiki\/page-forms\": \"^5.2.1\"",
+			"composer": "\"mediawiki\/page-forms\": \"5.2.1\"",
 			"purpose": "(known before 2016 as Semantic Forms) is an extension to MediaWiki that allows users to add, edit and query data using forms",
 			"since": "2016-09-07T00:00:00",
 			"url": "https://www.mediawiki.org/wiki/Extension:Page_Forms"
