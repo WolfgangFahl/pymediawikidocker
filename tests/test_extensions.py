@@ -81,7 +81,8 @@ class TestExtensions(Basetest):
         debug=self.debug
         #debug=False
         for url in [
-            "https://www.openresearch.org/wiki/Special:Version",
+            #"https://www.openresearch.org/wiki/Special:Version",
+            "https://confident.dbis.rwth-aachen.de/or/index.php/Special:Version"
             "https://wiki.bitplan.com/index.php/Special:Version"
             
         ]:

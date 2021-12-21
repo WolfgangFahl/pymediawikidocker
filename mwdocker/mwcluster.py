@@ -198,7 +198,7 @@ def main(argv=None): # IGNORE:C0111
         parser.add_argument('-bp', '--basePort',dest='basePort',type=int,default=9080,help="set how base html port 80 to be exposed - incrementing by one for each version [default: %(default)s]")
         parser.add_argument('-sp', '--sqlBasePort',dest='sqlPort',type=int,default=9306,help="set base mySql port 3306 to be exposed - incrementing by one for each version [default: %(default)s]")
         parser.add_argument('-smw','--smwVersion',dest='smwVersion',default=None,help="set SemanticMediaWiki Version to be installed default is None - no installation of SMW")
-        parser.add_argument('-mv', '--mariaDBVersion', dest='mariaDBVersion',default="10.5",help="mariaDB Version to be installed [default: %(default)s]")
+        parser.add_argument('-mv', '--mariaDBVersion', dest='mariaDBVersion',default="10.6",help="mariaDB Version to be installed [default: %(default)s]")
         parser.add_argument("-f", "--forceRebuild", dest="forceRebuild",   action="store_true", help="shall the applications rebuild be forced (with stop and remove of existing containers)")
         parser.add_argument("--logo", default=MediaWikiCluster.defaultLogo, help="set Logo [default: %(default)s]")
         args = parser.parse_args(argv)

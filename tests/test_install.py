@@ -120,7 +120,7 @@ class TestInstall(Basetest):
             sqlport=basesqlport+index
             v=version.replace(".","_")
             lines+=f'''  mew{index} [label="Mediawiki {version}\\nport {port}"\n'''
-            lines+=f'''  mdb{index} [ label="MariaDB 10.5\\nport {sqlport}"\n'''
+            lines+=f'''  mdb{index} [ label="MariaDB 10.6\\nport {sqlport}"\n'''
             lines+=f'''  subgraph cluster_{index}{{\n'''
             lines+=f'''    label="mw{v}"\n'''
             lines+=f'''    mew{index}->mdb{index}\n'''
