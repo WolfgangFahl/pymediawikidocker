@@ -12,7 +12,8 @@ class MediaWikiCluster(object):
     '''
     a cluster of mediawiki docker Applications
     '''
-    defaultVersions=["1.27.7","1.31.16","1.35.6","1.36.4","1.37.2"]
+    # https://hub.docker.com/_/mediawiki
+    defaultVersions=["1.27.7","1.31.16","1.35.7","1.37.3","1.38.2"]
     defaultExtensionNameList=["Admin Links","Header Tabs","SyntaxHighlight","Variables"]
     defaultUser="Sysop"
     defaultPassword="sysop-1234!"
