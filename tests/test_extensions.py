@@ -97,7 +97,6 @@ class TestExtensions(Basetest):
                 print(extList.toJSON())    
                 
 
-
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']
     unittest.main()
