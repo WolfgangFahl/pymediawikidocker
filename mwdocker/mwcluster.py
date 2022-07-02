@@ -157,7 +157,7 @@ class MediaWikiCluster(object):
 
 __version__ = "0.1.13"
 __date__ = '2021-06-21'
-__updated__ = '2021-07-06'
+__updated__ = '2022-07-02'
 DEBUG=False
 
 def main(argv=None): # IGNORE:C0111
