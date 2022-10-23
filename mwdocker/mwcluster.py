@@ -13,7 +13,7 @@ class MediaWikiCluster(object):
     a cluster of mediawiki docker Applications
     '''
     # https://hub.docker.com/_/mediawiki
-    defaultVersions=["1.27.7","1.31.16","1.35.7","1.37.3","1.38.2"]
+    defaultVersions=["1.27.7","1.31.16","1.35.8","1.37.6","1.38.4"]
     defaultExtensionNameList=["Admin Links","Header Tabs","SyntaxHighlight","Variables"]
     defaultUser="Sysop"
     defaultPassword="sysop-1234!"
@@ -155,9 +155,9 @@ class MediaWikiCluster(object):
         mwApp=DockerApplication(user=self.user,password=self.password,version=version,extensionMap=self.extensionMap,wikiId=wikiId,mariaDBVersion=self.mariaDBVersion,smwVersion=self.smwVersion,port=port,sqlPort=sqlPort,mySQLRootPassword=self.mySQLRootPassword,logo=self.logo,debug=True)
         return mwApp
 
-__version__ = "0.1.13"
+__version__ = "0.4.0"
 __date__ = '2021-06-21'
-__updated__ = '2022-07-02'
+__updated__ = '2022-10-23'
 DEBUG=False
 
 def main(argv=None): # IGNORE:C0111
@@ -199,7 +199,7 @@ def main(argv=None): # IGNORE:C0111
         parser.add_argument('-bp', '--basePort',dest='basePort',type=int,default=9080,help="set how base html port 80 to be exposed - incrementing by one for each version [default: %(default)s]")
         parser.add_argument('-sp', '--sqlBasePort',dest='sqlPort',type=int,default=9306,help="set base mySql port 3306 to be exposed - incrementing by one for each version [default: %(default)s]")
         parser.add_argument('-smw','--smwVersion',dest='smwVersion',default=None,help="set SemanticMediaWiki Version to be installed default is None - no installation of SMW")
-        parser.add_argument('-mv', '--mariaDBVersion', dest='mariaDBVersion',default="10.6",help="mariaDB Version to be installed [default: %(default)s]")
+        parser.add_argument('-mv', '--mariaDBVersion', dest='mariaDBVersion',default="10.9",help="mariaDB Version to be installed [default: %(default)s]")
         parser.add_argument("-f", "--forceRebuild", dest="forceRebuild",   action="store_true", help="shall the applications rebuild be forced (with stop and remove of existing containers)")
         parser.add_argument("--logo", default=MediaWikiCluster.defaultLogo, help="set Logo [default: %(default)s]")
         args = parser.parse_args(argv)
