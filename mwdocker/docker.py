@@ -5,6 +5,7 @@ Created on 2021-08-06
 '''
 from python_on_whales import docker
 import os
+import platform
 import datetime
 import time
 import secrets
@@ -128,8 +129,10 @@ class DockerApplication(object):
         self.dbContainer=None
         self.mwContainer=None
         containerMap=DockerMap.getContainerMap()
-        dbContainerName=f"mw{self.underscoreVersion}_db_1"
-        mwContainerName=f"mw{self.underscoreVersion}_mw_1"
+        # https://github.com/docker/for-mac/issues/6035
+        separator="-" if platform.system()=="Darwin" else "_"
+        dbContainerName=f"mw{self.underscoreVersion}{separator}db{separator}1"
+        mwContainerName=f"mw{self.underscoreVersion}{separator}mw{separator}1"
         if dbContainerName in containerMap:
             self.dbContainer=containerMap[dbContainerName]
         if mwContainerName in containerMap:
@@ -250,7 +253,8 @@ class DockerApplication(object):
                                  connection_timeout=timeout)
         
             except Error as e :
-                print (f"Connection to {self.database} on {self.host} with user {self.dbUser} failed error: {str(e)}" )
+                errMsg=str(e)
+                print (f"Connection to {self.database} on {self.host} with user {self.dbUser} failed error: {errMsg}" )
         return self.dbConn
     
     def doCheckDBConnection(self,timeout:int=10)->bool:
