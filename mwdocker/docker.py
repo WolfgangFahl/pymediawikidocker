@@ -67,6 +67,9 @@ class DockerApplication(object):
         self.wikiId=wikiId
         # what container name convention to expect
         self.mw_container_name_separator=separator
+        separator=self.mw_container_name_separator
+        self.dbContainerName=f"mw{self.underscoreVersion}{separator}db{separator}1"
+        self.mwContainerName=f"mw{self.underscoreVersion}{separator}mw{separator}1"
         # extensions
         self.extensionMap=extensionMap
         # Versions
@@ -132,12 +135,9 @@ class DockerApplication(object):
         self.dbContainer=None
         self.mwContainer=None
         containerMap=DockerMap.getContainerMap()
-        separator=self.mw_container_name_separator
-        dbContainerName=f"mw{self.underscoreVersion}{separator}db{separator}1"
-        mwContainerName=f"mw{self.underscoreVersion}{separator}mw{separator}1"
-        if dbContainerName in containerMap:
+        if self.dbContainerName in containerMap:
             self.dbContainer=containerMap[dbContainerName]
-        if mwContainerName in containerMap:
+        if self.mwContainerName in containerMap:
             self.mwContainer=containerMap[mwContainerName]      
             
     def getJinjaEnv(self):
@@ -211,7 +211,8 @@ class DockerApplication(object):
         if self.mwContainer:
             docker.execute(container=self.mwContainer,command=command)
         else:
-            raise Exception(f"no mediawiki Container for {self.name}")
+            errMsg=f"no mediawiki Container {self.mwContainerName} for {self.name}\n- you might want to check the separator {self.mw_container_name_separator} for your platform {platform.system()}"
+            raise Exception(f"{errMsg}")
     
     def close(self):
         self.dbClose()
