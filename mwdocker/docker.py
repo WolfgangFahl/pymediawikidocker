@@ -67,9 +67,6 @@ class DockerApplication(object):
         self.wikiId=wikiId
         # what container name convention to expect
         self.mw_container_name_separator=separator
-        separator=self.mw_container_name_separator
-        self.dbContainerName=f"mw{self.underscoreVersion}{separator}db{separator}1"
-        self.mwContainerName=f"mw{self.underscoreVersion}{separator}mw{separator}1"
         # extensions
         self.extensionMap=extensionMap
         # Versions
@@ -78,6 +75,10 @@ class DockerApplication(object):
         self.smwVersion=smwVersion
         self.underscoreVersion=version.replace(".","_")
         self.shortVersion=self.getShortVersion()
+        # container names
+        separator=self.mw_container_name_separator
+        self.dbContainerName=f"mw{self.underscoreVersion}{separator}db{separator}1"
+        self.mwContainerName=f"mw{self.underscoreVersion}{separator}mw{separator}1"
         # branch as need for git clone e.g. https://gerrit.wikimedia.org/g/mediawiki/extensions/MagicNoCache
         self.branch=f"REL{self.getShortVersion('_')}"
         self.mariaDBVersion=mariaDBVersion
