@@ -137,9 +137,9 @@ class DockerApplication(object):
         self.mwContainer=None
         containerMap=DockerMap.getContainerMap()
         if self.dbContainerName in containerMap:
-            self.dbContainer=containerMap[dbContainerName]
+            self.dbContainer=containerMap[self.dbContainerName]
         if self.mwContainerName in containerMap:
-            self.mwContainer=containerMap[mwContainerName]      
+            self.mwContainer=containerMap[self.mwContainerName]      
             
     def getJinjaEnv(self):
         '''
