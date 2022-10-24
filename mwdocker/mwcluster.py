@@ -19,7 +19,7 @@ class MediaWikiCluster(object):
     defaultPassword="sysop-1234!"
     defaultLogo="$wgResourceBasePath/resources/assets/wiki.png"
 
-    def __init__(self,versions:list,user:str=None,password:str=None,extensionNameList:list=None,extensionJsonFile:str=None,wikiIdList:list=None,sqlPort:int=9306,basePort:int=9080,networkName="mwNetwork",mariaDBVersion="10.8",smwVersion=None,mySQLRootPassword=None,logo=None,debug=False,verbose=True):
+    def __init__(self,versions:list,user:str=None,password:str=None,extensionNameList:list=None,extensionJsonFile:str=None,wikiIdList:list=None,sqlPort:int=9306,basePort:int=9080,networkName="mwNetwork",mariaDBVersion="10.8",smwVersion=None,mySQLRootPassword=None,logo=None,separator:str="-",debug=False,verbose=True):
         '''
         Constructor
         
@@ -37,10 +37,12 @@ class MediaWikiCluster(object):
             smwVersion(str): Semantic MediaWiki Version to be used (if any)
             mySQLRootPassword(str): the mySQL root password to use for the database containers - if None a random password is generated
             logo(str): URL of the logo to be used
+            separator(str): the mediawiki container name separator to be used
             debug(bool): if True debugging is enabled
         '''
         self.debug=debug
         self.verbose=verbose
+        self.mw_container_name_separator=separator
         if user is None:
             user=MediaWikiCluster.defaultUser
         self.user=user
@@ -152,12 +154,12 @@ class MediaWikiCluster(object):
         wikiId=None
         if self.wikiIdList is not None:
             wikiId=self.wikiIdList[i]                    
-        mwApp=DockerApplication(user=self.user,password=self.password,version=version,extensionMap=self.extensionMap,wikiId=wikiId,mariaDBVersion=self.mariaDBVersion,smwVersion=self.smwVersion,port=port,sqlPort=sqlPort,mySQLRootPassword=self.mySQLRootPassword,logo=self.logo,debug=True)
+        mwApp=DockerApplication(user=self.user,password=self.password,version=version,extensionMap=self.extensionMap,wikiId=wikiId,mariaDBVersion=self.mariaDBVersion,smwVersion=self.smwVersion,port=port,sqlPort=sqlPort,mySQLRootPassword=self.mySQLRootPassword,logo=self.logo,separator=self.mw_container_name_separator,debug=True)
         return mwApp
 
-__version__ = "0.4.0"
+__version__ = "0.4.2"
 __date__ = '2021-06-21'
-__updated__ = '2022-10-23'
+__updated__ = '2022-10-24'
 DEBUG=False
 
 def main(argv=None): # IGNORE:C0111
@@ -201,11 +203,15 @@ def main(argv=None): # IGNORE:C0111
         parser.add_argument('-smw','--smwVersion',dest='smwVersion',default=None,help="set SemanticMediaWiki Version to be installed default is None - no installation of SMW")
         parser.add_argument('-mv', '--mariaDBVersion', dest='mariaDBVersion',default="10.9",help="mariaDB Version to be installed [default: %(default)s]")
         parser.add_argument("-f", "--forceRebuild", dest="forceRebuild",   action="store_true", help="shall the applications rebuild be forced (with stop and remove of existing containers)")
+        # https://github.com/docker/for-mac/issues/6035
+        # separator="-" if platform.system()=="Darwin" else "_"
+        # e.g. mw1_38_4-mw-1
+        parser.add_argument("--separator",default="-",help="separator to be expected for docker container names e.g. mw1_38_4-mw-1 has separator -[default: %(default)s]")
         parser.add_argument("--logo", default=MediaWikiCluster.defaultLogo, help="set Logo [default: %(default)s]")
         args = parser.parse_args(argv)
         print(f"creating docker applications for mediawiki versions {args.versions}")
         # create a MediaWiki Cluster
-        mwCluster=MediaWikiCluster(args.versions,user=args.user,password=args.password,extensionJsonFile=args.extensionJsonFile,extensionNameList=args.extensionNameList,wikiIdList=args.wikiIdList,basePort=args.basePort,sqlPort=args.sqlPort,mariaDBVersion=args.mariaDBVersion,smwVersion=args.smwVersion,logo=args.logo,debug=args.debug)
+        mwCluster=MediaWikiCluster(args.versions,user=args.user,password=args.password,extensionJsonFile=args.extensionJsonFile,extensionNameList=args.extensionNameList,wikiIdList=args.wikiIdList,basePort=args.basePort,sqlPort=args.sqlPort,mariaDBVersion=args.mariaDBVersion,smwVersion=args.smwVersion,logo=args.logo,separator=args.separator,debug=args.debug)
         mwCluster.createApps()
         return mwCluster.start(forceRebuild=args.forceRebuild)
     except KeyboardInterrupt:

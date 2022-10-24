@@ -39,7 +39,7 @@ class DockerApplication(object):
     MediaWiki Docker image
     '''
 
-    def __init__(self,user:str,password:str,name="mediawiki",version="1.35.7",extensionMap:dict={},wikiId:str=None,mariaDBVersion="10.8",smwVersion=None,logo=None,port=9080,sqlPort=9306,mySQLRootPassword=None,debug=False,verbose=True):
+    def __init__(self,user:str,password:str,name="mediawiki",version="1.35.7",extensionMap:dict={},wikiId:str=None,mariaDBVersion="10.8",smwVersion=None,logo=None,port=9080,sqlPort=9306,mySQLRootPassword=None,separator="-",debug=False,verbose=True):
         '''
         Constructor
         
@@ -56,6 +56,7 @@ class DockerApplication(object):
             smwVersion(str): Semantic MediaWiki Version to be used (if any)
             mySQLRootPassword(str): the mySQL root password to use for the database containers - if None a random password is generated
             logo(str): URL of the logo to be used
+            separator(str): the container name separator
             debug(bool): if True debugging is enabled
             verbose(bool): if True output is verbose
         '''
@@ -64,6 +65,8 @@ class DockerApplication(object):
         self.user=user
         self.password=password
         self.wikiId=wikiId
+        # what container name convention to expect
+        self.mw_container_name_separator=separator
         # extensions
         self.extensionMap=extensionMap
         # Versions
@@ -129,8 +132,7 @@ class DockerApplication(object):
         self.dbContainer=None
         self.mwContainer=None
         containerMap=DockerMap.getContainerMap()
-        # https://github.com/docker/for-mac/issues/6035
-        separator="-" if platform.system()=="Darwin" else "_"
+        separator=self.mw_container_name_separator
         dbContainerName=f"mw{self.underscoreVersion}{separator}db{separator}1"
         mwContainerName=f"mw{self.underscoreVersion}{separator}mw{separator}1"
         if dbContainerName in containerMap:
