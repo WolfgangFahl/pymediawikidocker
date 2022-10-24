@@ -76,9 +76,6 @@ class DockerApplication(object):
         self.underscoreVersion=version.replace(".","_")
         self.shortVersion=self.getShortVersion()
         # container names
-        separator=self.mw_container_name_separator
-        self.dbContainerName=f"mw{self.underscoreVersion}{separator}db{separator}1"
-        self.mwContainerName=f"mw{self.underscoreVersion}{separator}mw{separator}1"
         # branch as need for git clone e.g. https://gerrit.wikimedia.org/g/mediawiki/extensions/MagicNoCache
         self.branch=f"REL{self.getShortVersion('_')}"
         self.mariaDBVersion=mariaDBVersion
@@ -129,6 +126,10 @@ class DockerApplication(object):
         '''
         return f"{self.name}_{self.version}"
     
+    def getContainerName(self,kind:str,separator:str):
+        containerName=f"mw{self.underscoreVersion}{separator}{kind}{separator}1"
+        return containerName
+    
     def getContainers(self):
         '''
         get my containers
@@ -136,10 +137,15 @@ class DockerApplication(object):
         self.dbContainer=None
         self.mwContainer=None
         containerMap=DockerMap.getContainerMap()
-        if self.dbContainerName in containerMap:
-            self.dbContainer=containerMap[self.dbContainerName]
-        if self.mwContainerName in containerMap:
-            self.mwContainer=containerMap[self.mwContainerName]      
+        for separator in ["-","_"]:
+            dbContainerName=self.getContainerName("db", separator)
+            mwContainerName=self.getContainerName("mw", separator)
+            if dbContainerName in containerMap:
+                self.dbContainerName=dbContainerName
+                self.dbContainer=containerMap[self.dbContainerName]
+            if mwContainerName in containerMap:
+                self.mwContainerName=mwContainerName
+                self.mwContainer=containerMap[self.mwContainerName]      
             
     def getJinjaEnv(self):
         '''
@@ -212,7 +218,9 @@ class DockerApplication(object):
         if self.mwContainer:
             docker.execute(container=self.mwContainer,command=command)
         else:
-            errMsg=f"no mediawiki Container {self.mwContainerName} for {self.name}\n- you might want to check the separator {self.mw_container_name_separator} for your platform {platform.system()}"
+            mwContainerNameDash=self.getContainerName("mw", "-")
+            mwContainerNameUnderscore=self.getContainerName("mw", "_")
+            errMsg=f"no mediawiki Container {mwContainerNameDash} or {mwContainerNameUnderscore} for {self.name} activated by docker compose\n- you might want to check the separator {self.mw_container_name_separator} for your platform {platform.system()}"
             raise Exception(f"{errMsg}")
     
     def close(self):
