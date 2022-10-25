@@ -450,8 +450,9 @@ class DockerApplication(object):
         if self.verbose:
             print(f"starting {self.name} {self.version} docker application ...")
         if forceRebuild:
-            for container in [self.dbContainer.container,self.mwContainer.container]:
-                if container is not None:
+            for docker_container in [self.dbContainer,self.mwContainer]:
+                if docker_container is not None:
+                    container=docker_container.container
                     if self.verbose:
                         print(f"stopping and removing container {container.name}")
                     container.stop()
