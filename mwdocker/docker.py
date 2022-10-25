@@ -37,6 +37,35 @@ class DockerMap():
             pass
         return containerMap
     
+class DockerContainer():
+    """
+    helper class for docker container info
+    """
+    
+    def __init__(self,name,kind,container):
+        """
+        constructor
+        """
+        self.name=name
+        self.kind=kind
+        self.container=container
+       
+    def check(self):
+        """
+        check the given docker container
+        
+        print check message and Return if container is running
+        
+        Args:
+            dc: the docker container
+        
+        Returns:
+            bool: True if the container is not None
+        """
+        ok=self.container.state.running
+        msg=f"mediawiki {self.kind} container {self.name}"
+        return Logger.check_and_log(msg, ok) 
+    
 class DockerApplication(object):
     '''
     MediaWiki Docker image
@@ -115,16 +144,18 @@ class DockerApplication(object):
 """
         return errMsg
     
-    
     def checkWiki(self,version_url:str):
         """
         check this wiki against the content of the given version_url
         """
         print(f"Checking {version_url} ...")
-        html_tables=HtmlTables(version_url)
-        tables=html_tables.get_tables("h2")
-        pp = pprint.PrettyPrinter(indent=2)
-        pp.pprint(tables)
+        try:
+            html_tables=HtmlTables(version_url)
+            tables=html_tables.get_tables("h2")
+            p = pprint.PrettyPrinter(indent=2)
+            p.pprint(tables)
+        except Exception as ex:
+            Logger.check_and_log(str(ex), False)
         pass
             
     def defaultContainerName(self):
@@ -155,11 +186,9 @@ class DockerApplication(object):
             dbContainerName=self.getContainerName("db", separator)
             mwContainerName=self.getContainerName("mw", separator)
             if dbContainerName in containerMap:
-                self.dbContainerName=dbContainerName
-                self.dbContainer=containerMap[self.dbContainerName]
-            if mwContainerName in containerMap:
-                self.mwContainerName=mwContainerName
-                self.mwContainer=containerMap[self.mwContainerName]   
+                self.dbContainer=DockerContainer(dbContainerName,"database",containerMap[dbContainerName])
+            if mwContainerName in containerMap:               
+                self.mwContainer=DockerContainer(mwContainerName,"webserver",containerMap[mwContainerName])   
         return self.mwContainer,self.dbContainer   
             
     def getJinjaEnv(self):

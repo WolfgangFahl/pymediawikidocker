@@ -143,26 +143,6 @@ class MediaWikiCluster(object):
                     mwApp.startUp()
                     
         return 0
-    
-    
-        
-    def checkContainer(self,container_name:str,kind:str,container):
-        """
-        check the container with the given name
-        
-        print check message and Return if container is not None
-        
-        Args:
-            container_name(str): the name of the container
-            kind(str): the kind of the container
-            container: the docker container
-        
-        Returns:
-            bool: True if the container is not None
-        """
-        ok=container is not None and container.state.running
-        msg=f"mediawiki {kind} container {container_name}"
-        return Logger.check_and_log(msg, ok)
         
     def check(self)->int:
         """
@@ -179,9 +159,8 @@ class MediaWikiCluster(object):
             msg=f"{i}:checking {version} ..."
             print(msg)
             mw,db=mwApp.getContainers()
-            if  self.checkContainer(mwApp.mwContainerName,"webserver",mw) \
-            and self.checkContainer(mwApp.dbContainerName,"database ",db):
-                pb_dict=mw.host_config.port_bindings
+            if  mw and db and mw.check() and db.check():
+                pb_dict=mw.container.host_config.port_bindings
                 p80="80/tcp"
                 if p80 in pb_dict:
                     pb=pb_dict[p80][0]
