@@ -17,7 +17,10 @@ import mysql.connector
 from mysql.connector import Error
 from pathlib import Path
 from wikibot.wikiuser import WikiUser
-    
+from mwdocker.logger import Logger
+from mwdocker.html_table import HtmlTables
+import pprint
+
 class DockerMap():
     '''
     helper class to convert lists of docker elements to maps for improved
@@ -111,7 +114,18 @@ class DockerApplication(object):
             by downloading latest v2.x release from https://github.com/docker/compose-cli/releases for your architecture and move into ~/.docker/cli-plugins/docker-compose
 """
         return errMsg
-        
+    
+    
+    def checkWiki(self,version_url:str):
+        """
+        check this wiki against the content of the given version_url
+        """
+        print(f"Checking {version_url} ...")
+        html_tables=HtmlTables(version_url)
+        tables=html_tables.get_tables("h2")
+        pp = pprint.PrettyPrinter(indent=2)
+        pp.pprint(tables)
+        pass
             
     def defaultContainerName(self):
         '''

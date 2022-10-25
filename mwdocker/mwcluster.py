@@ -7,6 +7,7 @@ from mwdocker.mw import ExtensionList
 import sys
 from argparse import ArgumentParser
 from argparse import ArgumentDefaultsHelpFormatter
+from mwdocker.logger import Logger
 
 class MediaWikiCluster(object):
     '''
@@ -143,18 +144,25 @@ class MediaWikiCluster(object):
                     
         return 0
     
-    def checkContainer(self,container_name,container):
+    
+        
+    def checkContainer(self,container_name:str,kind:str,container):
         """
         check the container with the given name
         
         print check message and Return if container is not None
         
+        Args:
+            container_name(str): the name of the container
+            kind(str): the kind of the container
+            container: the docker container
+        
         Returns:
             bool: True if the container is not None
         """
-        marker="❌" if container is None else "✅"
-        print(f"mediawiki container {container_name}: {marker}")
-        return container is not None
+        ok=container is not None and container.state.running
+        msg=f"mediawiki {kind} container {container_name}"
+        return Logger.check_and_log(msg, ok)
         
     def check(self)->int:
         """
@@ -171,11 +179,20 @@ class MediaWikiCluster(object):
             msg=f"{i}:checking {version} ..."
             print(msg)
             mw,db=mwApp.getContainers()
-            if  self.checkContainer(mwApp.mwContainerName,mw) \
-            and self.checkContainer(mwApp.dbContainerName,db):
+            if  self.checkContainer(mwApp.mwContainerName,"webserver",mw) \
+            and self.checkContainer(mwApp.dbContainerName,"database ",db):
+                pb_dict=mw.host_config.port_bindings
+                p80="80/tcp"
+                if p80 in pb_dict:
+                    pb=pb_dict[p80][0]
+                    host_port=pb.host_port
+                    Logger.check_and_log(f"host_port {host_port}={mwApp.port}?",host_port==str(mwApp.port))
+                    version_url=f"{mwApp.url}/index.php/Special:Version".replace(str(mwApp.port),host_port)
+                    mwApp.checkWiki(version_url)
+                else:
+                    self.log(f"port binding {p80} missing",False)
                 pass
-        return 0  
-  
+        return 0
             
     def close(self):
         """

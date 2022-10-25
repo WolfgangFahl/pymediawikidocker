@@ -26,8 +26,7 @@ class TestInstall(Basetest):
         '''
         make sure the docker compose command is available
         '''
-        self.assertTrue(docker.compose.is_installed())
-        
+        self.assertTrue(docker.compose.is_installed())   
         
     def testGenerateDockerFiles(self):
         '''
@@ -52,6 +51,14 @@ class TestInstall(Basetest):
             userCountRecords=mwApp.sqlQuery("select count(*) from user;")
             print(userCountRecords)
         mwCluster.close()
+        
+    def testCheckWiki(self):
+        """
+        test the check wiki functionality
+        """
+        mwCluster=MediaWikiCluster(MediaWikiCluster.defaultVersions)
+        mwCluster.createApps()
+        mwCluster.check()
         
     def testInstallationWithSemanticMediaWiki(self):
         '''
