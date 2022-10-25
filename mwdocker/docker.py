@@ -19,7 +19,10 @@ from pathlib import Path
 from wikibot.wikiuser import WikiUser
 from mwdocker.logger import Logger
 from mwdocker.html_table import HtmlTables
+from mwdocker.mariadb import MariaDB
 import pprint
+from lodstorage.lod import LOD
+
 
 class DockerMap():
     '''
@@ -71,7 +74,7 @@ class DockerApplication(object):
     MediaWiki Docker image
     '''
 
-    def __init__(self,user:str,password:str,name="mediawiki",version="1.35.7",extensionMap:dict={},wikiId:str=None,mariaDBVersion="10.8",smwVersion=None,logo=None,port=9080,sqlPort=9306,mySQLRootPassword=None,debug=False,verbose=True):
+    def __init__(self,user:str,password:str,name="mediawiki",version="1.35.7",extensionMap:dict={},wikiId:str=None,mariaDBVersion="10.9",smwVersion=None,logo=None,port=9080,sqlPort=9306,mySQLRootPassword=None,debug=False,verbose=True):
         '''
         Constructor
         
@@ -110,6 +113,8 @@ class DockerApplication(object):
         self.mariaDBVersion=mariaDBVersion
         # hostname and ports
         self.hostname=socket.getfqdn()
+        if self.hostname=="1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa":
+            self.hostname="localhost"
         self.port=port
         self.url=f"http://{self.hostname}:{self.port}"
         self.sqlPort=sqlPort
@@ -144,19 +149,32 @@ class DockerApplication(object):
 """
         return errMsg
     
-    def checkWiki(self,version_url:str):
+    def checkWiki(self,version_url:str)->bool:
         """
         check this wiki against the content of the given version_url
         """
         print(f"Checking {version_url} ...")
+        ok=True
         try:
             html_tables=HtmlTables(version_url)
             tables=html_tables.get_tables("h2")
-            p = pprint.PrettyPrinter(indent=2)
-            p.pprint(tables)
+            if self.debug:
+                p = pprint.PrettyPrinter(indent=2)
+                p.pprint(tables)
+            ok=ok and Logger.check_and_log("Special Version accessible ...", "Installed software" in tables)
+            if ok:
+                software=tables["Installed software"]
+                software_map,_dup=LOD.getLookup(software, "Product", withDuplicates=False)
+                mw_version=software_map["MediaWiki"]["Version"]
+                ok=ok and Logger.check_and_log_equal("Mediawiki Version",mw_version,"expected ",self.version)
+                db_version_str=software_map["MariaDB"]["Version"]
+                db_version=MariaDB.getVersion(db_version_str)
+                ok=ok and Logger.check_and_log(f"Maria DB Version {db_version} fitting expected {self.mariaDBVersion}?",self.mariaDBVersion.startswith(db_version))
+                pass
         except Exception as ex:
-            Logger.check_and_log(str(ex), False)
-        pass
+            ok=Logger.check_and_log(str(ex), False)
+        return ok
+
             
     def defaultContainerName(self):
         '''

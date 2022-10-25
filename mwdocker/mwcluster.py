@@ -165,13 +165,16 @@ class MediaWikiCluster(object):
                 if p80 in pb_dict:
                     pb=pb_dict[p80][0]
                     host_port=pb.host_port
-                    Logger.check_and_log(f"host_port {host_port}={mwApp.port}?",host_port==str(mwApp.port))
+                    Logger.check_and_log_equal(f"port binding",host_port,"expected  port",str(mwApp.port))
                     version_url=f"{mwApp.url}/index.php/Special:Version".replace(str(mwApp.port),host_port)
-                    mwApp.checkWiki(version_url)
+                    ok=mwApp.checkWiki(version_url)
+                    if not ok:
+                        exitCode=1
                 else:
                     self.log(f"port binding {p80} missing",False)
+                    exitCode=1
                 pass
-        return 0
+        return exitCode
             
     def close(self):
         """
@@ -196,10 +199,10 @@ class MediaWikiCluster(object):
         wikiId=None
         if self.wikiIdList is not None:
             wikiId=self.wikiIdList[i]                    
-        mwApp=DockerApplication(user=self.user,password=self.password,version=version,extensionMap=self.extensionMap,wikiId=wikiId,mariaDBVersion=self.mariaDBVersion,smwVersion=self.smwVersion,port=port,sqlPort=sqlPort,mySQLRootPassword=self.mySQLRootPassword,logo=self.logo,debug=True)
+        mwApp=DockerApplication(user=self.user,password=self.password,version=version,extensionMap=self.extensionMap,wikiId=wikiId,mariaDBVersion=self.mariaDBVersion,smwVersion=self.smwVersion,port=port,sqlPort=sqlPort,mySQLRootPassword=self.mySQLRootPassword,logo=self.logo,debug=self.debug)
         return mwApp
 
-__version__ = "0.4.2"
+__version__ = "0.4.3"
 __date__ = '2021-06-21'
 __updated__ = '2022-10-25'
 DEBUG=False

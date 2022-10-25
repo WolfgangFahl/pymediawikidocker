@@ -24,3 +24,8 @@ class Logger(object):
         marker="✅" if ok else "❌"
         print(f"{msg}:{marker}")
         return ok
+    
+    @classmethod
+    def check_and_log_equal(self,nameA,valueA,nameB,valueB):
+        msg=f"{nameA} {valueA}= {nameB} {valueB}?"
+        return self.check_and_log(msg, valueA==valueB)

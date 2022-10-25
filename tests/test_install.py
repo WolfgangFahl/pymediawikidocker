@@ -4,13 +4,16 @@ Created on 2021-06-14
 @author: wf
 '''
 import datetime
+import re
 import unittest
 import io
 import mwdocker
 from mwdocker.mwcluster import MediaWikiCluster
+
 from python_on_whales import docker
 from contextlib import redirect_stdout
 from tests.basetest import Basetest
+from mwdocker.mariadb import MariaDB        
 
 class TestInstall(Basetest):
     '''
@@ -52,13 +55,22 @@ class TestInstall(Basetest):
             print(userCountRecords)
         mwCluster.close()
         
+    def testMariaDBVersion(self):
+        """
+        test version number extraction from Maria DB
+        """
+        version_str="10.8.5-MariaDB-1:10.8.5+maria~ubu2204"
+        version=MariaDB.getVersion(version_str)
+        self.assertEqual("10.8",version)
+        
     def testCheckWiki(self):
         """
         test the check wiki functionality
         """
         mwCluster=MediaWikiCluster(MediaWikiCluster.defaultVersions)
         mwCluster.createApps()
-        mwCluster.check()
+        exitCode=mwCluster.check()
+        self.assertEqual(0,exitCode)
         
     def testInstallationWithSemanticMediaWiki(self):
         '''
