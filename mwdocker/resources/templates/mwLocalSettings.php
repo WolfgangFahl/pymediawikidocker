@@ -12,3 +12,5 @@ enableSemantics();
 # modified defaults
 # https://www.mediawiki.org/wiki/Manual:$wgEnableUploads
 $wgEnableUploads = true;
+# https://github.com/WolfgangFahl/pymediawikidocker/issues/30:
+$wgDeprecationReleaseLimit = "1.35.0";

@@ -128,9 +128,12 @@ class DockerApplication(object):
         return containerName
     
     def getContainers(self):
-        '''
+        """
         get my containers
-        '''
+        
+        Returns:
+            Tuple(
+        """
         self.dbContainer=None
         self.mwContainer=None
         containerMap=DockerMap.getContainerMap()
@@ -142,7 +145,8 @@ class DockerApplication(object):
                 self.dbContainer=containerMap[self.dbContainerName]
             if mwContainerName in containerMap:
                 self.mwContainerName=mwContainerName
-                self.mwContainer=containerMap[self.mwContainerName]      
+                self.mwContainer=containerMap[self.mwContainerName]   
+        return self.mwContainer,self.dbContainer   
             
     def getJinjaEnv(self):
         '''
