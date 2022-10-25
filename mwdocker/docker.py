@@ -262,7 +262,7 @@ class DockerApplication(object):
         if self.mwContainer:
             if self.verbose:
                 print(f"Executing docker command {command}")
-            docker.execute(container=self.mwContainer,command=command)
+            docker.execute(container=self.mwContainer.container,command=command)
         else:
             mwContainerNameDash=self.getContainerName("mw", "-")
             mwContainerNameUnderscore=self.getContainerName("mw", "_")
@@ -450,7 +450,7 @@ class DockerApplication(object):
         if self.verbose:
             print(f"starting {self.name} {self.version} docker application ...")
         if forceRebuild:
-            for container in [self.dbContainer,self.mwContainer]:
+            for container in [self.dbContainer.container,self.mwContainer.container]:
                 if container is not None:
                     if self.verbose:
                         print(f"stopping and removing container {container.name}")
