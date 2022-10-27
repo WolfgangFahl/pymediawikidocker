@@ -17,6 +17,7 @@ services:
   db:
 # use original image
     image: mariadb:{{mariaDBVersion}}
+    container_name: {{container_name}}-db
     
     restart: always
     
@@ -34,7 +35,10 @@ services:
       
 # mediawiki
   mw:
-    #image: mediawiki:{{mwVersion}}
+    container_name: {{container_name}}-mw
+
+    # the image is specified in the dockerfile
+    # image: mediawiki:{{mwVersion}}
     # use the Dockerfile in this directory
     build: .
        

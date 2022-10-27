@@ -23,7 +23,6 @@ from mwdocker.mariadb import MariaDB
 import pprint
 from lodstorage.lod import LOD
 
-
 class DockerMap():
     '''
     helper class to convert lists of docker elements to maps for improved
@@ -74,7 +73,7 @@ class DockerApplication(object):
     MediaWiki Docker image
     '''
 
-    def __init__(self,user:str,password:str,name="mediawiki",version="1.35.7",extensionMap:dict={},wikiId:str=None,mariaDBVersion="10.9",smwVersion=None,logo=None,port=9080,sqlPort=9306,mySQLRootPassword=None,debug=False,verbose=True):
+    def __init__(self,user:str,password:str,name="mediawiki",version="1.35.7",container_name:str=None,extensionMap:dict={},wikiId:str=None,mariaDBVersion="10.9",smwVersion=None,logo=None,port=9080,sqlPort=9306,mySQLRootPassword=None,debug=False,verbose=True):
         '''
         Constructor
         
@@ -82,6 +81,7 @@ class DockerApplication(object):
             user(str): the initial sysop user to create
             password(str): the initial sysop password to user
             version(str): the  MediaWiki version to create docker applications for
+            container_name(str): the name of the container to be used
             extensionMap(dict): a map of extensions to be installed
             wikiId(str): the wikiId to create a py-3rdparty-mediawiki user for (if any)
             sqlPort(int): the base port to be used for  publishing the SQL port (3306) for the docker applications
@@ -108,6 +108,10 @@ class DockerApplication(object):
         self.underscoreVersion=version.replace(".","_")
         self.shortVersion=self.getShortVersion()
         # container names
+        if container_name is None:
+            self.container_name=f"mw{self.underscoreVersion}"
+        else:
+            self.container_name=container_name
         # branch as need for git clone e.g. https://gerrit.wikimedia.org/g/mediawiki/extensions/MagicNoCache
         self.branch=f"REL{self.getShortVersion('_')}"
         self.mariaDBVersion=mariaDBVersion
@@ -174,20 +178,15 @@ class DockerApplication(object):
         except Exception as ex:
             ok=Logger.check_and_log(str(ex), False)
         return ok
-
-            
-    def defaultContainerName(self):
-        '''
-        return the default container name which consists of the 
-        my name with the version appended
-        
-        Returns
-            str: the default container name
-        '''
-        return f"{self.name}_{self.version}"
     
     def getContainerName(self,kind:str,separator:str):
-        containerName=f"mw{self.underscoreVersion}{separator}{kind}{separator}1"
+        """
+        get my container Name
+        """
+        if self.container_name is None:
+            containerName=f"mw{self.underscoreVersion}{separator}{kind}{separator}1"
+        else:
+            containerName=f"{self.container_name}{separator}{kind}"
         return containerName
     
     def getContainers(self):
@@ -218,7 +217,7 @@ class DockerApplication(object):
         template_dir = os.path.realpath(f'{resourcePath}/templates')
         #print(f"jinja template directory is {template_dir}")
         home = str(Path.home())
-        self.dockerPath=f'{home}/.pymediawikidocker/mw{self.underscoreVersion}' 
+        self.dockerPath=f'{home}/.pymediawikidocker/{self.container_name}' 
         os.makedirs(self.dockerPath,exist_ok=True)
         env = Environment(loader=FileSystemLoader(template_dir))
         return env
@@ -448,7 +447,7 @@ class DockerApplication(object):
         generate all files needed for the docker handling
         '''
         self.generate("mwDockerfile",f"{self.dockerPath}/Dockerfile")
-        self.generate("mwCompose.yml",f"{self.dockerPath}/docker-compose.yml",mySQLRootPassword=self.mySQLRootPassword,mySQLPassword=self.mySQLPassword)
+        self.generate("mwCompose.yml",f"{self.dockerPath}/docker-compose.yml",mySQLRootPassword=self.mySQLRootPassword,mySQLPassword=self.mySQLPassword,container_name=self.container_name)
         self.generate(f"mwLocalSettings{self.shortVersion}.php",f"{self.dockerPath}/LocalSettings.php",mySQLPassword=self.mySQLPassword,hostname=self.hostname,extensions=self.extensionMap.values(),mwShortVersion=self.shortVersion,logo=self.logo)
         self.generate(f"mwWiki{self.shortVersion}.sql",f"{self.dockerPath}/wiki.sql")
         self.generate(f"addSysopUser.sh",f"{self.dockerPath}/addSysopUser.sh",user=self.user,password=self.password)
