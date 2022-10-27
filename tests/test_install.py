@@ -4,7 +4,7 @@ Created on 2021-06-14
 @author: wf
 '''
 import datetime
-import re
+import socket
 import unittest
 import io
 import mwdocker
@@ -54,6 +54,22 @@ class TestInstall(Basetest):
             userCountRecords=mwApp.sqlQuery("select count(*) from user;")
             print(userCountRecords)
         mwCluster.close()
+        
+    def testSocketGetHostname(self):
+        """
+        test for https://github.com/python/cpython/issues/79345
+        """
+        debug=self.debug
+        debug=True
+        for i,hostname in enumerate([socket.gethostname(),socket.getfqdn()]):
+            if debug:
+                print(f"{i}:{hostname}")
+        for i,addr in enumerate(["localhost","127.0.0.1","fix.local","::1"]):
+            hostname=socket.gethostbyaddr(addr)
+            if debug:
+                print(f"{i}:{hostname}")
+        
+        
         
     def testMariaDBVersion(self):
         """
