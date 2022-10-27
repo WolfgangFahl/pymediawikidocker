@@ -65,9 +65,12 @@ class TestInstall(Basetest):
             if debug:
                 print(f"{i}:{hostname}")
         for i,addr in enumerate(["localhost","127.0.0.1","fix.local","::1"]):
-            hostname=socket.gethostbyaddr(addr)
-            if debug:
-                print(f"{i}:{hostname}")
+            try:
+                hostname=socket.gethostbyaddr(addr)
+                if debug:
+                    print(f"{i}:{hostname}")
+            except Exception as ex:
+                print(f"Exception: {str(ex)}")
         
         
         
