@@ -3,22 +3,23 @@ Created on 2022-10-25
 
 @author: wf
 '''
-from bs4 import BeautifulSoup
-from urllib.request import Request, urlopen
+from mwdocker.webscrape import WebScrape
 
-class HtmlTables(object):
+class HtmlTables(WebScrape):
     '''
     HtmlTables extractor
     '''
 
-    def __init__(self, url):
+    def __init__(self, url:str, debug=False,showHtml=False):
         '''
         Constructor
+        
+        url(str): the url to read the tables from
+        debug(bool): if True switch on debugging
+        showHtml(bool): if True show the HTML retrieved
         '''
-        req = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-        self.html_page = urlopen(req).read()
-
-        self.soup = BeautifulSoup(self.html_page, 'html.parser')
+        super().__init__(debug, showHtml)
+        self.soup=super().getSoup(url, showHtml)
         
     def get_tables(self,header_tag:str=None)->dict:
         """

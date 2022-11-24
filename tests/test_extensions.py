@@ -25,6 +25,7 @@ class TestExtensions(Basetest):
         ext.name="UrlGetParameters"
         ext.url="https://www.mediawiki.org/wiki/Extension:UrlGetParameters"
         debug=self.debug
+        debug=True
         ext.getDetailsFromUrl(showHtml=debug)
         if debug:
             print(ext)

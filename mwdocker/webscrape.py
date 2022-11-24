@@ -3,7 +3,7 @@ Created on 2020-08-20
 
 @author: wf
 '''
-import urllib.request
+from urllib.request import Request, urlopen
 from bs4 import BeautifulSoup
 
 class WebScrape(object):
@@ -18,8 +18,7 @@ class WebScrape(object):
         self.err=None
         self.valid=False
         self.debug=debug
-        self.showHtml=showHtml
-        
+        self.showHtml=showHtml  
         
     def getSoup(self,url,showHtml):
         '''
@@ -28,8 +27,8 @@ class WebScrape(object):
         Args:
            showHtml(boolean): True if the html code should be pretty printed and shown
         '''
-        response = urllib.request.urlopen(url)
-        html = response.read()
+        req = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+        html = urlopen(req).read()
         soup = BeautifulSoup(html, 'html.parser', from_encoding='utf-8')  
         if showHtml:
             self.printPrettyHtml(soup)
@@ -44,6 +43,4 @@ class WebScrape(object):
             soup(BeuatifulSoup): the parsed html to print
         '''
         prettyHtml=soup.prettify()
-        print(prettyHtml)   
-            
- 
+        print(prettyHtml)

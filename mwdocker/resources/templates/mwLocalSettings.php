@@ -3,6 +3,9 @@
 # enable Support for Semantic MediaWiki
 # see https://www.semantic-mediawiki.org/wiki/Help:EnableSemantics
 # Version of SemanticMediaWiki at install time: {{smwVersion}}
+{% if smwVersion >= "4" %}
+wfLoadExtension( 'SemanticMediaWiki' );
+{% endif %}
 enableSemantics();     
 {% endif %}
 {% for extension in extensions %}
