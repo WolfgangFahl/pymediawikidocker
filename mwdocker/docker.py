@@ -16,7 +16,7 @@ from jinja2.exceptions import TemplateNotFound
 import mysql.connector
 from mysql.connector import Error
 from pathlib import Path
-from wikibot.wikiuser import WikiUser
+from wikibot3rd.wikiuser import WikiUser
 from mwdocker.logger import Logger
 from mwdocker.html_table import HtmlTables
 from mwdocker.mariadb import MariaDB
