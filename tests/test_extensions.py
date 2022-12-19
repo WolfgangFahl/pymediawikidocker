@@ -25,7 +25,6 @@ class TestExtensions(Basetest):
         ext.name="UrlGetParameters"
         ext.url="https://www.mediawiki.org/wiki/Extension:UrlGetParameters"
         debug=self.debug
-        debug=True
         ext.getDetailsFromUrl(showHtml=debug)
         if debug:
             print(ext)
@@ -83,11 +82,11 @@ class TestExtensions(Basetest):
         #debug=False
         for url in [
             #"https://www.openresearch.org/wiki/Special:Version",
-            "https://confident.dbis.rwth-aachen.de/or/index.php/Special:Version"
+            "https://confident.dbis.rwth-aachen.de/or/index.php?title=Special:Version",
             "https://wiki.bitplan.com/index.php/Special:Version"
             
         ]:
-            extList=ExtensionList.fromSpecialVersion(url,showHtml=False,debug=True)
+            extList=ExtensionList.fromSpecialVersion(url,showHtml=False,debug=debug)
             extList.extensions=sorted(extList.extensions,key=lambda ext:ext.name)
             print(f"found {len(extList.extensions)} extensions for {url}")
             if debug:
