@@ -115,6 +115,9 @@ class DockerApplication(object):
         # branch as need for git clone e.g. https://gerrit.wikimedia.org/g/mediawiki/extensions/MagicNoCache
         self.branch=f"REL{self.getShortVersion('_')}"
         self.mariaDBVersion=mariaDBVersion
+        self.composerVersion=1
+        if self.shortVersion>="139":
+            self.composerVersion=2
         # hostname and ports
         self.hostname=socket.getfqdn()
         if self.hostname=="1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa":
@@ -446,7 +449,7 @@ class DockerApplication(object):
         '''
         generate all files needed for the docker handling
         '''
-        self.generate("mwDockerfile",f"{self.dockerPath}/Dockerfile")
+        self.generate("mwDockerfile",f"{self.dockerPath}/Dockerfile",composerVersion=self.composerVersion)
         self.generate("mwCompose.yml",f"{self.dockerPath}/docker-compose.yml",mySQLRootPassword=self.mySQLRootPassword,mySQLPassword=self.mySQLPassword,container_name=self.container_name)
         self.generate(f"mwLocalSettings{self.shortVersion}.php",f"{self.dockerPath}/LocalSettings.php",mySQLPassword=self.mySQLPassword,hostname=self.hostname,extensions=self.extensionMap.values(),mwShortVersion=self.shortVersion,logo=self.logo)
         self.generate(f"mwWiki{self.shortVersion}.sql",f"{self.dockerPath}/wiki.sql")
