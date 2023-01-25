@@ -124,6 +124,13 @@
 			"composer": "\"mediawiki\/mermaid\": \"~3.0\""
 		},
 		{
+			"name": "MsUpload",
+			"extension": "MsUpload",
+			"url": "https://github.com/wikimedia/mediawiki-extensions-MsUpload",
+			"since": "2013-04-13T00:00:00",
+            "purpose": "The MsUpload extension allows users to upload multiple files by drag & drop in the standard MediaWiki edit page. "
+        },
+	    {
 			"name": "Nuke",
 			"extension": "Nuke",
 			"url": "https://www.mediawiki.org/wiki/Extension:Nuke",
