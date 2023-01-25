@@ -14,7 +14,9 @@ class MediaWikiCluster(object):
     a cluster of mediawiki docker Applications
     '''
     # https://hub.docker.com/_/mediawiki
-    defaultVersions=["1.27.7","1.31.16","1.35.8","1.37.6","1.38.4"]
+    # 2023-01-13
+    # MediaWiki Extensions and Skins Security Release Supplement (1.35.9/1.38.4/1.39.1)
+    defaultVersions=["1.27.7","1.31.16","1.35.9","1.37.6","1.38.4","1.39.1"]
     defaultExtensionNameList=["Admin Links","Header Tabs","SyntaxHighlight","Variables"]
     defaultUser="Sysop"
     defaultPassword="sysop-1234!"
@@ -207,9 +209,9 @@ class MediaWikiCluster(object):
         mwApp=DockerApplication(user=self.user,password=self.password,version=version,container_name=self.container_name,extensionMap=self.extensionMap,wikiId=wikiId,mariaDBVersion=self.mariaDBVersion,smwVersion=self.smwVersion,port=port,sqlPort=sqlPort,mySQLRootPassword=self.mySQLRootPassword,logo=self.logo,debug=self.debug)
         return mwApp
 
-__version__ = "0.5.1"
+__version__ = "0.7.0"
 __date__ = '2021-06-21'
-__updated__ = '2022-10-28'
+__updated__ = '2023-01-25'
 DEBUG=False
 
 def main(argv=None): # IGNORE:C0111
