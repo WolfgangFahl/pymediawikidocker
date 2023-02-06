@@ -67,8 +67,9 @@
 			"giturl": "https://github.com/samwilson/diagrams-extension.git",
 			"purpose": "Render Graphviz, Mscgen, and PlantUML diagrams in wiki pages.",
 			"since": "2019-12-12T00:00:00",
-			"url": "https://www.mediawiki.org/wiki/Extension:Diagrams"
-		},
+			"url": "https://www.mediawiki.org/wiki/Extension:Diagrams",
+			"composer": "\"samwilson\/diagrams\": \"~0.11.0\""
+        },
 		{
 			"name": "Header Tabs",
 			"extension": "HeaderTabs",
