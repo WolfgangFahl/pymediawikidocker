@@ -1,8 +1,8 @@
--- MariaDB dump 10.19  Distrib 10.8.6-MariaDB, for debian-linux-gnu (x86_64)
+-- MariaDB dump 10.19  Distrib 10.9.4-MariaDB, for debian-linux-gnu (x86_64)
 --
 -- Host: localhost    Database: wiki
 -- ------------------------------------------------------
--- Server version	10.8.6-MariaDB-1:10.8.6+maria~ubu2204
+-- Server version	10.9.4-MariaDB-1:10.9.4+maria~ubu2204
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -38,6 +38,9 @@ CREATE TABLE `actor` (
 
 LOCK TABLES `actor` WRITE;
 /*!40000 ALTER TABLE `actor` DISABLE KEYS */;
+INSERT INTO `actor` VALUES
+(1,1,'Sysop'),
+(2,2,'MediaWiki default');
 /*!40000 ALTER TABLE `actor` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -839,7 +842,7 @@ CREATE TABLE `logging` (
 LOCK TABLES `logging` WRITE;
 /*!40000 ALTER TABLE `logging` DISABLE KEYS */;
 INSERT INTO `logging` VALUES
-(1,'create','create','20230206091127',2,0,'Main_Page',1,1,'a:1:{s:17:\"associated_rev_id\";i:1;}',0);
+(1,'create','create','20230206162947',2,0,'Main_Page',1,1,'a:1:{s:17:\"associated_rev_id\";i:1;}',0);
 /*!40000 ALTER TABLE `logging` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -969,7 +972,7 @@ CREATE TABLE `page` (
 LOCK TABLES `page` WRITE;
 /*!40000 ALTER TABLE `page` DISABLE KEYS */;
 INSERT INTO `page` VALUES
-(1,0,'Main_Page',0,1,0.037261018214,'20230206091127',NULL,1,755,'wikitext',NULL);
+(1,0,'Main_Page',0,1,0.146782531068,'20230206162947',NULL,1,755,'wikitext',NULL);
 /*!40000 ALTER TABLE `page` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1277,7 +1280,7 @@ CREATE TABLE `revision` (
 LOCK TABLES `revision` WRITE;
 /*!40000 ALTER TABLE `revision` DISABLE KEYS */;
 INSERT INTO `revision` VALUES
-(1,1,0,2,'20230206091127',0,0,755,0,'22vz5zlxa2zctewimaum2bf1due8hkl');
+(1,1,0,2,'20230206162947',0,0,755,0,'22vz5zlxa2zctewimaum2bf1due8hkl');
 /*!40000 ALTER TABLE `revision` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1642,6 +1645,9 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
+INSERT INTO `user` VALUES
+(1,'Sysop','',':pbkdf2:sha512:30000:64:b5VpYxjF7jllFpMHXWjHow==:VjEZ+hSm1S3GrgcwBdQJA5YyKNQRg25u4MFFOKYgP5MtLnIHSyO3V8nazUf2HqgeuZfgFldx43opaXbmZqtlXQ==','',NULL,'','20230206162948','ab1f1d28b135415bcb8bdc3fef50ffda',NULL,'\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0',NULL,'20230206162947',0,NULL),
+(2,'MediaWiki default','','','',NULL,'','20230206162947','*** INVALID ***\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0',NULL,NULL,NULL,'20230206162947',0,NULL);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1833,4 +1839,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-02-06  9:25:30
+-- Dump completed on 2023-02-06 16:40:16
