@@ -182,7 +182,7 @@
 		{
 			"name": "Semantic Result Formats",
 			"extension": "SemanticResultFormats",
-			"composer": "\"mediawiki\/semantic-result-formats\": \"~3.1\"",
+			"composer": "\"mediawiki\/semantic-result-formats\": \"~4.0.1\"",
 			"purpose": "Additional result formats for Semantic MediaWiki queries",
 			"url": "https://www.semantic-mediawiki.org/wiki/Extension:Semantic_Result_Formats"
 		},
