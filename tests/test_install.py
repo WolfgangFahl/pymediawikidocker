@@ -7,6 +7,7 @@ import datetime
 import socket
 import unittest
 import io
+import re
 import mwdocker
 from mwdocker.mwcluster import MediaWikiCluster
 
@@ -124,7 +125,11 @@ class TestInstall(Basetest):
         '''
         test the wikiUser handling
         '''
-        mwCluster=MediaWikiCluster(MediaWikiCluster.defaultVersions,wikiIdList=["mw27test","mw31test","mw35test","mw36test","mw37test"])
+        wikiIdList=[]
+        for version in MediaWikiCluster.defaultVersions:
+            minorVersion=re.sub(r"1.([0-9]+)(.[0-9]*)?",r"\1",version)
+            wikiIdList.append(f"mw{minorVersion}test")
+        mwCluster=MediaWikiCluster(MediaWikiCluster.defaultVersions,wikiIdList)
         mwCluster.createApps()
         for mwApp in mwCluster.apps.values():
             wikiUser=mwApp.createWikiUser(store=False)
