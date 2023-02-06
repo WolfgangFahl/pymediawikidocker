@@ -117,6 +117,13 @@
 			"composer": "\"mediawiki\/maps\": \"~7.0\""
 		},
 		{
+			"name": "Maps9",
+			"extension": "Maps",
+			"purpose": "Enables embedding of dynamic maps into wiki pages, geocoding of addresses and other geographical operations",
+			"url": "https://github.com/JeroenDeDauw/Maps/blob/master/README.md#maps",
+			"composer": "\"mediawiki\/maps\": \"~9.0.5\""
+		},
+		{
 			"name": "Mermaid",
 			"extension": "Mermaid",
 			"url": "https://github.com/SemanticMediaWiki/Mermaid",
