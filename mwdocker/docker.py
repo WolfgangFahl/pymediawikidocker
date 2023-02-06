@@ -260,7 +260,7 @@ class DockerApplication(object):
            store(bool): if True save my user data to the relevant ini File
         '''
         if self.wikiId is None:
-            raise("createWikiUser needs wikiId to be set but it is None")
+            raise Exception("createWikiUser needs wikiId to be set but it is None")
         userDict={
             "wikiId":f"{self.wikiId}",
             "url": f"{self.url}",

@@ -129,7 +129,7 @@ class TestInstall(Basetest):
         for version in MediaWikiCluster.defaultVersions:
             minorVersion=re.sub(r"1.([0-9]+)(.[0-9]*)?",r"\1",version)
             wikiIdList.append(f"mw{minorVersion}test")
-        mwCluster=MediaWikiCluster(MediaWikiCluster.defaultVersions,wikiIdList)
+        mwCluster=MediaWikiCluster(MediaWikiCluster.defaultVersions,wikiIdList=wikiIdList)
         mwCluster.createApps()
         for mwApp in mwCluster.apps.values():
             wikiUser=mwApp.createWikiUser(store=False)
