@@ -1,3 +1,5 @@
 #!/bin/bash
 # WF 2020-06-03
-python3 -m unittest discover
+pip install green
+green
+#python3 -m unittest discover
