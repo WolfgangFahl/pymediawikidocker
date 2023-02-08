@@ -80,7 +80,7 @@ COPY startRunJobs.sh /root
 COPY addCronTabEntry.sh /root
 
 # copy the plantuml script
-COPY plantuml.sh /root/plantuml
+COPY plantuml.sh /root
 
 # make the scripts executable
 RUN chmod +x /tmp/initdb.sh /tmp/update.sh /tmp/addSysopUser.sh /tmp/installExtensions.sh /root/addCronTabEntry.sh /root/startRunJobs.sh /root/plantuml
