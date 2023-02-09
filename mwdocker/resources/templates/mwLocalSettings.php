@@ -6,7 +6,10 @@
 {% if smwVersion >= "4" %}
 wfLoadExtension( 'SemanticMediaWiki' );
 {% endif %}
-enableSemantics();     
+enableSemantics();
+# https://www.semantic-mediawiki.org/wiki/Help:$smwgQMaxInlineLimit
+$smwgQMaxLimit=10000;
+$smwgQMaxInlineLimit=2000;
 {% endif %}
 {% for extension in extensions %}
 # {{ extension.name }}
