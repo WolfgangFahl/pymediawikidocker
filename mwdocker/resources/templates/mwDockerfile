@@ -16,7 +16,6 @@ RUN apt-get -y update && \
     git \
     graphviz \
     imagemagick \
-    plantuml \
     procps \
     ssh-client \
     vim \
@@ -26,9 +25,9 @@ RUN apt-get -y update && \
     && docker-php-ext-install zip \
     && rm -rf /var/lib/apt/lists/*
 
+# plantuml
 #  openssh-server \
 #  dialog \
-#  imagemagick \
 #  libjpeg62-turbo-dev \
 #  libfreetype6-dev \
 #  libpng-dev \
