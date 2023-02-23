@@ -277,7 +277,7 @@ class DockerApplication(object):
     
     def execute(self,command_str):
         '''
-        execute the given command str
+        execute the given command string
         
         Args:
             command_str: str - a command string to be executed ...
