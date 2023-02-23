@@ -275,14 +275,17 @@ class DockerApplication(object):
             wikiUser.save()
         return wikiUser
     
-    def execute(self,command):
+    def execute(self,command_str):
         '''
-        execute the given command
+        execute the given command str
+        
+        Args:
+            command_str: str - a command string to be executed ...
         '''
         if self.mwContainer:
             if self.verbose:
-                print(f"Executing docker command {command}")
-            docker.execute(container=self.mwContainer.container,command=command)
+                print(f"Executing docker command {command_str}")
+            docker.execute(container=self.mwContainer.container,command=[command_str])
         else:
             mwContainerNameDash=self.getContainerName("mw", "-")
             mwContainerNameUnderscore=self.getContainerName("mw", "_")
