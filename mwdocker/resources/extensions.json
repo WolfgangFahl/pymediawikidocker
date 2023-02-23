@@ -139,6 +139,14 @@
 			"since": "2013-04-13T00:00:00",
             "purpose": "The MsUpload extension allows users to upload multiple files by drag & drop in the standard MediaWiki edit page. "
         },
+        {
+			"name": "Network",
+			"extension": "Network",
+			"giturl": "https://github.com/ProfessionalWiki/Network",
+			"url": "https://www.mediawiki.org/wiki/Extension:Network",
+			"purpose": "The Network extension allows visualizing connections between wiki pages via an interactive network graph.",
+			"composer": "\"professional-wiki\/network\": \"~2.0\""
+		},
 	    {
 			"name": "Nuke",
 			"extension": "Nuke",
