@@ -323,6 +323,9 @@ class DockerApplication(object):
         
         Args:
             timeout(int): number of seconds for timeout
+            
+        Returns:
+            the connection
         '''
         if self.dbConn is None:
             try:
@@ -336,6 +339,8 @@ class DockerApplication(object):
             except Error as e :
                 errMsg=str(e)
                 print (f"Connection to {self.database} on {self.host} with user {self.dbUser} failed error: {errMsg}" )
+                if "Access denied" in errMsg:
+                    raise e
         return self.dbConn
     
     def doCheckDBConnection(self,timeout:int=10)->bool:
@@ -371,14 +376,19 @@ class DockerApplication(object):
         tries=1
         ok=False
         while not ok and tries<=maxTries:
-            ok=self.doCheckDBConnection(timeout=timeout)
-            if not ok:
+            try:
+                ok=self.doCheckDBConnection(timeout=timeout)
+                if not ok:
+                    if self.verbose:
+                        print(f"Connection attempt #{tries} failed will retry in {sleep} secs" )
+                    tries+=1    
+                    # wait before trying
+                    time.sleep(sleep)
+                    sleep=sleep*2
+            except Exception as _ex:
                 if self.verbose:
-                    print(f"Connection attempt #{tries} failed will retry in {sleep} secs" )
-                tries+=1    
-                # wait before trying
-                time.sleep(sleep)
-                sleep=sleep*2
+                    print(f"Connection attempt #{tries} failed with exception - will not retry ...")
+                break
         return ok
     
     def generate(self,templateName:str,targetPath:str,**kwArgs):
