@@ -79,7 +79,7 @@ class DBStatus():
     max_tries: int
     ok: bool
     msg:str
-    ex:typing.Optional[Exception]
+    ex:typing.Optional[Exception]=None
     
 class DockerApplication(object):
     '''
