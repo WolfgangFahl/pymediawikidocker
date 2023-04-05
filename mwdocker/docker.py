@@ -487,6 +487,7 @@ class DockerApplication(object):
         if forceRebuild:
             docker.compose.build()
         # run docker compose up
+        # this might take a while e.g. downloading
         docker.compose.up(detach=True)    
         self.getContainers()
             
