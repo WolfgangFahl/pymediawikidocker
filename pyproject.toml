@@ -15,7 +15,7 @@ readme = "README.md"
 license = {text = "Apache-2.0"} 
 dependencies = [
 	#python-on-whales
-	'python-on-whales>=0.57.0',
+	'python-on-whales>=0.56.0',
 	# https://pypi.org/project/Jinja2/
 	'Jinja2',
 	#

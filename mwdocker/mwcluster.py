@@ -17,7 +17,8 @@ class MediaWikiCluster(object):
     # 2023-01-13
     # MediaWiki Extensions and Skins Security Release Supplement (1.35.9/1.38.4/1.39.1)
     # 2023-02-23 1.39.2 released
-    defaultVersions=["1.27.7","1.31.16","1.35.9","1.37.6","1.38.5","1.39.2"]
+    # 2023-04-04 1.39.3 upgrade
+    defaultVersions=["1.27.7","1.31.16","1.35.10","1.37.6","1.38.6","1.39.3"]
     defaultExtensionNameList=["Admin Links","Header Tabs","SyntaxHighlight","Variables"]
     defaultUser="Sysop"
     defaultPassword="sysop-1234!"
