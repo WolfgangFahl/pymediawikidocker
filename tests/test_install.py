@@ -51,7 +51,8 @@ class TestInstall(Basetest):
         for mwApp in apps:
             self.assertTrue(mwApp.dbContainer is not None)
             self.assertTrue(mwApp.mwContainer is not None)
-            self.assertTrue(mwApp.checkDBConnection())
+            dbStatus=mwApp.checkDBConnection()
+            self.assertTrue(dbStatus.ok)
             userCountRecords=mwApp.sqlQuery("select count(*) from user;")
             print(userCountRecords)
         mwCluster.close()

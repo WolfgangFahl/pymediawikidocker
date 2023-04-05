@@ -10,6 +10,7 @@ import datetime
 import time
 import secrets
 import socket
+import typing
 import re
 from jinja2 import Environment, FileSystemLoader
 from jinja2.exceptions import TemplateNotFound
@@ -22,6 +23,7 @@ from mwdocker.html_table import HtmlTables
 from mwdocker.mariadb import MariaDB
 import pprint
 from lodstorage.lod import LOD
+from dataclasses import dataclass
 
 class DockerMap():
     '''
@@ -67,6 +69,17 @@ class DockerContainer():
         ok=self.container.state.running
         msg=f"mediawiki {self.kind} container {self.name}"
         return Logger.check_and_log(msg, ok) 
+    
+@dataclass
+class DBStatus():
+    """
+    the Database Status
+    """
+    attempts: int
+    max_tries: int
+    ok: bool
+    msg:str
+    ex:typing.Optional[Exception]
     
 class DockerApplication(object):
     '''
@@ -343,23 +356,25 @@ class DockerApplication(object):
                     raise e
         return self.dbConn
     
-    def doCheckDBConnection(self,timeout:int=10)->bool:
+    def doCheckDBConnection(self,dbStatus:DBStatus,timeout:int=10):
         '''
         check the database connection of this application
-        '''       
-        ok=False
-        conn_msg=f"Connection to {self.database} on {self.host} with user {self.dbUser}"
+        
+        Args:
+            timeout(int): how many seconds to wait
+            
+        Returns:
+            DBStatus
+        '''          
+        dbStatus.attempts+=1
         self.dbConnect(timeout=timeout)
         if self.dbConn and self.dbConn.is_connected():
             rows=self.sqlQuery("select database();")
-            ok=True
+            dbStatus.ok=True
             if self.verbose:
-                print (f"{conn_msg} established database returns: {rows[0]}")
-        else:
-            raise(f"{conn_msg} failed")        
-        return ok
+                print (f"{dbStatus.msg} established database returns: {rows[0]}")     
     
-    def checkDBConnection(self,timeout:float=10,initialSleep:float=2.5,maxTries:int=7)->bool:
+    def checkDBConnection(self,timeout:float=10,initialSleep:float=2.5,maxTries:int=7)->DBStatus:
         '''
         check database connection with retries
         
@@ -370,29 +385,29 @@ class DockerApplication(object):
             with 0.5 secs and doubles on every retry
             
         Returns:
-            bool: if connection was successful
-        '''
+            dbStatus: the status
+        ''' 
+        conn_msg=f"SQL-Connection to {self.database} on {self.host} port {self.sqlPort} with user {self.dbUser}"
+        dbStatus=DBStatus(attempts=0,ok=False,msg=conn_msg,max_tries=maxTries)
         if self.debug:
-            print (f"Trying DB-Connection to {self.database} on {self.host} port {self.sqlPort} with user {self.dbUser} with max {maxTries} tries and {timeout}s timeout per try - initial sleep {initialSleep}s")
+            print (f"Trying {dbStatus.msg} with max {maxTries} tries and {timeout}s timeout per try - initial sleep {initialSleep}s")
         time.sleep(initialSleep)
         sleep=0.5
-        tries=1
-        ok=False
-        while not ok and tries<=maxTries:
+        while not dbStatus.ok and dbStatus.attempts<=maxTries:
             try:
-                ok=self.doCheckDBConnection(timeout=timeout)
-                if not ok:
+                self.doCheckDBConnection(dbStatus,timeout=timeout)
+                if not dbStatus.ok:
                     if self.verbose:
-                        print(f"Connection attempt #{tries} failed will retry in {sleep} secs" )
-                    tries+=1    
+                        print(f"Connection attempt #{dbStatus.attempts}/{dbStatus.max_tries} failed will retry in {sleep} secs" )   
                     # wait before trying
                     time.sleep(sleep)
                     sleep=sleep*2
-            except Exception as _ex:
+            except Exception as ex:
+                dbStatus.ex=ex
                 if self.verbose:
-                    print(f"Connection attempt #{tries} failed with exception - will not retry ...")
+                    print(f"Connection attempt #{dbStatus.attempts} failed with exception - will not retry ...")
                 break
-        return ok
+        return dbStatus
     
     def generate(self,templateName:str,targetPath:str,**kwArgs):
         '''

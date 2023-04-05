@@ -143,7 +143,8 @@ class MediaWikiCluster(object):
             if withInitDB:
                 if self.verbose:
                     print("Initializing MediaWiki SQL tables")
-                if mwApp.checkDBConnection():
+                dbStatus=mwApp.checkDBConnection()
+                if dbStatus.ok:
                     # first install extensions
                     mwApp.installExtensions()
                     # then create and fill database and update it
