@@ -348,12 +348,15 @@ class DockerApplication(object):
         check the database connection of this application
         '''       
         ok=False
+        conn_msg=f"Connection to {self.database} on {self.host} with user {self.dbUser}"
         self.dbConnect(timeout=timeout)
         if self.dbConn and self.dbConn.is_connected():
             rows=self.sqlQuery("select database();")
             ok=True
             if self.verbose:
-                print (f"Connection to {self.database} on {self.host} with user {self.dbUser} established database returns: {rows[0]}")
+                print (f"{conn_msg} established database returns: {rows[0]}")
+        else:
+            raise(f"{conn_msg} failed")        
         return ok
     
     def checkDBConnection(self,timeout:float=10,initialSleep:float=2.5,maxTries:int=7)->bool:
