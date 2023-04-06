@@ -31,7 +31,6 @@ services:
       - {{sqlPort}}:3306
     
     volumes:
-       - mysql-etc:/etc
        - mysql-data:/var/lib/mysql
       
 # mediawiki
@@ -55,16 +54,17 @@ services:
       - db
     
     volumes:
-      - wikiimages:/var/www/html/images
+      - wiki-www:/var/www/
+      - wiki-etc:/etc
     # After initial setup, download LocalSettings.php to the same directory as
     # this yaml and uncomment the following line and use compose to restart
     # the mediawiki service
     # - ./LocalSettings.php:/var/www/html/LocalSettings.php
     
 volumes:
-  mysql-etc:
-    driver: local
   mysql-data:
     driver: local
-  wikiimages:
+  wiki-etc:
+    driver: local
+  wiki-www:
     driver: local
