@@ -2,7 +2,7 @@
 Created on 2021-08-06
 @author: wf
 '''
-from mwdocker.docker import DockerApplication
+from mwdocker.docker import DockerApplication, Host
 from mwdocker.mw import ExtensionList
 import sys
 from argparse import ArgumentParser
@@ -24,7 +24,11 @@ class MediaWikiCluster(object):
     defaultPassword="sysop-1234!"
     defaultLogo="$wgResourceBasePath/resources/assets/wiki.png"
 
-    def __init__(self,versions:list,user:str=None,password:str=None,container_name:str=None,extensionNameList:list=None,extensionJsonFile:str=None,wikiIdList:list=None,sqlPort:int=9306,basePort:int=9080,networkName="mwNetwork",mariaDBVersion="10.11",smwVersion=None,mySQLRootPassword=None,logo=None,debug=False,verbose=True):
+    def __init__(self,versions:list,user:str=None,password:str=None,container_name:str=None,extensionNameList:list=None,extensionJsonFile:str=None,wikiIdList:list=None,sqlPort:int=9306,basePort:int=9080,
+        prot="http",
+        host=None,
+        script_path="",         
+        networkName="mwNetwork",mariaDBVersion="10.11",smwVersion=None,mySQLRootPassword=None,logo=None,debug=False,verbose=True):
         '''
         Constructor
         
@@ -39,6 +43,9 @@ class MediaWikiCluster(object):
             sqlPort(int): the base port to be used for  publishing the SQL port (3306) for the docker applications
             basePort(int): the base port to be used for publishing the HTML port (80) for the docker applications
             networkName(str): the name to use for the docker network to be shared by the cluster participants
+            prot(str): the protocol to use (http or https)
+            host(str): the hostname to use
+            script_path(str): the script_path to use
             mariaDBVersion(str): the Maria DB version to install as the SQL database provider for the docker applications
             smwVersion(str): Semantic MediaWiki Version to be used (if any)
             mySQLRootPassword(str): the mySQL root password to use for the database containers - if None a random password is generated
@@ -62,6 +69,9 @@ class MediaWikiCluster(object):
         self.password=password
         self.baseSqlPort=sqlPort
         self.basePort=basePort
+        self.prot=prot
+        self.host=host
+        self.script_path=script_path
         self.versions=versions
         if container_name is not None and len(self.versions)>1:
             print(f"container name {container_name} supplied with multiple versions - ignoring", file=sys.stderr)
@@ -209,12 +219,13 @@ class MediaWikiCluster(object):
         wikiId=None
         if self.wikiIdList is not None:
             wikiId=self.wikiIdList[i]                        
-        mwApp=DockerApplication(user=self.user,password=self.password,version=version,container_name=self.container_name,extensionMap=self.extensionMap,wikiId=wikiId,mariaDBVersion=self.mariaDBVersion,smwVersion=self.smwVersion,port=port,sqlPort=sqlPort,mySQLRootPassword=self.mySQLRootPassword,logo=self.logo,debug=self.debug)
+        mwApp=DockerApplication(user=self.user,password=self.password,version=version,container_name=self.container_name,extensionMap=self.extensionMap,wikiId=wikiId,mariaDBVersion=self.mariaDBVersion,smwVersion=self.smwVersion,port=port,
+                                prot=self.prot,host=self.host,script_path=self.script_path,sqlPort=sqlPort,mySQLRootPassword=self.mySQLRootPassword,logo=self.logo,debug=self.debug)
         return mwApp
 
-__version__ = "0.7.0"
+__version__ = "0.8.4"
 __date__ = '2021-06-21'
-__updated__ = '2023-01-25'
+__updated__ = '2023-04-06'
 DEBUG=False
 
 def main(argv=None): # IGNORE:C0111
@@ -233,7 +244,7 @@ def main(argv=None): # IGNORE:C0111
     program_license = '''%s
 
   Created by %s on %s.
-  Copyright 2021-2022 Wolfgang Fahl. All rights reserved.
+  Copyright 2021-2023 Wolfgang Fahl. All rights reserved.
 
   Licensed under the Apache License 2.0
   http://www.apache.org/licenses/LICENSE-2.0
@@ -252,6 +263,10 @@ def main(argv=None): # IGNORE:C0111
         parser.add_argument('-el', '--extensionList', dest='extensionNameList', nargs="*",default=MediaWikiCluster.defaultExtensionNameList,help="list of extensions to be installed [default: %(default)s]")
         parser.add_argument('-ej', '--extensionJson',dest='extensionJsonFile',default=None,help="additional extension descriptions default: None")
         parser.add_argument("-f", "--forceRebuild", dest="forceRebuild",   action="store_true", help="shall the applications rebuild be forced (with stop and remove of existing containers)")
+        parser.add_argument("--prot",default="http",help="change to https in case")
+        parser.add_argument("--script_path",default="",help="change to any script_path you might need to set")
+        parser.add_argument("--host", default=Host.get_default_host(),
+                            help="the host to serve / listen from [default: %(default)s]")
         parser.add_argument("--logo", default=MediaWikiCluster.defaultLogo, help="set Logo [default: %(default)s]")
         parser.add_argument('-mv', '--mariaDBVersion', dest='mariaDBVersion',default="10.9",help="mariaDB Version to be installed [default: %(default)s]")
         parser.add_argument('-p','--password',dest='password',default=MediaWikiCluster.defaultPassword, help="set password for initial user [default: %(default)s] ")
@@ -265,7 +280,13 @@ def main(argv=None): # IGNORE:C0111
         action="checking docker access" if args.check else "creating docker compose applications"
         print(f"{action} for mediawiki versions {args.versions}")
         # create a MediaWiki Cluster
-        mwCluster=MediaWikiCluster(args.versions,user=args.user,password=args.password,container_name=args.container_name,extensionJsonFile=args.extensionJsonFile,extensionNameList=args.extensionNameList,wikiIdList=args.wikiIdList,basePort=args.basePort,sqlPort=args.sqlPort,mariaDBVersion=args.mariaDBVersion,smwVersion=args.smwVersion,logo=args.logo,debug=args.debug)
+        mwCluster=MediaWikiCluster(args.versions,user=args.user,password=args.password,container_name=args.container_name,extensionJsonFile=args.extensionJsonFile,extensionNameList=args.extensionNameList,wikiIdList=args.wikiIdList,
+            host=args.host,
+            prot=args.prot,
+            script_path=args.script_path,
+            basePort=args.basePort,
+            sqlPort=args.sqlPort,
+            mariaDBVersion=args.mariaDBVersion,smwVersion=args.smwVersion,logo=args.logo,debug=args.debug)
         mwCluster.createApps()
         if args.check:
             return mwCluster.check()

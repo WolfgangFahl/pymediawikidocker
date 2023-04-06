@@ -81,12 +81,45 @@ class DBStatus():
     msg:str
     ex:typing.Optional[Exception]=None
     
+class Host():
+    @classmethod
+    def get_default_host(self) -> str:
+        """
+        get the default host as the fully qualifying hostname
+        of the computer the server runs on
+        
+        Returns:
+            str: the hostname
+        """
+        host = socket.getfqdn()
+        # work around https://github.com/python/cpython/issues/79345
+        if host == "1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa":
+            host = "localhost"  # host="127.0.0.1"
+        return host
+    
 class DockerApplication(object):
     '''
     MediaWiki Docker image
     '''
 
-    def __init__(self,user:str,password:str,name="mediawiki",version="1.35.7",container_name:str=None,extensionMap:dict={},wikiId:str=None,mariaDBVersion="10.9",smwVersion=None,logo=None,port=9080,sqlPort=9306,mySQLRootPassword=None,debug=False,verbose=True):
+    def __init__(self,
+                 user:str,
+                 password:str,
+                 name="mediawiki",
+                 version="1.39.3",
+                 container_name:str=None,
+                 extensionMap:dict={},
+                 wikiId:str=None,
+                 mariaDBVersion="10.11",
+                 smwVersion=None,logo=None,
+                 prot="http",
+                 host=None,
+                 script_path="",
+                 port=9080,
+                 sqlPort=9306,
+                 mySQLRootPassword=None,
+                 debug=False,
+                 verbose=True):
         '''
         Constructor
         
@@ -99,6 +132,9 @@ class DockerApplication(object):
             wikiId(str): the wikiId to create a py-3rdparty-mediawiki user for (if any)
             sqlPort(int): the base port to be used for  publishing the SQL port (3306) for the docker applications
             port(int): the port to be used for publishing the HTML port (80) for the docker applications
+            prot(str): the protocol to use (http or https)
+            host(str): the hostname to use
+            script_path(str): the script_path to use
             networkName(str): the name to use for the docker network to be shared by the cluster participants
             mariaDBVersion(str): the Maria DB version to install as the SQL database provider for the docker applications
             smwVersion(str): Semantic MediaWiki Version to be used (if any)
@@ -131,12 +167,12 @@ class DockerApplication(object):
         self.composerVersion=1
         if self.shortVersion>="139":
             self.composerVersion=2
-        # hostname and ports
-        self.hostname=socket.getfqdn()
-        if self.hostname=="1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa":
-            self.hostname="localhost"
+        self.host=host
+        self.hostname=host
         self.port=port
-        self.url=f"http://{self.hostname}:{self.port}"
+        self.script_path=script_path
+        self.base_url=f"{prot}://{self.hostname}"
+        self.url=f"{self.base_url}{script_path}:{self.port}"
         self.sqlPort=sqlPort
         self.logo=logo
         # debug and verbosity
@@ -154,7 +190,6 @@ class DockerApplication(object):
         self.getContainers()
         self.dbConn=None
         self.database="wiki"
-        self.host="localhost"
         self.dbUser="wikiuser"
         self.wikiUser=None
        
@@ -276,8 +311,8 @@ class DockerApplication(object):
             raise Exception("createWikiUser needs wikiId to be set but it is None")
         userDict={
             "wikiId":f"{self.wikiId}",
-            "url": f"{self.url}",
-            "scriptPath": "",
+            "url": f"{self.base_url}",
+            "scriptPath": f"{self.script_path}",
             "user": f"{self.user}",
             "email":"noreply@nouser.com",
             "version": f"{self.fullVersion}",
@@ -518,4 +553,3 @@ class DockerApplication(object):
         # this might take a while e.g. downloading
         docker.compose.up(detach=True)    
         self.getContainers()
-            
