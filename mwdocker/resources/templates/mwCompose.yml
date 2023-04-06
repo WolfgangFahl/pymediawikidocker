@@ -6,7 +6,7 @@
 #
 # Access via "http://localhost:{{port}}"
 #   (or "http://docker-machine ip:{{port}}" if using docker-machine)
-version: "3"
+version: "3.1"
 
 # 2 services
 #   db - database
@@ -31,7 +31,8 @@ services:
       - {{sqlPort}}:3306
     
     volumes:
-       - etc:/etc
+       - mysql-etc:/etc
+       - mysql-data:/var/lib/mysql
       
 # mediawiki
   mw:
@@ -61,7 +62,9 @@ services:
     # - ./LocalSettings.php:/var/www/html/LocalSettings.php
     
 volumes:
-  etc:
+  mysql-etc:
+    driver: local
+  mysql-data:
     driver: local
   wikiimages:
     driver: local

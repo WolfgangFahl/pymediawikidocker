@@ -24,7 +24,7 @@ class MediaWikiCluster(object):
     defaultPassword="sysop-1234!"
     defaultLogo="$wgResourceBasePath/resources/assets/wiki.png"
 
-    def __init__(self,versions:list,user:str=None,password:str=None,container_name:str=None,extensionNameList:list=None,extensionJsonFile:str=None,wikiIdList:list=None,sqlPort:int=9306,basePort:int=9080,networkName="mwNetwork",mariaDBVersion="10.8",smwVersion=None,mySQLRootPassword=None,logo=None,debug=False,verbose=True):
+    def __init__(self,versions:list,user:str=None,password:str=None,container_name:str=None,extensionNameList:list=None,extensionJsonFile:str=None,wikiIdList:list=None,sqlPort:int=9306,basePort:int=9080,networkName="mwNetwork",mariaDBVersion="10.11",smwVersion=None,mySQLRootPassword=None,logo=None,debug=False,verbose=True):
         '''
         Constructor
         
