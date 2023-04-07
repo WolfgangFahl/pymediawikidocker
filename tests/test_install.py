@@ -122,7 +122,7 @@ class TestInstall(Basetest):
         mwCluster=self.getMwCluster(withGenerate=True)
         mwCluster.start(forceRebuild=True)
         apps=mwCluster.apps.values()
-        self.assertEqual(len(mwCluster.versions),len(apps))
+        self.assertEqual(len(mwCluster.config.versions),len(apps))
         for mwApp in apps:
             self.assertTrue(mwApp.dbContainer is not None)
             self.assertTrue(mwApp.mwContainer is not None)
