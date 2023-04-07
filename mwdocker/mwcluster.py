@@ -158,7 +158,7 @@ def main(argv=None): # IGNORE:C0111
 
     program_name = "mwcluster"
     program_version = f"v{Version.version}"
-    program_build_date = str(Version.date)
+    program_build_date = str(Version.updated)
     program_version_message = f'{program_name} ({program_version},{program_build_date})'
     program_license = Version.license
     
