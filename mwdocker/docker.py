@@ -154,10 +154,10 @@ class DockerApplication(object):
                 software=tables["Installed software"]
                 software_map,_dup=LOD.getLookup(software, "Product", withDuplicates=False)
                 mw_version=software_map["MediaWiki"]["Version"]
-                ok=ok and Logger.check_and_log_equal("Mediawiki Version",mw_version,"expected ",self.version)
+                ok=ok and Logger.check_and_log_equal("Mediawiki Version",mw_version,"expected ",self.config.version)
                 db_version_str=software_map["MariaDB"]["Version"]
                 db_version=MariaDB.getVersion(db_version_str)
-                ok=ok and Logger.check_and_log(f"Maria DB Version {db_version} fitting expected {self.mariaDBVersion}?",self.mariaDBVersion.startswith(db_version))
+                ok=ok and Logger.check_and_log(f"Maria DB Version {db_version} fitting expected {self.config.mariaDBVersion}?",self.mariaDBVersion.startswith(db_version))
                 pass
         except Exception as ex:
             ok=Logger.check_and_log(str(ex), False)
@@ -249,7 +249,7 @@ class DockerApplication(object):
             wikiUser.save()
         return wikiUser
     
-    def execute(self,command_str):
+    def execute(self,command_str:str):
         '''
         execute the given command string
         
@@ -257,7 +257,7 @@ class DockerApplication(object):
             command_str: str - a command string to be executed ...
         '''
         if self.mwContainer:
-            if self.verbose:
+            if self.config.verbose:
                 print(f"Executing docker command {command_str}")
             docker.execute(container=self.mwContainer.container,command=[command_str])
         else:
@@ -267,12 +267,15 @@ class DockerApplication(object):
             raise Exception(f"{errMsg}")
     
     def close(self):
+        """
+        close the database
+        """
         self.dbClose()
     
     def sqlQuery(self,query):
-        '''
+        """
         run the given SQL query
-        '''
+        """
         if self.dbConn and self.dbConn.is_connected():
             cursor = self.dbConn.cursor()
             cursor.execute(query)
@@ -280,19 +283,19 @@ class DockerApplication(object):
             cursor.close()
             return rows
         else:
-            if self.verbose:
+            if self.config.verbose:
                 print (f"Connection to {self.database} on {self.config.config.host} with user {self.dbUser} not established" )
             return None
         
     def dbClose(self):
-        '''
+        """
         close the database connection
-        '''
+        """
         if self.dbConn and self.dbConn.is_connected():
             self.dbConn.close()
         
     def dbConnect(self,timeout:int=10):
-        '''
+        """
         connect to the database and return the connection
         
         Args:
@@ -300,7 +303,7 @@ class DockerApplication(object):
             
         Returns:
             the connection
-        '''
+        """
         if self.dbConn is None:
             try:
                 self.dbConn = mysql.connector.connect(host=self.config.host,
@@ -318,7 +321,7 @@ class DockerApplication(object):
         return self.dbConn
     
     def doCheckDBConnection(self,dbStatus:DBStatus,timeout:int=10):
-        '''
+        """
         check the database connection of this application
         
         Args:
@@ -326,17 +329,17 @@ class DockerApplication(object):
             
         Returns:
             DBStatus
-        '''          
+        """          
         dbStatus.attempts+=1
         self.dbConnect(timeout=timeout)
         if self.dbConn and self.dbConn.is_connected():
             rows=self.sqlQuery("select database();")
             dbStatus.ok=True
-            if self.verbose:
+            if self.config.config.verbose:
                 print (f"{dbStatus.msg} established database returns: {rows[0]}")     
     
     def checkDBConnection(self,timeout:float=10,initialSleep:float=2.5,maxTries:int=7)->DBStatus:
-        '''
+        """
         check database connection with retries
         
         Args:
@@ -347,7 +350,7 @@ class DockerApplication(object):
             
         Returns:
             dbStatus: the status
-        ''' 
+        """ 
         conn_msg=f"SQL-Connection to {self.database} on {self.config.host} port {self.config.sqlPort} with user {self.dbUser}"
         dbStatus=DBStatus(attempts=0,ok=False,msg=conn_msg,max_tries=maxTries)
         if self.config.debug:
@@ -358,7 +361,7 @@ class DockerApplication(object):
             try:
                 self.doCheckDBConnection(dbStatus,timeout=timeout)
                 if not dbStatus.ok:
-                    if self.verbose:
+                    if self.config.verbose:
                         print(f"Connection attempt #{dbStatus.attempts}/{dbStatus.max_tries} failed will retry in {sleep} secs" )   
                     # wait before trying
                     time.sleep(sleep)
@@ -370,22 +373,38 @@ class DockerApplication(object):
                 break
         return dbStatus
     
-    def generate(self,templateName:str,targetPath:str,**kwArgs):
+    def optionalWrite(self,targetPath:str,content:str,overwrite:bool=False):
+        """
+        optionally Write the modified content to the given targetPath
+        
+        Args:
+            targetPath(str): the path to write the content to
+            content(str): the content to write
+            overwrite(bool): if True overwrite the existing content
+        """
+        if not overwrite and os.path.isfile(targetPath):
+            if self.config.verbose:
+                print(f"{targetPath} already exists!")
+            return
+        with open(targetPath, "w") as targetFile:
+                targetFile.write(content)
+    
+    def generate(self,templateName:str,targetPath:str,overwrite:bool=False,**kwArgs):
         '''
         generate file at targetPath using the given templateName
         
         Args:
             templateName(str): the Jinja2 template to use
             targetPath(str): the path to the target file
+            overwrite(bool): if True overwrite existing files
             kwArgs(): generic keyword arguments to pass on to template rendering
-        
         '''
         try:
             template = self.env.get_template(templateName)
             timestamp=datetime.datetime.now().isoformat()
             content=template.render(mwVersion=self.config.version,mariaDBVersion=self.config.mariaDBVersion,port=self.config.port,sqlPort=self.config.sqlPort,smwVersion=self.config.smwVersion,timestamp=timestamp,**kwArgs)
-            with open(targetPath, "w") as targetFile:
-                targetFile.write(content)
+            self.optionalWrite(targetPath, content, overwrite)
+
         except TemplateNotFound:
             print(f"no template {templateName} for {self.config.name} {self.config.version}")     
     
@@ -414,7 +433,7 @@ class DockerApplication(object):
 }}"""
         return requireJson
         
-    def genComposerRequire(self,composerFilePath):
+    def genComposerRequire(self,composerFilePath,overwrite:bool=False):
         '''
         gen the composer.local.json require file
         
@@ -422,22 +441,24 @@ class DockerApplication(object):
             composerFilePath(str): the name of the file to generate
         '''
         requireJson=self.getComposerRequire()
-        with open(composerFilePath, "w") as composerFile:
-                composerFile.write(requireJson)
+        self.optionalWrite(composerFilePath, requireJson, overwrite)
              
-    def generateAll(self):
+    def generateAll(self,overwrite:bool=False):
         '''
         generate all files needed for the docker handling
+        
+        Args:
+            overwrite(bool): if True overwrite the existing files
         '''
-        self.generate("mwDockerfile",f"{self.dockerPath}/Dockerfile",composerVersion=self.composerVersion)
-        self.generate("mwCompose.yml",f"{self.dockerPath}/docker-compose.yml",mySQLRootPassword=self.config.mySQLRootPassword,mySQLPassword=self.config.mySQLPassword,container_base_name=self.config.container_base_name)
-        self.generate(f"mwLocalSettings{self.config.shortVersion}.php",f"{self.dockerPath}/LocalSettings.php",mySQLPassword=self.config.mySQLPassword,hostname=self.config.host,extensions=self.config.extensionMap.values(),mwShortVersion=self.config.shortVersion,logo=self.config.logo)
-        self.generate(f"mwWiki{self.config.shortVersion}.sql",f"{self.dockerPath}/wiki.sql")
-        self.generate(f"addSysopUser.sh",f"{self.dockerPath}/addSysopUser.sh",user=self.config.user,password=self.config.password)
-        self.generate(f"installExtensions.sh",f"{self.dockerPath}/installExtensions.sh",extensions=self.config.extensionMap.values(),branch=self.branch)
-        self.genComposerRequire(f"{self.dockerPath}/composer.local.json")
+        self.generate("mwDockerfile",f"{self.dockerPath}/Dockerfile",composerVersion=self.composerVersion,overwrite=overwrite)
+        self.generate("mwCompose.yml",f"{self.dockerPath}/docker-compose.yml",mySQLRootPassword=self.config.mySQLRootPassword,mySQLPassword=self.config.mySQLPassword,container_base_name=self.config.container_base_name,overwrite=overwrite)
+        self.generate(f"mwLocalSettings{self.config.shortVersion}.php",f"{self.dockerPath}/LocalSettings.php",mySQLPassword=self.config.mySQLPassword,hostname=self.config.host,extensions=self.config.extensionMap.values(),mwShortVersion=self.config.shortVersion,logo=self.config.logo,overwrite=overwrite)
+        self.generate(f"mwWiki{self.config.shortVersion}.sql",f"{self.dockerPath}/wiki.sql",overwrite=overwrite)
+        self.generate(f"addSysopUser.sh",f"{self.dockerPath}/addSysopUser.sh",user=self.config.user,password=self.config.password,overwrite=overwrite)
+        self.generate(f"installExtensions.sh",f"{self.dockerPath}/installExtensions.sh",extensions=self.config.extensionMap.values(),branch=self.branch,overwrite=overwrite)
+        self.genComposerRequire(f"{self.dockerPath}/composer.local.json",overwrite=overwrite)
         for fileName in ["addCronTabEntry.sh","startRunJobs.sh","initdb.sh","update.sh","phpinfo.php","upload.ini","plantuml.sh"]:
-            self.generate(f"{fileName}",f"{self.dockerPath}/{fileName}")
+            self.generate(f"{fileName}",f"{self.dockerPath}/{fileName}",overwrite=overwrite)
         
     def up(self,forceRebuild:bool=False):
         '''
@@ -464,7 +485,11 @@ class DockerApplication(object):
             docker.compose.build()
         # run docker compose up
         # this might take a while e.g. downloading
-        docker.compose.up(detach=True)    
+        options = {
+            'force_recreate': forceRebuild
+        }
+        # run docker compose up
+        docker.compose.up(detach=True,options=options)      
         return self.getContainers()
         
     def start(self,forceRebuild:bool=False,withInitDB=True):
