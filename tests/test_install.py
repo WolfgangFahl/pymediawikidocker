@@ -8,7 +8,7 @@ import socket
 import unittest
 import io
 import os
-import re
+import shutil
 import mwdocker
 from mwdocker.version import Version
 from mwdocker.mwcluster import MediaWikiCluster
@@ -28,6 +28,8 @@ class TestInstall(Basetest):
 
     def setUp(self):
         Basetest.setUp(self, debug=False)
+        # make sure we don't use the $HOME
+        self.home="/tmp"
         
     def getMwConfig(self,argv=[]):
         """
@@ -40,7 +42,7 @@ class TestInstall(Basetest):
         mwClusterConfig.fromArgs(args)
         return mwClusterConfig
     
-    def getMwCluster(self,argv=[],createApps:bool=True):
+    def getMwCluster(self,argv=[],createApps:bool=True,withGenerate:bool=False):
         """
         get a mediawiki cluster as configured by the command line arguments
         """
@@ -48,8 +50,7 @@ class TestInstall(Basetest):
         mwCluster=MediaWikiCluster(config=config)
         mwCluster.checkDocker()
         if createApps:
-            self.home="/tmp"
-            mwCluster.createApps(home=self.home)
+            mwCluster.createApps(home=self.home,withGenerate=withGenerate)
         return mwCluster
           
     def testComposePluginInstalled(self):
@@ -58,15 +59,34 @@ class TestInstall(Basetest):
         '''
         self.assertTrue(docker.compose.is_installed())   
         
+    def removeFolderContent(self,folder_path:str):
+        """
+        
+        remove the folder content in the given folder_path
+        
+        Args:
+            folder_path(str): the path to the folder to remove
+            
+        see https://stackoverflow.com/a/1073382/1497139
+        """
+        
+        for root, dirs, files in os.walk(folder_path):
+            for f in files:
+                os.unlink(os.path.join(root, f))
+            for d in dirs:
+                shutil.rmtree(os.path.join(root, d))
+        
     def testGenerateDockerFiles(self):
         '''
         test generating the docker files
         '''
-        mwCluster=self.getMwCluster()
+        config_path=f"{self.home}/.pymediawikidocker"
+        self.removeFolderContent(config_path)
+        mwCluster=self.getMwCluster(withGenerate=True)
         for _index,version in enumerate(mwCluster.config.versions):
             mwApp=mwCluster.apps[version]
             config=mwApp.config
-            epath=f"{self.home}/.pymediawikidocker/{config.container_base_name}"
+            epath=f"{config_path}/{config.container_base_name}"
             self.assertTrue(os.path.isdir(epath))
             for fname in [
                     'Dockerfile',
@@ -91,7 +111,7 @@ class TestInstall(Basetest):
         '''
         test the MediaWiki docker image installation
         '''
-        mwCluster=self.getMwCluster()
+        mwCluster=self.getMwCluster(withGenerate=True)
         mwCluster.start(forceRebuild=True)
         apps=mwCluster.apps.values()
         self.assertEqual(len(mwCluster.versions),len(apps))
@@ -142,13 +162,17 @@ class TestInstall(Basetest):
         test MediaWiki with SemanticMediaWiki 
         and composer
         '''
-        mwCluster=self.getMwCluster(["--prefix","smw4",
+        args=["--prefix","smw4",
             "--versionList","1.39.3",
             "--smwVersion","4.1.1",
             "--basePort","9480",
-            "--sqlBasePort","10306"],createApps=False)
+            "--sqlBasePort","10306"]
+        arg_str=' '.join(args)
+        # print command for clean up if needed for interactive testing
+        print(f"mwcluster --down -f {arg_str}")
+        mwCluster=self.getMwCluster(args,createApps=False)
         mwCluster.config.addExtensions(["MagicNoCache","Data Transfer","Page Forms","Semantic Result Formats"])
-        apps=mwCluster.createApps()
+        apps=mwCluster.createApps(withGenerate=True)
         app=apps["1.39.3"]
         app.start(forceRebuild=True)
         
@@ -175,12 +199,7 @@ class TestInstall(Basetest):
         '''
         test the wikiUser handling
         '''
-        wikiIdList=[]
-        for version in MediaWikiCluster.defaultVersions:
-            minorVersion=re.sub(r"1.([0-9]+)(.[0-9]*)?",r"\1",version)
-            wikiIdList.append(f"mw{minorVersion}test")
-        mwCluster=MediaWikiCluster(MediaWikiCluster.defaultVersions,wikiIdList=wikiIdList)
-        mwCluster.createApps()
+        mwCluster=self.getMwCluster()
         for mwApp in mwCluster.apps.values():
             wikiUser=mwApp.createWikiUser(store=False)
             if self.debug:

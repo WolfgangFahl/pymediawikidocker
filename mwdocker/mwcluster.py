@@ -33,19 +33,21 @@ class MediaWikiCluster(object):
         self.config=config
         self.apps={}       
   
-    def createApps(self,home:str=None)->dict:
+    def createApps(self,home:str=None,withGenerate:bool=True)->dict:
         '''
         create my apps
         
         Args:
             home(str): the home path to use for the docker configuration files
+            withGenerate(bool): if True generate the config files
             
         Returns:
             dict(str): a dict of apps by version
         '''  
         for i,version in enumerate(self.config.versions):
             mwApp=self.getDockerApplication(i,version,home)
-            mwApp.generateAll(overwrite=self.config.forceRebuild)
+            if withGenerate:
+                mwApp.generateAll(overwrite=self.config.forceRebuild)
             self.apps[version]=mwApp    
         return self.apps
         
@@ -123,7 +125,7 @@ class MediaWikiCluster(object):
         
         for i,version in enumerate(self.config.versions):
             mwApp=self.apps[version]
-            msg=f"{i}:checking {version} ..."
+            msg=f"{i+1}:checking {version} ..."
             print(msg)
             mw,db=mwApp.getContainers()
             if not mw:
@@ -217,10 +219,12 @@ def main(argv=None): # IGNORE:C0111
             webbrowser.open(Version.doc_url)
         else:
             action=None
+            withGenerate=False
             if args.check: 
                 action="checking docker access" 
             elif args.create: 
                 action="creating docker compose applications" 
+                withGenerate=True
             elif args.list:
                 action="listing docker compose wiki applications"
             elif args.down:
@@ -232,7 +236,7 @@ def main(argv=None): # IGNORE:C0111
                 # create a MediaWiki Cluster
                 mwClusterConfig.fromArgs(args)
                 mwCluster=MediaWikiCluster(config=mwClusterConfig)
-                mwCluster.createApps()
+                mwCluster.createApps(withGenerate=withGenerate)
                 if args.check:
                     return mwCluster.check()
                 elif args.create:
