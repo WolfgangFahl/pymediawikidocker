@@ -223,7 +223,6 @@ class TestInstall(Basetest):
             self.assertTrue("code 14" in ex_msg)
             pass
            
-        
     def testWikiUser(self):
         '''
         test the wikiUser handling
@@ -233,6 +232,7 @@ class TestInstall(Basetest):
             wikiUser=mwApp.createWikiUser(store=False)
             if self.debug:
                 print(wikiUser)
+            pass
         
     def testMwClusterCommandLine(self):
         '''

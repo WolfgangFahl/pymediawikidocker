@@ -224,23 +224,23 @@ class DockerApplication(object):
         '''
         self.execute("/root/addCronTabEntry.sh")
             
-    def createWikiUser(self,store:bool=False):
+    def createWikiUser(self,wikiId:str=None,store:bool=False):
         '''
         create my wikiUser and optionally save it
         
         Args:
            store(bool): if True save my user data to the relevant ini File
         '''
-        if self.wikiId is None:
-            raise Exception("createWikiUser needs wikiId to be set but it is None")
+        if not wikiId:
+            wikiId=f"{self.config.container_base_name}"
         userDict={
-            "wikiId":f"{self.wikiId}",
-            "url": f"{self.base_url}",
-            "scriptPath": f"{self.script_path}",
-            "user": f"{self.user}",
+            "wikiId":f"{wikiId}",
+            "url": f"{self.config.base_url}",
+            "scriptPath": f"{self.config.script_path}",
+            "user": f"{self.config.user}",
             "email":"noreply@nouser.com",
-            "version": f"{self.fullVersion}",
-            "password": f"{self.password}"
+            "version": f"{self.config.fullVersion}",
+            "password": f"{self.config.password}"
         }
         wikiUser=WikiUser.ofDict(userDict,encrypted=False)
         if store:

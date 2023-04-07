@@ -25,11 +25,12 @@ class TestConfig(Basetest):
                   'password_length': 15, 'password': 'sysop-1234!', 
                   'mySQLRootPassword': None, 'mySQLPassword': None, 
                   'logo': '$wgResourceBasePath/resources/assets/wiki.png',
-                   'port': 9080, 'sqlPort': 9306, 'prot': 'http', 'host': Host.get_default_host(), 'script_path': '', 'container_base_name': 'mw-9080', 'networkName': 'mwNetwork', 'mariaDBVersion': '10.11', 'forceRebuild': False, 'debug': False, 'verbose': True, 'wikiId': None, 'versions': ['1.27.7', '1.31.16', '1.35.10', '1.37.6', '1.38.6', '1.39.3'], 'basePort': 9080}
+                   'port': 9080, 'sqlPort': 9306, 'prot': 'http', 
+                   'host': Host.get_default_host(), 'script_path': '', 'container_base_name': 'mw-139', 'networkName': 'mwNetwork', 'mariaDBVersion': '10.11', 'forceRebuild': False, 'debug': False, 'verbose': True, 'wikiId': None, 'versions': ['1.35.10','1.38.6', '1.39.3'], 'basePort': 9080}
 
         mwd=dataclasses.asdict(mwClusterConfig)
         debug=self.debug
-        debug=True
+        #debug=True
         if debug:
             print(mwd)
             print(json.dumps(mwd,indent=2))
