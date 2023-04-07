@@ -52,6 +52,14 @@ class TestInstall(Basetest):
         if createApps:
             mwCluster.createApps(home=self.home,withGenerate=withGenerate)
         return mwCluster
+    
+    def printCommand(self,options,args):
+        """
+        print the mw cluster command with the given options and args
+        """
+        arg_str=' '.join(args)
+        # print command for clean up if needed for interactive testing
+        print(f"mwcluster {options} {arg_str}")
           
     def testComposePluginInstalled(self):
         '''
@@ -157,6 +165,7 @@ class TestInstall(Basetest):
         exitCode=mwCluster.check()
         self.assertEqual(0,exitCode)
         
+        
     def testInstallationWithSemanticMediaWiki(self):
         '''
         test MediaWiki with SemanticMediaWiki 
@@ -167,9 +176,7 @@ class TestInstall(Basetest):
             "--smwVersion","4.1.1",
             "--basePort","9480",
             "--sqlBasePort","10306"]
-        arg_str=' '.join(args)
-        # print command for clean up if needed for interactive testing
-        print(f"mwcluster --down -f {arg_str}")
+        self.printCommand("--down -f",args)
         mwCluster=self.getMwCluster(args,createApps=False)
         mwCluster.config.addExtensions(["MagicNoCache","Data Transfer","Page Forms","Semantic Result Formats"])
         apps=mwCluster.createApps(withGenerate=True)
@@ -181,10 +188,19 @@ class TestInstall(Basetest):
         https://github.com/WolfgangFahl/pymediawikidocker/issues/15
         support legacy require_once extension registration
         '''
-        mwCluster=MediaWikiCluster(versions=["1.27.7"],basePort=9481,sqlPort=10307)
-        mwCluster.extensionNameList.extend(["MagicNoCache"])
-        mwCluster.createApps()
-        mwCluster.start(forceRebuild=True)
+        version="1.27.7"
+        args=["--versionList",version,
+            "--prefix","rqotest",
+            "--basePort","9481",
+            "--sqlBasePort","10307"]
+        self.printCommand("--down -f",args)
+        mwCluster=self.getMwCluster(args,createApps=False)
+        mwCluster.config.addExtensions(["MagicNoCache"])
+        apps=mwCluster.createApps(withGenerate=True)
+        app=apps[version]
+        app.start(forceRebuild=True)
+        exitCode=mwCluster.check()
+        self.assertEqual(0,exitCode)
         
     def testInstallationWithMissingLocalSettingsTemplate(self):
         '''

@@ -201,7 +201,7 @@ class MwClusterConfig(MwConfig):
     """
     MediaWiki Cluster configuration for multiple wikis
     """
-    versions:Optional[List[str]]=field(default_factory=lambda: ["1.27.7","1.31.16","1.35.10","1.37.6","1.38.6","1.39.3"])
+    versions:Optional[List[str]]=field(default_factory=lambda: ["1.35.10","1.38.6","1.39.3"])
     basePort:int=9080
     
     def addArgs(self,parser):
