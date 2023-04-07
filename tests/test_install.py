@@ -206,10 +206,23 @@ class TestInstall(Basetest):
         '''
         test a cluster with no LocalSettingsTemplate available
         '''
-        return
-        mwCluster=MediaWikiCluster(versions=['1.36.0'])
-        mwCluster.createApps()
-        mwCluster.start()
+        version="1.36.0"
+        args=["--versionList",version,
+            "--prefix","mittest"
+        ]
+        try:
+            mwCluster=self.getMwCluster(args,createApps=True)
+            mwCluster.start()
+            exitCode=mwCluster.check()
+            self.assertEqual(0,exitCode)
+        except Exception as ex:
+            ex_msg=str(ex)
+            if self.debug:
+                print(ex_msg)
+            #self.assertTrue()
+            self.assertTrue("code 14" in ex_msg)
+            pass
+           
         
     def testWikiUser(self):
         '''
