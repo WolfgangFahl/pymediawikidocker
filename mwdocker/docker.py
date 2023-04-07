@@ -7,7 +7,9 @@ from python_on_whales import docker
 import os
 import platform
 import datetime
+import pprint
 import time
+import traceback
 import typing
 from jinja2 import Environment, FileSystemLoader
 from jinja2.exceptions import TemplateNotFound
@@ -19,7 +21,6 @@ from mwdocker.logger import Logger
 from mwdocker.config import MwClusterConfig
 from mwdocker.html_table import HtmlTables
 from mwdocker.mariadb import MariaDB
-import pprint
 from lodstorage.lod import LOD
 from dataclasses import dataclass
 
@@ -146,7 +147,7 @@ class DockerApplication(object):
         try:
             html_tables=HtmlTables(version_url)
             tables=html_tables.get_tables("h2")
-            if self.debug:
+            if self.config.debug:
                 p = pprint.PrettyPrinter(indent=2)
                 p.pprint(tables)
             ok=ok and Logger.check_and_log("Special Version accessible ...", "Installed software" in tables)
@@ -157,7 +158,7 @@ class DockerApplication(object):
                 ok=ok and Logger.check_and_log_equal("Mediawiki Version",mw_version,"expected ",self.config.version)
                 db_version_str=software_map["MariaDB"]["Version"]
                 db_version=MariaDB.getVersion(db_version_str)
-                ok=ok and Logger.check_and_log(f"Maria DB Version {db_version} fitting expected {self.config.mariaDBVersion}?",self.mariaDBVersion.startswith(db_version))
+                ok=ok and Logger.check_and_log(f"Maria DB Version {db_version} fitting expected {self.config.mariaDBVersion}?",self.config.mariaDBVersion.startswith(db_version))
                 pass
         except Exception as ex:
             ok=Logger.check_and_log(str(ex), False)
@@ -210,9 +211,6 @@ class DockerApplication(object):
         self.execute("/tmp/update.sh")
         # add an initial sysop user as specified
         self.execute("/tmp/addSysopUser.sh")
-        # if wikiId is specified create a wikiuser
-        if self.wikiId is not None:
-            self.wikiUser=self.createWikiUser(store=True)
             
     def installExtensions(self):
         '''
@@ -284,7 +282,7 @@ class DockerApplication(object):
             return rows
         else:
             if self.config.verbose:
-                print (f"Connection to {self.database} on {self.config.config.host} with user {self.dbUser} not established" )
+                print (f"Connection to {self.database} on {self.config.host} with user {self.dbUser} not established" )
             return None
         
     def dbClose(self):
@@ -335,7 +333,7 @@ class DockerApplication(object):
         if self.dbConn and self.dbConn.is_connected():
             rows=self.sqlQuery("select database();")
             dbStatus.ok=True
-            if self.config.config.verbose:
+            if self.config.verbose:
                 print (f"{dbStatus.msg} established database returns: {rows[0]}")     
     
     def checkDBConnection(self,timeout:float=10,initialSleep:float=2.5,maxTries:int=7)->DBStatus:
@@ -370,6 +368,8 @@ class DockerApplication(object):
                 dbStatus.ex=ex
                 if self.config.verbose:
                     print(f"Connection attempt #{dbStatus.attempts} failed with exception {str(ex)} - will not retry ...")
+                if self.config.debug:
+                    print(traceback.format_exc())
                 break
         return dbStatus
     
@@ -460,13 +460,27 @@ class DockerApplication(object):
         for fileName in ["addCronTabEntry.sh","startRunJobs.sh","initdb.sh","update.sh","phpinfo.php","upload.ini","plantuml.sh"]:
             self.generate(f"{fileName}",f"{self.dockerPath}/{fileName}",overwrite=overwrite)
         
+    def down(self,forceRebuild:bool=False):
+        """
+        run docker compose down
+        
+        see https://docs.docker.com/engine/reference/commandline/compose_down/
+        and https://gabrieldemarmiesse.github.io/python-on-whales/sub-commands/compose/#down
+        
+        """
+        # change directory so that docker CLI will find the relevant dockerfile and docker-compose.yml
+        if self.config.verbose:
+            print(f"running docker compose down for {self.config.container_base_name} {self.config.version} docker application ...")
+        os.chdir(self.dockerPath)
+        docker.compose.down(volumes=forceRebuild) 
+        
     def up(self,forceRebuild:bool=False):
-        '''
+        """
         start this docker application
         
         Args: 
             forceRebuild(bool): if true stop and remove the existing containers
-        '''            
+        """            
         if self.config.verbose:
             print(f"starting {self.config.container_base_name} {self.config.version} docker application ...")
         if forceRebuild:
@@ -485,11 +499,8 @@ class DockerApplication(object):
             docker.compose.build()
         # run docker compose up
         # this might take a while e.g. downloading
-        options = {
-            'force_recreate': forceRebuild
-        }
         # run docker compose up
-        docker.compose.up(detach=True,options=options)      
+        docker.compose.up(detach=True,force_recreate=forceRebuild)      
         return self.getContainers()
         
     def start(self,forceRebuild:bool=False,withInitDB=True):

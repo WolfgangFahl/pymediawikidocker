@@ -11,6 +11,7 @@ from argparse import ArgumentParser
 from argparse import ArgumentDefaultsHelpFormatter
 from mwdocker.logger import Logger
 import webbrowser
+import traceback
 
 class MediaWikiCluster(object):
     '''
@@ -79,6 +80,16 @@ class MediaWikiCluster(object):
             mwApp.start(forceRebuild=forceRebuild,withInitDB=withInitDB)
         return 0
     
+    def down(self,forceRebuild:bool=False):
+        """
+        run docker compose down
+        """
+        exitCode=self.checkDocker()  
+        if exitCode>0: return exitCode
+        for i,version in enumerate(self.config.versions):
+            mwApp=self.apps[version]
+            mwApp.down(forceRebuild)
+    
     def listWikis(self)->int:
         """
         list my wikis
@@ -128,7 +139,11 @@ class MediaWikiCluster(object):
                     pb=pb_dict[p80][0]
                     host_port=pb.host_port
                     Logger.check_and_log_equal(f"port binding",host_port,"expected  port",str(mwApp.config.port))
-                    version_url=f"{mwApp.url}/index.php/Special:Version".replace(str(mwApp.config.port),host_port)
+                    url=mwApp.config.url
+                    # fix url to local port
+                    url=url.replace(str(mwApp.config.port),host_port)
+                    version_url=f"{url}/index.php/Special:Version"
+                    
                     ok=mwApp.checkWiki(version_url)
                     if not ok:
                         exitCode=1
@@ -191,6 +206,7 @@ def main(argv=None): # IGNORE:C0111
         mwClusterConfig.addArgs(parser)
         parser.add_argument("--about", help="show about info [default: %(default)s]", action="store_true")
         parser.add_argument("--create", action="store_true", help="create wikis [default: %(default)s]")
+        parser.add_argument("--down", action="store_true", help="shutdown wikis [default: %(default)s]")
         parser.add_argument("--check",action="store_true",help="check the wikis [default: %(default)s]")
         parser.add_argument("--list",action="store_true",help="list the wikis [default: %(default)s]")
         parser.add_argument('-V', '--version', action='version', version=program_version_message)
@@ -207,6 +223,8 @@ def main(argv=None): # IGNORE:C0111
                 action="creating docker compose applications" 
             elif args.list:
                 action="listing docker compose wiki applications"
+            elif args.down:
+                action="running docker compose down"
             if not action:
                 parser.print_usage()
             else:
@@ -221,6 +239,8 @@ def main(argv=None): # IGNORE:C0111
                     return mwCluster.start(forceRebuild=args.forceRebuild)
                 elif args.list:
                     return mwCluster.listWikis()
+                elif args.down:
+                    return mwCluster.down(forceRebuild=args.forceRebuild)
     except KeyboardInterrupt:
         ### handle keyboard interrupt ###
         return 1
@@ -230,6 +250,10 @@ def main(argv=None): # IGNORE:C0111
         indent = len(program_name) * " "
         sys.stderr.write(program_name + ": " + repr(e) + "\n")
         sys.stderr.write(indent + "  for help use --help")
+        if args is None:
+            print("args could not be parsed")
+        elif args.debug:
+            print(traceback.format_exc())
         return 2
             
 if __name__ == "__main__":
