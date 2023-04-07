@@ -8,10 +8,7 @@ import os
 import platform
 import datetime
 import time
-import secrets
-import socket
 import typing
-import re
 from jinja2 import Environment, FileSystemLoader
 from jinja2.exceptions import TemplateNotFound
 import mysql.connector
@@ -19,6 +16,7 @@ from mysql.connector import Error
 from pathlib import Path
 from wikibot3rd.wikiuser import WikiUser
 from mwdocker.logger import Logger
+from mwdocker.config import MwClusterConfig
 from mwdocker.html_table import HtmlTables
 from mwdocker.mariadb import MariaDB
 import pprint
@@ -80,113 +78,35 @@ class DBStatus():
     ok: bool
     msg:str
     ex:typing.Optional[Exception]=None
-    
-class Host():
-    @classmethod
-    def get_default_host(self) -> str:
-        """
-        get the default host as the fully qualifying hostname
-        of the computer the server runs on
         
-        Returns:
-            str: the hostname
-        """
-        host = socket.getfqdn()
-        # work around https://github.com/python/cpython/issues/79345
-        if host == "1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa":
-            host = "localhost"  # host="127.0.0.1"
-        return host
-    
 class DockerApplication(object):
     '''
     MediaWiki Docker image
     '''
 
     def __init__(self,
-                 user:str,
-                 password:str,
-                 name="mediawiki",
-                 version="1.39.3",
-                 container_name:str=None,
-                 extensionMap:dict={},
-                 wikiId:str=None,
-                 mariaDBVersion="10.11",
-                 smwVersion=None,logo=None,
-                 prot="http",
-                 host=None,
-                 script_path="",
-                 port=9080,
-                 sqlPort=9306,
-                 mySQLRootPassword=None,
-                 debug=False,
-                 verbose=True):
+                 config:MwClusterConfig,
+                 home:str=None):
         '''
         Constructor
         
         Args:
-            user(str): the initial sysop user to create
-            password(str): the initial sysop password to user
-            version(str): the  MediaWiki version to create docker applications for
-            container_name(str): the name of the container to be used
-            extensionMap(dict): a map of extensions to be installed
-            wikiId(str): the wikiId to create a py-3rdparty-mediawiki user for (if any)
-            sqlPort(int): the base port to be used for  publishing the SQL port (3306) for the docker applications
-            port(int): the port to be used for publishing the HTML port (80) for the docker applications
-            prot(str): the protocol to use (http or https)
-            host(str): the hostname to use
-            script_path(str): the script_path to use
-            networkName(str): the name to use for the docker network to be shared by the cluster participants
-            mariaDBVersion(str): the Maria DB version to install as the SQL database provider for the docker applications
-            smwVersion(str): Semantic MediaWiki Version to be used (if any)
-            mySQLRootPassword(str): the mySQL root password to use for the database containers - if None a random password is generated
-            logo(str): URL of the logo to be used
-            debug(bool): if True debugging is enabled
-            verbose(bool): if True output is verbose
+            config: MwClusterConfig,
+            home: the home directory to use
         '''
-        # identifications
-        self.name=name
-        self.user=user
-        self.password=password
-        self.wikiId=wikiId
-        # extensions
-        self.extensionMap=extensionMap
-        # Versions
-        self.version=version
-        self.fullVersion=f"MediaWiki {self.version}"
-        self.smwVersion=smwVersion
-        self.underscoreVersion=version.replace(".","_")
-        self.shortVersion=self.getShortVersion()
-        # container names
-        if container_name is None:
-            self.container_name=f"mw{self.underscoreVersion}"
-        else:
-            self.container_name=container_name
+        self.config=config
         # branch as need for git clone e.g. https://gerrit.wikimedia.org/g/mediawiki/extensions/MagicNoCache
-        self.branch=f"REL{self.getShortVersion('_')}"
-        self.mariaDBVersion=mariaDBVersion
+        self.branch=f"REL{self.config.getShortVersion('_')}"
         self.composerVersion=1
-        if self.shortVersion>="139":
+        if self.config.shortVersion>="139":
             self.composerVersion=2
-        self.host=host
-        self.hostname=host
-        self.port=port
-        self.script_path=script_path
-        self.base_url=f"{prot}://{self.hostname}"
-        self.url=f"{self.base_url}{script_path}:{self.port}"
-        self.sqlPort=sqlPort
-        self.logo=logo
-        # debug and verbosity
-        self.debug=debug
-        self.verbose=verbose
-        # passwords
-        password_length = 13
-        if mySQLRootPassword is None:
-            self.mySQLRootPassword=secrets.token_urlsafe(password_length)
-        else:
-            self.mySQLRootPassword=mySQLRootPassword
-        self.mySQLPassword=secrets.token_urlsafe(password_length)
         # jinja and docker prerequisites
         self.env=self.getJinjaEnv()
+        if home is None:
+            home = str(Path.home())
+        self.dockerPath=f'{home}/.pymediawikidocker/{self.config.container_base_name}' 
+        os.makedirs(self.dockerPath,exist_ok=True)
+        
         self.getContainers()
         self.dbConn=None
         self.database="wiki"
@@ -194,14 +114,27 @@ class DockerApplication(object):
         self.wikiUser=None
        
     @staticmethod 
-    def check()->str:
+    def check(debug:bool=False)->str:
+        """
+        check the docker environment
+        
+        Args:
+            debug(bool): if True show debug information
+            
+        Returns:
+            str: an error message or None
+        """
         errMsg=None
         if not docker.compose.is_installed():
-            errMsg="""docker composer up needs to be working
-            you might want to install https://github.com/docker/compose-cli
-            Compose v2 can be installed manually as a CLI plugin, 
-            by downloading latest v2.x release from https://github.com/docker/compose-cli/releases for your architecture and move into ~/.docker/cli-plugins/docker-compose
-"""
+            errMsg="""docker composer up needs to be working"""
+        os_path=os.environ["PATH"]
+        paths=["/usr/local/bin"]
+        for path in paths:
+            if os.path.islink(f"{path}/docker"):
+                if not path in os_path:
+                    os.environ["PATH"]=f"{os_path}{os.pathsep}{path}"
+                    if debug:
+                        print(f"""modified PATH from {os_path} to \n{os.environ["PATH"]}""")
         return errMsg
     
     def checkWiki(self,version_url:str)->bool:
@@ -234,10 +167,7 @@ class DockerApplication(object):
         """
         get my container Name
         """
-        if self.container_name is None:
-            containerName=f"mw{self.underscoreVersion}{separator}{kind}{separator}1"
-        else:
-            containerName=f"{self.container_name}{separator}{kind}"
+        containerName=f"{self.config.container_base_name}{separator}{kind}"
         return containerName
     
     def getContainers(self):
@@ -267,9 +197,6 @@ class DockerApplication(object):
         resourcePath=os.path.realpath(f"{scriptdir}/resources")
         template_dir = os.path.realpath(f'{resourcePath}/templates')
         #print(f"jinja template directory is {template_dir}")
-        home = str(Path.home())
-        self.dockerPath=f'{home}/.pymediawikidocker/{self.container_name}' 
-        os.makedirs(self.dockerPath,exist_ok=True)
         env = Environment(loader=FileSystemLoader(template_dir))
         return env
     
@@ -298,7 +225,6 @@ class DockerApplication(object):
         run startUp scripts
         '''
         self.execute("/root/addCronTabEntry.sh")
-            
             
     def createWikiUser(self,store:bool=False):
         '''
@@ -337,7 +263,7 @@ class DockerApplication(object):
         else:
             mwContainerNameDash=self.getContainerName("mw", "-")
             mwContainerNameUnderscore=self.getContainerName("mw", "_")
-            errMsg=f"no mediawiki Container {mwContainerNameDash} or {mwContainerNameUnderscore} for {self.name} activated by docker compose\n- you might want to check the separator {self.mw_container_name_separator} for your platform {platform.system()}"
+            errMsg=f"no mediawiki Container {mwContainerNameDash} or {mwContainerNameUnderscore} for {self.name} activated by docker compose\n- you might want to check the separator character used for container names for your platform {platform.system()}"
             raise Exception(f"{errMsg}")
     
     def close(self):
@@ -422,9 +348,9 @@ class DockerApplication(object):
         Returns:
             dbStatus: the status
         ''' 
-        conn_msg=f"SQL-Connection to {self.database} on {self.host} port {self.sqlPort} with user {self.dbUser}"
+        conn_msg=f"SQL-Connection to {self.database} on {self.config.host} port {self.config.sqlPort} with user {self.dbUser}"
         dbStatus=DBStatus(attempts=0,ok=False,msg=conn_msg,max_tries=maxTries)
-        if self.debug:
+        if self.config.debug:
             print (f"Trying {dbStatus.msg} with max {maxTries} tries and {timeout}s timeout per try - initial sleep {initialSleep}s")
         time.sleep(initialSleep)
         sleep=0.5
@@ -439,7 +365,7 @@ class DockerApplication(object):
                     sleep=sleep*2
             except Exception as ex:
                 dbStatus.ex=ex
-                if self.verbose:
+                if self.config.verbose:
                     print(f"Connection attempt #{dbStatus.attempts} failed with exception - will not retry ...")
                 break
         return dbStatus
@@ -457,38 +383,27 @@ class DockerApplication(object):
         try:
             template = self.env.get_template(templateName)
             timestamp=datetime.datetime.now().isoformat()
-            content=template.render(mwVersion=self.version,mariaDBVersion=self.mariaDBVersion,port=self.port,sqlPort=self.sqlPort,smwVersion=self.smwVersion,timestamp=timestamp,**kwArgs)
+            content=template.render(mwVersion=self.config.version,mariaDBVersion=self.config.mariaDBVersion,port=self.config.port,sqlPort=self.config.sqlPort,smwVersion=self.config.smwVersion,timestamp=timestamp,**kwArgs)
             with open(targetPath, "w") as targetFile:
                 targetFile.write(content)
         except TemplateNotFound:
-            print(f"no template {templateName} for {self.name} {self.version}")     
-        
-    def getShortVersion(self,separator=""):
-        '''
-        get my short version e.g. convert 1.27.7 to 127
-        
-        Returns:
-            str: the short version string
-        '''
-        versionMatch=re.match("(?P<major>[0-9]+)\.(?P<minor>[0-9]+)",self.version)
-        shortVersion=f"{versionMatch.group('major')}{separator}{versionMatch.group('minor')}"
-        return shortVersion
+            print(f"no template {templateName} for {self.config.name} {self.config.version}")     
     
     def getComposerRequire(self):
         '''
         get the json string for the composer require e.g. composer.local.json
         '''
         requires=[]
-        for ext in self.extensionMap.values():
+        for ext in self.config.extensionMap.values():
             if hasattr(ext,"composer"):
                 # get the composer statement
                 composer=ext.composer
-                requires.append(ext.composer)
+                requires.append(composer)
         indent="     "
         delim="" if len(requires)==0 else ",\n"
         requireList=""
-        if self.smwVersion:
-            requireList+=f'{indent}"mediawiki/semantic-media-wiki": "~{self.smwVersion}"{delim}'
+        if self.config.smwVersion:
+            requireList+=f'{indent}"mediawiki/semantic-media-wiki": "~{self.config.smwVersion}"{delim}'
         for i,require in enumerate(requires):
             delim="" if i>=len(requires)-1 else ",\n"
             requireList+=f"{indent}{require}{delim}"
@@ -509,22 +424,20 @@ class DockerApplication(object):
         requireJson=self.getComposerRequire()
         with open(composerFilePath, "w") as composerFile:
                 composerFile.write(requireJson)
-                
              
     def generateAll(self):
         '''
         generate all files needed for the docker handling
         '''
         self.generate("mwDockerfile",f"{self.dockerPath}/Dockerfile",composerVersion=self.composerVersion)
-        self.generate("mwCompose.yml",f"{self.dockerPath}/docker-compose.yml",mySQLRootPassword=self.mySQLRootPassword,mySQLPassword=self.mySQLPassword,container_name=self.container_name)
-        self.generate(f"mwLocalSettings{self.shortVersion}.php",f"{self.dockerPath}/LocalSettings.php",mySQLPassword=self.mySQLPassword,hostname=self.hostname,extensions=self.extensionMap.values(),mwShortVersion=self.shortVersion,logo=self.logo)
-        self.generate(f"mwWiki{self.shortVersion}.sql",f"{self.dockerPath}/wiki.sql")
-        self.generate(f"addSysopUser.sh",f"{self.dockerPath}/addSysopUser.sh",user=self.user,password=self.password)
-        self.generate(f"installExtensions.sh",f"{self.dockerPath}/installExtensions.sh",extensions=self.extensionMap.values(),branch=self.branch)
+        self.generate("mwCompose.yml",f"{self.dockerPath}/docker-compose.yml",mySQLRootPassword=self.config.mySQLRootPassword,mySQLPassword=self.config.mySQLPassword,container_base_name=self.config.container_base_name)
+        self.generate(f"mwLocalSettings{self.config.shortVersion}.php",f"{self.dockerPath}/LocalSettings.php",mySQLPassword=self.config.mySQLPassword,hostname=self.config.host,extensions=self.config.extensionMap.values(),mwShortVersion=self.config.shortVersion,logo=self.config.logo)
+        self.generate(f"mwWiki{self.config.shortVersion}.sql",f"{self.dockerPath}/wiki.sql")
+        self.generate(f"addSysopUser.sh",f"{self.dockerPath}/addSysopUser.sh",user=self.config.user,password=self.config.password)
+        self.generate(f"installExtensions.sh",f"{self.dockerPath}/installExtensions.sh",extensions=self.config.extensionMap.values(),branch=self.branch)
         self.genComposerRequire(f"{self.dockerPath}/composer.local.json")
         for fileName in ["addCronTabEntry.sh","startRunJobs.sh","initdb.sh","update.sh","phpinfo.php","upload.ini","plantuml.sh"]:
             self.generate(f"{fileName}",f"{self.dockerPath}/{fileName}")
-        
         
     def up(self,forceRebuild:bool=False):
         '''
@@ -533,13 +446,13 @@ class DockerApplication(object):
         Args: 
             forceRebuild(bool): if true stop and remove the existing containers
         '''            
-        if self.verbose:
-            print(f"starting {self.name} {self.version} docker application ...")
+        if self.config.verbose:
+            print(f"starting {self.config.container_base_name} {self.config.version} docker application ...")
         if forceRebuild:
             for docker_container in [self.dbContainer,self.mwContainer]:
                 if docker_container is not None:
                     container=docker_container.container
-                    if self.verbose:
+                    if self.config.verbose:
                         print(f"stopping and removing container {container.name}")
                     container.stop()
                     container.remove()
