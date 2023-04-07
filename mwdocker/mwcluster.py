@@ -32,14 +32,21 @@ class MediaWikiCluster(object):
         self.config=config
         self.apps={}       
   
-    def createApps(self,home:str=None):
+    def createApps(self,home:str=None)->dict:
         '''
         create my apps
+        
+        Args:
+            home(str): the home path to use for the docker configuration files
+            
+        Returns:
+            dict(str): a dict of apps by version
         '''  
         for i,version in enumerate(self.config.versions):
             mwApp=self.getDockerApplication(i,version,home)
             mwApp.generateAll()
             self.apps[version]=mwApp    
+        return self.apps
         
     def checkDocker(self)->int: 
         """
@@ -69,20 +76,29 @@ class MediaWikiCluster(object):
         
         for version in self.config.versions:
             mwApp=self.apps[version]
-            mwApp.up(forceRebuild=forceRebuild) 
-            if withInitDB:
-                if self.config.verbose:
-                    print("Initializing MediaWiki SQL tables")
-                dbStatus=mwApp.checkDBConnection()
-                if dbStatus.ok:
-                    # first install extensions
-                    mwApp.installExtensions()
-                    # then create and fill database and update it
-                    mwApp.initDB()
-                    # then run startUp scripts
-                    mwApp.startUp()
-                    
+            mwApp.start(forceRebuild=forceRebuild,withInitDB=withInitDB)
         return 0
+    
+    def listWikis(self)->int:
+        """
+        list my wikis
+        
+        Returns:
+            int: exitCode - 0 if ok 1 if failed
+        """
+        exitCode=self.checkDocker()  
+        if exitCode>0: return exitCode
+        for i,version in enumerate(self.config.versions):
+            mwApp=self.apps[version]
+            mw,db=mwApp.getContainers()
+            if mw and db:
+                l_str="found"
+            else:
+                l_str="missing"
+            msg=f"{i+1}:{version} {l_str}"
+            print(msg)
+        return exitCode
+        
         
     def check(self)->int:
         """
@@ -99,7 +115,13 @@ class MediaWikiCluster(object):
             msg=f"{i}:checking {version} ..."
             print(msg)
             mw,db=mwApp.getContainers()
-            if  mw and db and mw.check() and db.check():
+            if not mw:
+                print("mediawiki container missing")
+                exitCode=1
+            if  not db:
+                print("database container missing")
+                exitCode=1
+            if mw and db and mw.check() and db.check():
                 pb_dict=mw.container.host_config.port_bindings
                 p80="80/tcp"
                 if p80 in pb_dict:
@@ -168,7 +190,9 @@ def main(argv=None): # IGNORE:C0111
         mwClusterConfig=MwClusterConfig()
         mwClusterConfig.addArgs(parser)
         parser.add_argument("--about", help="show about info [default: %(default)s]", action="store_true")
-        parser.add_argument('-c','--check',action="store_true",default=False,help="check the wikis [default: %(default)s]")
+        parser.add_argument("--create", action="store_true", help="create wikis [default: %(default)s]")
+        parser.add_argument("--check",action="store_true",help="check the wikis [default: %(default)s]")
+        parser.add_argument("--list",action="store_true",help="list the wikis [default: %(default)s]")
         parser.add_argument('-V', '--version', action='version', version=program_version_message)
         args = parser.parse_args(argv)
         if args.about:
@@ -176,16 +200,27 @@ def main(argv=None): # IGNORE:C0111
             print(f"see {Version.doc_url}")
             webbrowser.open(Version.doc_url)
         else:
-            action="checking docker access" if args.check else "creating docker compose applications"
-            print(f"{action} for mediawiki versions {args.versions}")
-            # create a MediaWiki Cluster
-            mwClusterConfig.fromArgs(args)
-            mwCluster=MediaWikiCluster(config=mwClusterConfig)
-            mwCluster.createApps()
-            if args.check:
-                return mwCluster.check()
+            action=None
+            if args.check: 
+                action="checking docker access" 
+            elif args.create: 
+                action="creating docker compose applications" 
+            elif args.list:
+                action="listing docker compose wiki applications"
+            if not action:
+                parser.print_usage()
             else:
-                return mwCluster.start(forceRebuild=args.forceRebuild)
+                print(f"{action} for mediawiki versions {args.versions}")
+                # create a MediaWiki Cluster
+                mwClusterConfig.fromArgs(args)
+                mwCluster=MediaWikiCluster(config=mwClusterConfig)
+                mwCluster.createApps()
+                if args.check:
+                    return mwCluster.check()
+                elif args.create:
+                    return mwCluster.start(forceRebuild=args.forceRebuild)
+                elif args.list:
+                    return mwCluster.listWikis()
     except KeyboardInterrupt:
         ### handle keyboard interrupt ###
         return 1

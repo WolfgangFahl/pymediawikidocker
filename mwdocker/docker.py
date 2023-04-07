@@ -281,7 +281,7 @@ class DockerApplication(object):
             return rows
         else:
             if self.verbose:
-                print (f"Connection to {self.database} on {self.host} with user {self.dbUser} not established" )
+                print (f"Connection to {self.database} on {self.config.config.host} with user {self.dbUser} not established" )
             return None
         
     def dbClose(self):
@@ -303,16 +303,16 @@ class DockerApplication(object):
         '''
         if self.dbConn is None:
             try:
-                self.dbConn = mysql.connector.connect(host=self.host,
+                self.dbConn = mysql.connector.connect(host=self.config.host,
                                  database=self.database,
                                  user=self.dbUser,
-                                 port=self.sqlPort,
-                                 password=self.mySQLPassword,
+                                 port=self.config.sqlPort,
+                                 password=self.config.mySQLPassword,
                                  connection_timeout=timeout)
         
             except Error as e :
                 errMsg=str(e)
-                print (f"Connection to {self.database} on {self.host} with user {self.dbUser} failed error: {errMsg}" )
+                print (f"Connection to {self.database} on {self.config.host} with user {self.dbUser} failed error: {errMsg}" )
                 if "Access denied" in errMsg:
                     raise e
         return self.dbConn
@@ -366,7 +366,7 @@ class DockerApplication(object):
             except Exception as ex:
                 dbStatus.ex=ex
                 if self.config.verbose:
-                    print(f"Connection attempt #{dbStatus.attempts} failed with exception - will not retry ...")
+                    print(f"Connection attempt #{dbStatus.attempts} failed with exception {str(ex)} - will not retry ...")
                 break
         return dbStatus
     
@@ -465,4 +465,25 @@ class DockerApplication(object):
         # run docker compose up
         # this might take a while e.g. downloading
         docker.compose.up(detach=True)    
-        self.getContainers()
+        return self.getContainers()
+        
+    def start(self,forceRebuild:bool=False,withInitDB=True):
+        """
+        start my containers
+        
+        Args:
+            forceRebuild(bool): if True force rebuilding
+            withInitDB(bool): if True intialize my database
+        """         
+        self.up(forceRebuild=forceRebuild) 
+        if withInitDB:
+            if self.config.verbose:
+                print("Initializing MediaWiki SQL tables")
+            dbStatus=self.checkDBConnection()
+            if dbStatus.ok:
+                # first install extensions
+                self.installExtensions()
+                # then create and fill database and update it
+                self.initDB()
+                # then run startUp scripts
+                self.startUp()

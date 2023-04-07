@@ -121,16 +121,24 @@ class MwConfig:
             extraExtensionList.restoreFromJsonFile(extensionJsonFile.replace(".json",""))
             for ext in extraExtensionList.extensions:
                 extensionList.extensions.append(ext)
-        extByName,duplicates=extensionList.getLookup("name")
+        self.extByName,duplicates=extensionList.getLookup("name")
         if len(duplicates)>0:
             print(f"{len(duplicates)} duplicate extensions: ")
             for duplicate in duplicates:
                 print(duplicate.name)
         if extensionNameList is not None:
-            for extensionName in extensionNameList:
-                if extensionName in extByName:
-                    self.extensionMap[extensionName]=extByName[extensionName]
+            self.addExtensions(extensionNameList)
         pass            
+    
+    def addExtensions(self,extensionNameList):
+        """
+        add extensions for the given list of extension names
+        """
+        for extensionName in extensionNameList:
+            if extensionName in self.extByName:
+                self.extensionMap[extensionName]=self.extByName[extensionName]
+            else:
+                print(f"warning: extension {extensionName} not known")
         
     def fromArgs(self,args):
         """
@@ -139,27 +147,29 @@ class MwConfig:
         Args:
             args(Namespace): the command line arguments
         """
-        self.host=args.host
-        self.prot=args.prot
-        self.script_path=args.script_path
-        self.versions=args.versions
-        self.user=args.user
-        self.password=args.password
+        self.prefix=args.prefix
         self.container_base_name=args.container_name
-        self.extensionJsonFile=args.extensionJsonFile
         self.extensionNameList=args.extensionNameList
-        self.basePort=args.basePort
-        self.sqlPort=args.sqlPort
-        self.mariaDBVersion=args.mariaDBVersion
-        self.smwVersion=args.smwVersion
+        self.extensionJsonFile=args.extensionJsonFile
+        self.forceRebuild=args.forceRebuild
+        self.host=args.host
         self.logo=args.logo
-        self.verbose=not args.quiet
-        self.debug=args.debug
+        self.mariaDBVersion=args.mariaDBVersion
         # passwords
         self.mySQLRootPassword=args.mysqlPassword
         if not self.mySQLRootPassword:
             self.mySQLRootPassword=self.random_password(self.password_length)
         self.mySQLPassword=self.random_password(self.password_length)    
+        self.prot=args.prot
+        self.script_path=args.script_path
+        self.versions=args.versions
+        self.user=args.user
+        self.password=args.password
+        self.basePort=args.basePort
+        self.sqlPort=args.sqlPort
+        self.smwVersion=args.smwVersion
+        self.verbose=not args.quiet
+        self.debug=args.debug
         self.getExtensionMap(self.extensionNameList, self.extensionJsonFile)
    
     def addArgs(self,parser):
@@ -167,9 +177,10 @@ class MwConfig:
         add Arguments to the given parser
         """
         parser.add_argument('-cn','--container_name',default=self.container_base_name,help="set container name (only valid and recommended for single version call)")
-        parser.add_argument("-d", "--debug", dest="debug",   action="store_true", help="set debug level [default: %(default)s]")
+        parser.add_argument("-d", "--debug", dest="debug",   action="store_true", help="enable debug mode [default: %(default)s]")
         parser.add_argument('-el', '--extensionList', dest='extensionNameList', nargs="*",default=self.extensionNameList,help="list of extensions to be installed [default: %(default)s]")
         parser.add_argument('-ej', '--extensionJson',dest='extensionJsonFile',default=self.extensionJsonFile,help="additional extension descriptions default: [default: %(default)s]")
+        parser.add_argument("-f", "--forceRebuild", action="store_true", help="force rebuilding  [default: %(default)s]")
         parser.add_argument("--host", default=Host.get_default_host(),
                             help="the host to serve / listen from [default: %(default)s]")
         parser.add_argument("--logo", default=self.logo, help="set Logo [default: %(default)s]")

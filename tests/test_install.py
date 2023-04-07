@@ -10,6 +10,7 @@ import io
 import os
 import re
 import mwdocker
+from mwdocker.version import Version
 from mwdocker.mwcluster import MediaWikiCluster
 from mwdocker.config import MwClusterConfig
 from argparse import ArgumentParser
@@ -29,6 +30,9 @@ class TestInstall(Basetest):
         Basetest.setUp(self, debug=False)
         
     def getMwConfig(self,argv=[]):
+        """
+        get a mediawiki configuration for the given command line arguments
+        """
         parser = ArgumentParser()
         mwClusterConfig=MwClusterConfig()
         mwClusterConfig.addArgs(parser)
@@ -36,11 +40,16 @@ class TestInstall(Basetest):
         mwClusterConfig.fromArgs(args)
         return mwClusterConfig
     
-    def getMwCluster(self):
-        config=self.getMwConfig()
+    def getMwCluster(self,argv=[],createApps:bool=True):
+        """
+        get a mediawiki cluster as configured by the command line arguments
+        """
+        config=self.getMwConfig(argv)
         mwCluster=MediaWikiCluster(config=config)
-        self.home="/tmp"
-        mwCluster.createApps(home=self.home)
+        mwCluster.checkDocker()
+        if createApps:
+            self.home="/tmp"
+            mwCluster.createApps(home=self.home)
         return mwCluster
           
     def testComposePluginInstalled(self):
@@ -133,10 +142,15 @@ class TestInstall(Basetest):
         test MediaWiki with SemanticMediaWiki 
         and composer
         '''
-        mwCluster=MediaWikiCluster(versions=["1.31.14"],smwVersion="3.2.3",basePort=9480,sqlPort=10306)
-        mwCluster.extensionNameList.extend(["MagicNoCache","Data Transfer","Page Forms","Semantic Result Formats"])
-        mwCluster.createApps()
-        mwCluster.start(forceRebuild=True)
+        mwCluster=self.getMwCluster(["--prefix","smw4",
+            "--versionList","1.39.3",
+            "--smwVersion","4.1.1",
+            "--basePort","9480",
+            "--sqlBasePort","10306"],createApps=False)
+        mwCluster.config.addExtensions(["MagicNoCache","Data Transfer","Page Forms","Semantic Result Formats"])
+        apps=mwCluster.createApps()
+        app=apps["1.39.3"]
+        app.start(forceRebuild=True)
         
     def testInstallationWithRequireOnce(self):
         '''
@@ -176,17 +190,24 @@ class TestInstall(Basetest):
         '''
         test the mwCluster Command Line
         '''
-        argv=["-h"]
-        try:
-            stdout = io.StringIO()
-            with redirect_stdout(stdout):
-                mwdocker.mwcluster.main(argv)
-            self.fail("system exit expected")
-        except SystemExit:
-            pass
-        stdout_txt=stdout.getvalue()
-        #print(stdout_txt)
-        self.assertTrue("----user" in stdout_txt)
+        for argv,expected in [
+            (["-h"],"--user"),
+            (["-V"],Version.updated),
+            (["--list"],"1.39.3")
+        ]:
+            try:
+                stdout = io.StringIO()
+                with redirect_stdout(stdout):
+                    mwdocker.mwcluster.main(argv)
+                #self.fail("system exit expected")
+            except SystemExit:
+                pass
+            stdout_txt=stdout.getvalue()
+            debug=self.debug
+            debug=True
+            if debug:
+                print(stdout_txt)
+            self.assertTrue(expected in stdout_txt)
         
     def testGraphViz(self):
         '''
@@ -209,7 +230,7 @@ digraph mwcluster {{
             lines+=f'''  }}\n'''
         lines+="}"
         show=self.debug
-        show=True
+        #show=True
         # show only for wiki documentation
         if show:
             print (lines)
