@@ -128,7 +128,7 @@ class MwConfig:
                 print(duplicate.name)
         if extensionNameList is not None:
             self.addExtensions(extensionNameList)
-        pass            
+        return self.extensionMap          
     
     def addExtensions(self,extensionNameList):
         """

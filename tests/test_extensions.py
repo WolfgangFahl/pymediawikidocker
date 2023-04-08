@@ -4,7 +4,7 @@ Created on 2021-06-23
 @author: wf
 '''
 import unittest
-from mwdocker.mwcluster import MediaWikiCluster
+from mwdocker.config import MwClusterConfig
 from mwdocker.mw import ExtensionList, Extension
 from tests.basetest import Basetest
 
@@ -29,7 +29,6 @@ class TestExtensions(Basetest):
         if debug:
             print(ext)
         self.assertEqual("https://github.com/wikimedia/mediawiki-extensions-UrlGetParameters",ext.giturl)
-        
 
     def testExtensionHandling(self):
         '''
@@ -51,7 +50,8 @@ class TestExtensions(Basetest):
         with open(extensionJsonFile, "w") as jsonFile:
                 jsonFile.write(jsonStr)
         extensionNames=["Admin Links","BreadCrumbs2","Variables","ImageMap"]
-        extMap=MediaWikiCluster.config.getExtensionMap(extensionNames,extensionJsonFile)
+        config=MwClusterConfig()
+        extMap=config.getExtensionMap(extensionNames,extensionJsonFile)
         mwShortVersion="131"
         expectedUrl={
             "Admin Links": "https://www.mediawiki.org/wiki/Extension:Admin_Links",
@@ -80,15 +80,17 @@ class TestExtensions(Basetest):
         '''
         debug=self.debug
         #debug=False
-        for url in [
+        for url,expected in [
             #"https://www.openresearch.org/wiki/Special:Version",
             #"https://confident.dbis.rwth-aachen.de/or/index.php?title=Special:Version",
-            "https://wiki.bitplan.com/index.php/Special:Version"
+            ("https://wiki.bitplan.com/index.php/Special:Version",36),
+            ("https://cr.bitplan.com/index.php/Special:Version",35),
             
         ]:
             extList=ExtensionList.fromSpecialVersion(url,showHtml=False,debug=debug)
             extList.extensions=sorted(extList.extensions,key=lambda ext:ext.name)
-            print(f"found {len(extList.extensions)} extensions for {url}")
+            print(f"checking {len(extList.extensions)}>={expected} extensions for {url}")
+            self.assertTrue(len(extList.extensions)>=expected)
             if debug:
                 for ext in extList.extensions:
                     print (ext)

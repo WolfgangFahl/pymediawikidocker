@@ -25,7 +25,7 @@ dependencies = [
 	# https://pypi.org/project/mysql-connector-python/
 	'mysql-connector-python',
 	# https://pypi.org/project/py-3rdparty-mediawiki/
-	'py-3rdparty-mediawiki>=0.8.0',
+	'py-3rdparty-mediawiki>=0.9.4',
 	# https://pypi.org/project/pylodstorage/
 	'pylodstorage>=0.4.8',
 	# Beautiful Soup HTML parser
