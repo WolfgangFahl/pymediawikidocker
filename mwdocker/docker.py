@@ -530,21 +530,26 @@ class DockerApplication(object):
             for docker_container in [self.dbContainer,self.mwContainer]:
                 if docker_container is not None:
                     container=docker_container.container
-                    if self.config.verbose:
-                        print(f"stopping and removing container {container.name}")
                     try:
-                        container.stop()
-                    except Exception as stop_ex:
+                        container_name=container.name
                         if self.config.verbose:
-                            print(f"stop failed with {str(stop_ex)}")
-                        pass
-                    try:
-                        container.remove()
-                    except Exception as remove_ex:
-                        if self.config.verbose:
-                            print(f"removed failed with {str(remove_ex)}")
-                        pass
-                        pass
+                            print(f"stopping and removing container {container_name}")
+                    except Exception as container_ex:
+                        container=None
+                    if container:
+                        try:
+                            container.stop()
+                        except Exception as stop_ex:
+                            if self.config.verbose:
+                                print(f"stop failed with {str(stop_ex)}")
+                            pass
+                        try:
+                            container.remove()
+                        except Exception as remove_ex:
+                            if self.config.verbose:
+                                print(f"removed failed with {str(remove_ex)}")
+                            pass
+                    pass
 
         # remember current directory 
         cwd = os.getcwd()    
