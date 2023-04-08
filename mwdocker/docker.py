@@ -145,6 +145,7 @@ class DockerApplication(object):
         Returns:
             int: exitCode: 0 if ok, 1 if not ok
         """
+        DockerApplication.checkDockerEnvironment(self.config.debug) 
         exitCode=0
         mw,db=self.getContainers()
         if not mw:
@@ -504,11 +505,16 @@ class DockerApplication(object):
         and https://gabrieldemarmiesse.github.io/python-on-whales/sub-commands/compose/#down
         
         """
+        DockerApplication.checkDockerEnvironment(self.config.debug) 
         # change directory so that docker CLI will find the relevant dockerfile and docker-compose.yml
         if self.config.verbose:
             print(f"running docker compose down for {self.config.container_base_name} {self.config.version} docker application ...")
+        # remember current directory 
+        cwd = os.getcwd()    
         os.chdir(self.dockerPath)
         docker.compose.down(volumes=forceRebuild) 
+        # switch back to previous current directory
+        os.chdir(cwd)
         
     def up(self,forceRebuild:bool=False):
         """
@@ -516,7 +522,8 @@ class DockerApplication(object):
         
         Args: 
             forceRebuild(bool): if true stop and remove the existing containers
-        """            
+        """     
+        DockerApplication.checkDockerEnvironment(self.config.debug)       
         if self.config.verbose:
             print(f"starting {self.config.container_base_name} {self.config.version} docker application ...")
         if forceRebuild:
@@ -528,6 +535,9 @@ class DockerApplication(object):
                     container.stop()
                     container.remove()
 
+        # remember current directory 
+        cwd = os.getcwd()    
+     
         # change directory so that docker CLI will find the relevant dockerfile and docker-compose.yml
         os.chdir(self.dockerPath)
         #project_config = docker.compose.config()
@@ -537,6 +547,9 @@ class DockerApplication(object):
         # this might take a while e.g. downloading
         # run docker compose up
         docker.compose.up(detach=True,force_recreate=forceRebuild)      
+        # switch back to previous current directory
+        os.chdir(cwd)
+    
         return self.getContainers()
         
     def start(self,forceRebuild:bool=False,withInitDB=True):
