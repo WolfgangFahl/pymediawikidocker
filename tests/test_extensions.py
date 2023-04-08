@@ -51,7 +51,7 @@ class TestExtensions(Basetest):
         with open(extensionJsonFile, "w") as jsonFile:
                 jsonFile.write(jsonStr)
         extensionNames=["Admin Links","BreadCrumbs2","Variables","ImageMap"]
-        extMap=MediaWikiCluster.getExtensionMap(extensionNames,extensionJsonFile)
+        extMap=MediaWikiCluster.config.getExtensionMap(extensionNames,extensionJsonFile)
         mwShortVersion="131"
         expectedUrl={
             "Admin Links": "https://www.mediawiki.org/wiki/Extension:Admin_Links",
