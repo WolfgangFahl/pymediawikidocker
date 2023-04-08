@@ -61,7 +61,7 @@ class MediaWikiCluster(object):
             int: exitCode - 0 if ok 1 if failed
         
         """
-        errMsg=DockerApplication.checkDockerEnvironment(self.debug)
+        errMsg=DockerApplication.checkDockerEnvironment(self.config.debug)
         if errMsg is not None:
             print(errMsg,file=sys.stderr)
             return 1
