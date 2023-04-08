@@ -532,8 +532,19 @@ class DockerApplication(object):
                     container=docker_container.container
                     if self.config.verbose:
                         print(f"stopping and removing container {container.name}")
-                    container.stop()
-                    container.remove()
+                    try:
+                        container.stop()
+                    except Exception as stop_ex:
+                        if self.config.verbose:
+                            print(f"stop failed with {str(stop_ex)}")
+                        pass
+                    try:
+                        container.remove()
+                    except Exception as remove_ex:
+                        if self.config.verbose:
+                            print(f"removed failed with {str(remove_ex)}")
+                        pass
+                        pass
 
         # remember current directory 
         cwd = os.getcwd()    
