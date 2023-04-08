@@ -61,7 +61,7 @@ class MediaWikiCluster(object):
             int: exitCode - 0 if ok 1 if failed
         
         """
-        errMsg=DockerApplication.check()
+        errMsg=DockerApplication.checkDockerEnvironment(self.debug)
         if errMsg is not None:
             print(errMsg,file=sys.stderr)
             return 1
@@ -127,32 +127,7 @@ class MediaWikiCluster(object):
             mwApp=self.apps[version]
             msg=f"{i+1}:checking {version} ..."
             print(msg)
-            mw,db=mwApp.getContainers()
-            if not mw:
-                print("mediawiki container missing")
-                exitCode=1
-            if  not db:
-                print("database container missing")
-                exitCode=1
-            if mw and db and mw.check() and db.check():
-                pb_dict=mw.container.host_config.port_bindings
-                p80="80/tcp"
-                if p80 in pb_dict:
-                    pb=pb_dict[p80][0]
-                    host_port=pb.host_port
-                    Logger.check_and_log_equal(f"port binding",host_port,"expected  port",str(mwApp.config.port))
-                    url=mwApp.config.url
-                    # fix url to local port
-                    url=url.replace(str(mwApp.config.port),host_port)
-                    version_url=f"{url}/index.php/Special:Version"
-                    
-                    ok=mwApp.checkWiki(version_url)
-                    if not ok:
-                        exitCode=1
-                else:
-                    self.log(f"port binding {p80} missing",False)
-                    exitCode=1
-                pass
+            exitCode=mwApp.check()
         return exitCode
             
     def close(self):

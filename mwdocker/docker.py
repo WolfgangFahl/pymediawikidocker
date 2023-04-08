@@ -115,7 +115,7 @@ class DockerApplication(object):
         self.wikiUser=None
        
     @staticmethod 
-    def check(debug:bool=False)->str:
+    def checkDockerEnvironment(debug:bool=False)->str:
         """
         check the docker environment
         
@@ -137,6 +137,42 @@ class DockerApplication(object):
                     if debug:
                         print(f"""modified PATH from {os_path} to \n{os.environ["PATH"]}""")
         return errMsg
+    
+    def check(self)->int:
+        """
+        check me
+        
+        Returns:
+            int: exitCode: 0 if ok, 1 if not ok
+        """
+        exitCode=0
+        mw,db=self.getContainers()
+        if not mw:
+            print("mediawiki container missing")
+            exitCode=1
+        if  not db:
+            print("database container missing")
+            exitCode=1
+        if mw and db and mw.check() and db.check():
+            pb_dict=mw.container.host_config.port_bindings
+            p80="80/tcp"
+            if p80 in pb_dict:
+                pb=pb_dict[p80][0]
+                host_port=pb.host_port
+                Logger.check_and_log_equal(f"port binding",host_port,"expected  port",str(self.config.port))
+                url=self.config.url
+                # fix url to local port
+                url=url.replace(str(self.config.port),host_port)
+                version_url=f"{url}/index.php/Special:Version"
+                
+                ok=self.checkWiki(version_url)
+                if not ok:
+                    exitCode=1
+            else:
+                self.log(f"port binding {p80} missing",False)
+                exitCode=1
+            pass
+        return exitCode
     
     def checkWiki(self,version_url:str)->bool:
         """
