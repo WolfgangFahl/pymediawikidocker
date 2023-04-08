@@ -133,12 +133,6 @@ class TestInstall(Basetest):
             userCountRecords=mwApp.sqlQuery("select count(*) from user;")
             print(userCountRecords)
         mwCluster.close()
-        
-    def testCheckWiki(self):
-        """
-        test the check wiki functionality
-        """
-        mwCluster=self.getMwCluster()
         exitCode=mwCluster.check()
         self.assertEqual(0,exitCode)
         
