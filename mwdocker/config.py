@@ -3,6 +3,7 @@ Created on 2023-04-06
 
 @author: wf
 '''
+import dataclasses
 from dataclasses import dataclass, field
 import re
 import secrets
@@ -69,6 +70,17 @@ class MwConfig:
         self.url=f"{self.base_url}{self.script_path}:{self.port}"
         if not self.container_base_name:
             self.container_base_name=f"{self.prefix}-{self.shortVersion}"
+            
+    def as_dict(self)->dict:
+        """
+        return my fields as a dict
+        dataclasses to dict conversion convenienc and information hiding
+        
+        Returns:
+            dict: my fields in dict format
+        """
+        config_dict=dataclasses.asdict(self)
+        return config_dict
         
     def getShortVersion(self,separator=""):
         '''
