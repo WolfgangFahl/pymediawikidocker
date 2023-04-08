@@ -88,7 +88,7 @@ class MediaWikiCluster(object):
         """
         exitCode=self.checkDocker()  
         if exitCode>0: return exitCode
-        for i,version in enumerate(self.config.versions):
+        for _i,version in enumerate(self.config.versions):
             mwApp=self.apps[version]
             mwApp.down(forceRebuild)
     

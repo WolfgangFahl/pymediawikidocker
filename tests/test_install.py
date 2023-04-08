@@ -119,6 +119,8 @@ class TestInstall(Basetest):
         '''
         test the MediaWiki docker image installation
         '''
+        if self.inPublicCI():
+            self.home=None
         mwCluster=self.getMwCluster(withGenerate=True)
         mwCluster.start(forceRebuild=True)
         apps=mwCluster.apps.values()
@@ -131,6 +133,14 @@ class TestInstall(Basetest):
             userCountRecords=mwApp.sqlQuery("select count(*) from user;")
             print(userCountRecords)
         mwCluster.close()
+        
+    def testCheckWiki(self):
+        """
+        test the check wiki functionality
+        """
+        mwCluster=self.getMwCluster()
+        exitCode=mwCluster.check()
+        self.assertEqual(0,exitCode)
         
     def testSocketGetHostname(self):
         """
@@ -156,15 +166,6 @@ class TestInstall(Basetest):
         version_str="10.8.5-MariaDB-1:10.8.5+maria~ubu2204"
         version=MariaDB.getVersion(version_str)
         self.assertEqual("10.8",version)
-        
-    def testCheckWiki(self):
-        """
-        test the check wiki functionality
-        """
-        mwCluster=self.getMwCluster()
-        exitCode=mwCluster.check()
-        self.assertEqual(0,exitCode)
-        
         
     def testInstallationWithSemanticMediaWiki(self):
         '''
