@@ -149,8 +149,8 @@ class TestInstall(Basetest):
             self.assertTrue(mwApp.mwContainer is not None)
             browser_port=mwApp.mwContainer.getHostPort(80)
             sql_port=mwApp.dbContainer.getHostPort(3306)
-            self.assertEqual(browser_port,mwApp.config.port)
-            self.assertEqual(sql_port,mwApp.config.sqlPort)
+            self.assertEqual(str(browser_port),str(mwApp.config.port))
+            self.assertEqual(str(sql_port),str(mwApp.config.sqlPort))
             pass
         
     def testSocketGetHostname(self):
