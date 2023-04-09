@@ -206,11 +206,14 @@ class TestInstall(Basetest):
             "--basePort","9481",
             "--sqlBasePort","10307"]
         self.printCommand("--down -f",args)
+        forceRebuild=True
         mwCluster=self.getMwCluster(args,createApps=False)
         mwCluster.config.addExtensions(["MagicNoCache"])
-        apps=mwCluster.createApps(withGenerate=True)
+        mwCluster.config.forceRebuild=forceRebuild
+        mwCluster.config.__post_init__()
+        apps=mwCluster.createApps(withGenerate=forceRebuild)
         app=apps[version]
-        app.start(forceRebuild=True)
+        app.start(forceRebuild=forceRebuild)
         exitCode=mwCluster.check()
         self.assertEqual(0,exitCode)
         
@@ -221,6 +224,7 @@ class TestInstall(Basetest):
         version="1.36.0"
         args=["--versionList",version,
             "--prefix","mittest"
+            "-f"
         ]
         debug=self.debug
         debug=True
