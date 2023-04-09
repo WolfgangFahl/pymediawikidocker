@@ -69,6 +69,24 @@ class DockerContainer():
         msg=f"mediawiki {self.kind} container {self.name}"
         return Logger.check_and_log(msg, ok) 
     
+    def getHostPort(self,local_port:int=80)->int:
+        """
+        get the host port for the given local port
+        
+        Args:
+            local_port(int): the local port to get the mapping for
+            
+        Returns:
+            int: the  host port or None
+        """
+        host_port=None
+        pb_dict=self.container.host_config.port_bindings
+        p_local=f"{local_port}/tcp"
+        if p_local in pb_dict:
+            pb=pb_dict[p_local][0]
+            host_port=pb.host_port
+        return host_port
+    
 @dataclass
 class DBStatus():
     """
@@ -155,11 +173,8 @@ class DockerApplication(object):
             print("database container missing")
             exitCode=1
         if mw and db and mw.check() and db.check():
-            pb_dict=mw.container.host_config.port_bindings
-            p80="80/tcp"
-            if p80 in pb_dict:
-                pb=pb_dict[p80][0]
-                host_port=pb.host_port
+            host_port=mw.getHostPort(80)
+            if host_port:
                 Logger.check_and_log_equal(f"port binding",host_port,"expected  port",str(self.config.port))
                 url=self.config.url
                 # fix url to local port
@@ -170,7 +185,7 @@ class DockerApplication(object):
                 if not ok:
                     exitCode=1
             else:
-                self.log(f"port binding {p80} missing",False)
+                self.log(f"port binding for port 80 missing",False)
                 exitCode=1
             pass
         return exitCode

@@ -136,6 +136,23 @@ class TestInstall(Basetest):
         exitCode=mwCluster.check()
         self.assertEqual(0,exitCode)
         
+    def testPortBindingAccess(self):
+        """
+        https://github.com/WolfgangFahl/pymediawikidocker/issues/48
+        
+        refactor port binding access 
+        """    
+        mwCluster=self.getMwCluster(withGenerate=False)
+        apps=mwCluster.apps.values()
+        for mwApp in apps:
+            self.assertTrue(mwApp.dbContainer is not None)
+            self.assertTrue(mwApp.mwContainer is not None)
+            browser_port=mwApp.mwContainer.getHostPort(80)
+            sql_port=mwApp.dbContainer.getHostPort(3306)
+            self.assertEqual(browser_port,mwApp.config.port)
+            self.assertEqual(sql_port,mwApp.config.sqlPort)
+            pass
+        
     def testSocketGetHostname(self):
         """
         test for https://github.com/python/cpython/issues/79345
@@ -227,6 +244,7 @@ class TestInstall(Basetest):
             wikiUser=mwApp.createWikiUser(store=False)
             if self.debug:
                 print(wikiUser)
+            self.assertEqual(wikiUser.wikiId,mwApp.config.container_base_name)
             pass
         
     def testMwClusterCommandLine(self):
