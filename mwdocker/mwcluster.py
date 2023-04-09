@@ -6,6 +6,7 @@ import dataclasses
 from mwdocker.docker import DockerApplication
 from mwdocker.version import Version
 from mwdocker.config import MwClusterConfig
+from mwdocker.logger import Logger
 import sys
 from argparse import ArgumentParser
 from argparse import ArgumentDefaultsHelpFormatter
@@ -104,12 +105,10 @@ class MediaWikiCluster(object):
         for i,version in enumerate(self.config.versions):
             mwApp=self.apps[version]
             mw,db=mwApp.getContainers()
-            if mw and db:
-                l_str="found"
-            else:
-                l_str="missing"
-            msg=f"{i+1}:{version} {l_str}"
-            print(msg)
+            config=mwApp.config
+            ok=mw and db
+            msg=f"{i+1}:{config.container_base_name} {config.fullVersion}"
+            Logger.check_and_log(msg, ok)
         return exitCode
         
     def check(self)->int:
