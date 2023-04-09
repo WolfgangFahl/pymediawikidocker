@@ -178,6 +178,7 @@ class DockerApplication(object):
                 Logger.check_and_log_equal(f"port binding",host_port,"expected  port",str(self.config.port))
                 url=self.config.url
                 # fix url to local port
+                # @TODO isn't this superfluous / has no effect ...?
                 url=url.replace(str(self.config.port),host_port)
                 version_url=f"{url}/index.php/Special:Version"
                 
