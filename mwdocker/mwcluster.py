@@ -9,7 +9,6 @@ from mwdocker.config import MwClusterConfig
 import sys
 from argparse import ArgumentParser
 from argparse import ArgumentDefaultsHelpFormatter
-from mwdocker.logger import Logger
 import webbrowser
 import traceback
 
