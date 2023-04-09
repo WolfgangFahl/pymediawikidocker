@@ -43,8 +43,9 @@ class MediaWikiCluster(object):
         Returns:
             dict(str): a dict of apps by version
         '''  
+        app_count=len(self.config.versions)
         for i,version in enumerate(self.config.versions):
-            mwApp=self.getDockerApplication(i,version,home)
+            mwApp=self.getDockerApplication(i,app_count,version,home)
             if withGenerate:
                 mwApp.generateAll(overwrite=self.config.forceRebuild)
             self.apps[version]=mwApp    
@@ -111,7 +112,6 @@ class MediaWikiCluster(object):
             print(msg)
         return exitCode
         
-        
     def check(self)->int:
         """
         check the composer applications
@@ -136,12 +136,13 @@ class MediaWikiCluster(object):
         for mwApp in self.apps.values():
             mwApp.close()
             
-    def getDockerApplication(self,i:int,version:str,home:str=None):
+    def getDockerApplication(self,i:int,count:int,version:str,home:str=None):
         '''
         get the docker application for the given version index and version
         
         Args:
             i(int): the index of the version
+            count(int): total number of Docker applications in this cluster
             version(str): the mediawiki version to use
         
         Returns:
@@ -156,7 +157,8 @@ class MediaWikiCluster(object):
         appConfig.port=self.config.basePort+i
         appConfig.sqlPort=self.config.sqlPort+i   
         # let post_init create a new container_base_name
-        appConfig.container_base_name=None
+        if count>1:
+            appConfig.container_base_name=None
         appConfig.__post_init__()            
         mwApp=DockerApplication(config=appConfig,home=home)
         return mwApp
