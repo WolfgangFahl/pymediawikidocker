@@ -222,6 +222,8 @@ class TestInstall(Basetest):
         args=["--versionList",version,
             "--prefix","mittest"
         ]
+        debug=self.debug
+        debug=True
         try:
             mwCluster=self.getMwCluster(args,createApps=True)
             mwCluster.start()
@@ -229,10 +231,10 @@ class TestInstall(Basetest):
             self.assertEqual(0,exitCode)
         except Exception as ex:
             ex_msg=str(ex)
-            if self.debug:
-                print(ex_msg)
+            if debug:
+                print(f"exception: {ex_msg}")
             #self.assertTrue()
-            self.assertTrue("code 14" in ex_msg)
+            self.assertTrue("code 14" in ex_msg,ex_msg)
             pass
            
     def testWikiUser(self):
