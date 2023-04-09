@@ -210,7 +210,7 @@ class TestInstall(Basetest):
         mwCluster=self.getMwCluster(args,createApps=False)
         mwCluster.config.addExtensions(["MagicNoCache"])
         mwCluster.config.forceRebuild=forceRebuild
-        mwCluster.config.__post_init__()
+        mwCluster.config.reset_container_base_name()
         apps=mwCluster.createApps(withGenerate=forceRebuild)
         app=apps[version]
         app.start(forceRebuild=forceRebuild)
@@ -223,7 +223,8 @@ class TestInstall(Basetest):
         '''
         version="1.36.0"
         args=["--versionList",version,
-            "--prefix","mittest"
+            "--prefix","mittest",
+            "--container_name","mittest",
             "-f"
         ]
         debug=self.debug

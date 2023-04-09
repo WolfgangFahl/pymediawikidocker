@@ -70,7 +70,11 @@ class MwConfig:
         self.url=f"{self.base_url}{self.script_path}:{self.port}"
         if not self.container_base_name:
             self.container_base_name=f"{self.prefix}-{self.shortVersion}"
-            
+          
+    def reset_container_base_name(self,container_base_name:str=None):
+        self.container_base_name=container_base_name
+        self.__post_init__()
+          
     def as_dict(self)->dict:
         """
         return my fields as a dict
