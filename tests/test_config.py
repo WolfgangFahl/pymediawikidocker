@@ -52,3 +52,15 @@ class TestConfig(Basetest):
         if debug:
             print(json.dumps(mwd,indent=2))
         self.assertEqual("https",mwClusterConfig.prot)
+        
+    def test_random_password(self):
+        """
+        test the random password generation
+        """
+        config=MwClusterConfig()
+        for length,chars in [(11,15),(13,18),(15,20)]:
+            rp=config.random_password(length)
+            debug=self.debug
+            if debug:
+                print(f"{length} bytes:{len(rp)} chars:{rp}")
+            self.assertEqual(chars,len(rp))    
