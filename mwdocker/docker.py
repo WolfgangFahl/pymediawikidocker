@@ -286,7 +286,7 @@ class DockerApplication(object):
             wikiId=f"{self.config.container_base_name}"
         userDict={
             "wikiId":f"{wikiId}",
-            "url": f"{self.config.base_url}",
+            "url": f"{self.config.base_url}:{self.config.port}",
             "scriptPath": f"{self.config.script_path}",
             "user": f"{self.config.user}",
             "email":"noreply@nouser.com",
