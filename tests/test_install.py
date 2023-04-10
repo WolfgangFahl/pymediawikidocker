@@ -154,6 +154,8 @@ class TestInstall(Basetest):
                 print(config_json)
             self.assertTrue(mwApp.dbContainer is not None)
             self.assertTrue(mwApp.mwContainer is not None)
+            if debug:
+                print(mwApp.mwContainer.container)
             browser_port=mwApp.mwContainer.getHostPort(80)
             sql_port=mwApp.dbContainer.getHostPort(3306)
             self.assertEqual(str(browser_port),str(mwApp.config.port))
