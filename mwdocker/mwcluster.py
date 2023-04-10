@@ -33,12 +33,11 @@ class MediaWikiCluster(object):
         self.config=config
         self.apps={}       
   
-    def createApps(self,home:str=None,withGenerate:bool=True)->dict:
+    def createApps(self,withGenerate:bool=True)->dict:
         '''
         create my apps
         
         Args:
-            home(str): the home path to use for the docker configuration files
             withGenerate(bool): if True generate the config files
             
         Returns:
@@ -46,7 +45,7 @@ class MediaWikiCluster(object):
         '''  
         app_count=len(self.config.versions)
         for i,version in enumerate(self.config.versions):
-            mwApp=self.getDockerApplication(i,app_count,version,home)
+            mwApp=self.getDockerApplication(i,app_count,version)
             if withGenerate:
                 mwApp.generateAll(overwrite=self.config.forceRebuild)
             self.apps[version]=mwApp    
@@ -135,7 +134,7 @@ class MediaWikiCluster(object):
         for mwApp in self.apps.values():
             mwApp.close()
             
-    def getDockerApplication(self,i:int,count:int,version:str,home:str=None):
+    def getDockerApplication(self,i:int,count:int,version:str):
         '''
         get the docker application for the given version index and version
         
@@ -159,7 +158,7 @@ class MediaWikiCluster(object):
         if count>1:
             appConfig.container_base_name=None
         appConfig.__post_init__()            
-        mwApp=DockerApplication(config=appConfig,home=home)
+        mwApp=DockerApplication(config=appConfig)
         return mwApp
 
 DEBUG=False

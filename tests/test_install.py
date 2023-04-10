@@ -26,15 +26,18 @@ class TestInstall(Basetest):
     https://pypi.org/project/python-on-whales/
     '''
 
-    def setUp(self):
-        Basetest.setUp(self, debug=False)
-        # make sure we don't use the $HOME
-        self.home="/tmp"
+    def setUp(self, debug=False, profile=True):
+        Basetest.setUp(self, debug=debug, profile=profile)
+        # make sure we don't use the $HOME directory
+        self.docker_path="/tmp/.pmw" 
+        self.argv=["--dockerPath",self.docker_path]
         
-    def getMwConfig(self,argv=[]):
+    def getMwConfig(self,argv=None):
         """
         get a mediawiki configuration for the given command line arguments
         """
+        if not argv:
+            argv=self.argv
         parser = ArgumentParser()
         mwClusterConfig=MwClusterConfig()
         mwClusterConfig.addArgs(parser)
@@ -42,15 +45,17 @@ class TestInstall(Basetest):
         mwClusterConfig.fromArgs(args)
         return mwClusterConfig
     
-    def getMwCluster(self,argv=[],createApps:bool=True,withGenerate:bool=False):
+    def getMwCluster(self,argv=None,createApps:bool=True,withGenerate:bool=False):
         """
         get a mediawiki cluster as configured by the command line arguments
         """
+        if not argv:
+            argv=self.argv
         config=self.getMwConfig(argv)
         mwCluster=MediaWikiCluster(config=config)
         mwCluster.checkDocker()
         if createApps:
-            mwCluster.createApps(home=self.home,withGenerate=withGenerate)
+            mwCluster.createApps(withGenerate=withGenerate)
         return mwCluster
     
     def printCommand(self,options,args):
@@ -88,13 +93,12 @@ class TestInstall(Basetest):
         '''
         test generating the docker files
         '''
-        config_path=f"{self.home}/.pymediawikidocker"
-        self.removeFolderContent(config_path)
+        self.removeFolderContent(self.docker_path)
         mwCluster=self.getMwCluster(withGenerate=True)
         for _index,version in enumerate(mwCluster.config.versions):
             mwApp=mwCluster.apps[version]
             config=mwApp.config
-            epath=f"{config_path}/{config.container_base_name}"
+            epath=f"{self.docker_path}/{config.container_base_name}"
             self.assertTrue(os.path.isdir(epath))
             for fname in [
                     'Dockerfile',
@@ -119,8 +123,6 @@ class TestInstall(Basetest):
         '''
         test the MediaWiki docker image installation
         '''
-        if self.inPublicCI():
-            self.home=None
         mwCluster=self.getMwCluster(withGenerate=True)
         mwCluster.start(forceRebuild=True)
         apps=mwCluster.apps.values()

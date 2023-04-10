@@ -104,8 +104,7 @@ class DockerApplication(object):
     '''
 
     def __init__(self,
-                 config:MwClusterConfig,
-                 home:str=None):
+                 config:MwClusterConfig):
         '''
         Constructor
         
@@ -121,9 +120,8 @@ class DockerApplication(object):
             self.composerVersion=2
         # jinja and docker prerequisites
         self.env=self.getJinjaEnv()
-        if home is None:
-            home = str(Path.home())
-        self.dockerPath=f'{home}/.pymediawikidocker/{self.config.container_base_name}' 
+        # docker file location
+        self.dockerPath=f'{self.config.dockerPath}/{self.config.container_base_name}' 
         os.makedirs(self.dockerPath,exist_ok=True)
         
         self.getContainers()

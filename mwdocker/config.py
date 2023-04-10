@@ -5,6 +5,7 @@ Created on 2023-04-06
 '''
 import dataclasses
 from dataclasses import dataclass, field
+from pathlib import Path
 import re
 import secrets
 import socket
@@ -58,6 +59,12 @@ class MwConfig:
     debug:bool=False
     verbose:bool=True
     wikiId:str=None
+    dockerPath:str=None
+    
+    def default_docker_path(self)->str:
+        home = str(Path.home())
+        docker_path=f'{home}/.pymediawikidocker' 
+        return docker_path
     
     def __post_init__(self):
         """
@@ -68,6 +75,8 @@ class MwConfig:
         self.shortVersion=self.getShortVersion()
         self.base_url=f"{self.prot}://{self.host}"
         self.url=f"{self.base_url}{self.script_path}:{self.port}"
+        if not self.dockerPath:
+            self.dockerPath=self.default_docker_path()
         if not self.container_base_name:
             self.container_base_name=f"{self.prefix}-{self.shortVersion}"
           
@@ -165,6 +174,7 @@ class MwConfig:
         """
         self.prefix=args.prefix
         self.container_base_name=args.container_name
+        self.dockerPath=args.dockerPath
         self.extensionNameList=args.extensionNameList
         self.extensionJsonFile=args.extensionJsonFile
         self.forceRebuild=args.forceRebuild
@@ -199,6 +209,8 @@ class MwConfig:
         parser.add_argument("-f", "--forceRebuild", action="store_true", help="force rebuilding  [default: %(default)s]")
         parser.add_argument("--host", default=Host.get_default_host(),
                             help="the host to serve / listen from [default: %(default)s]")
+        parser.add_argument("-dp","--dockerPath", default=self.default_docker_path(),
+                            help="the base directory to store docker and jinja template files [default: %(default)s]")
         parser.add_argument("--logo", default=self.logo, help="set Logo [default: %(default)s]")
         parser.add_argument('-mv', '--mariaDBVersion', dest='mariaDBVersion',default=self.mariaDBVersion,help="mariaDB Version to be installed [default: %(default)s]")
         parser.add_argument('--mysqlPassword',default=self.mySQLRootPassword, help="set sqlRootPassword [default: %(default)s] - random password if None")
