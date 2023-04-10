@@ -146,7 +146,12 @@ class TestInstall(Basetest):
         """    
         mwCluster=self.getMwCluster(withGenerate=False)
         apps=mwCluster.apps.values()
+        debug=self.debug
+        debug=True
         for mwApp in apps:
+            config_json=mwApp.config.as_json()
+            if debug:
+                print(config_json)
             self.assertTrue(mwApp.dbContainer is not None)
             self.assertTrue(mwApp.mwContainer is not None)
             browser_port=mwApp.mwContainer.getHostPort(80)

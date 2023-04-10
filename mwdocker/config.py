@@ -6,6 +6,7 @@ Created on 2023-04-06
 import dataclasses
 from dataclasses import dataclass, field
 from pathlib import Path
+import json
 import re
 import secrets
 import socket
@@ -94,6 +95,17 @@ class MwConfig:
         """
         config_dict=dataclasses.asdict(self)
         return config_dict
+    
+    def as_json(self)->str:
+        """
+        return me as a json string
+        
+        Returns:
+            str: my json representation
+        """
+        config_dict=self.as_dict()
+        json_str=json.dumps(config_dict,indent=2)
+        return json_str
         
     def getShortVersion(self,separator=""):
         '''

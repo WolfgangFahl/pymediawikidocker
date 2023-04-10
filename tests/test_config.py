@@ -7,7 +7,6 @@ from tests.basetest import Basetest
 from mwdocker.config import MwClusterConfig, Host
 import json
 from argparse import ArgumentParser
-import dataclasses
 
 class TestConfig(Basetest):
     '''
@@ -46,11 +45,11 @@ class TestConfig(Basetest):
         argv=["--prot","https"]
         args = parser.parse_args(argv)
         mwClusterConfig.fromArgs(args)
-        mwd=dataclasses.asdict(mwClusterConfig)
+        json_str=mwClusterConfig.as_json()
         debug=self.debug
         #debug=True
         if debug:
-            print(json.dumps(mwd,indent=2))
+            print(json_str)
         self.assertEqual("https",mwClusterConfig.prot)
         
     def test_random_password(self):
