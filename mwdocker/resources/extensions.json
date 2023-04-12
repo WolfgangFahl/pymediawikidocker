@@ -80,6 +80,12 @@
 			"url": "https://www.mediawiki.org/wiki/Extension:Header_Tabs"
 		},
 		{
+			"name": "ImageLink",
+			"extension": "ImageLink",
+			"giturl": "https://github.com/BITPlan/ImageLink",
+			"url": "https://wiki.bitplan.com/index.php/ImageLink",
+		},
+		{
 			"name": "ImageMap",
 			"extension": "ImageMap",
 			"giturl": "https://github.com/wikimedia/mediawiki-extensions-ImageMap",
