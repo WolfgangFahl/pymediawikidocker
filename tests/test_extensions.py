@@ -5,6 +5,7 @@ Created on 2021-06-23
 '''
 import unittest
 from mwdocker.config import MwClusterConfig
+from mwdocker.docker import DockerApplication
 from mwdocker.mw import ExtensionList, Extension
 from tests.basetest import Basetest
 
@@ -15,6 +16,15 @@ class TestExtensions(Basetest):
 
     def setUp(self):
         Basetest.setUp(self)
+        pass
+    
+    def testReadExtensions(self):
+        """
+        read the extensions
+        """
+        extensionList=ExtensionList()
+        extensionList.restoreFromJsonFile(ExtensionList.storeFilePrefix())
+        self.assertTrue(len(extensionList.extensions)>=35)
         pass
     
     def testExtensionDetailsFromUrl(self):
