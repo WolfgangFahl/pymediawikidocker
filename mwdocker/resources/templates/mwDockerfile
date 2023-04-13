@@ -78,8 +78,12 @@ COPY startRunJobs.sh /root
 # copy the script to add a crontab entry
 COPY addCronTabEntry.sh /root
 
+# copy the script to add languages
+COPY lang.sh /root
+
 # copy the plantuml script
 COPY plantuml.sh /root
+
 
 # make the scripts executable
 RUN chmod +x /tmp/initdb.sh /tmp/update.sh /tmp/addSysopUser.sh /tmp/installExtensions.sh /root/addCronTabEntry.sh /root/startRunJobs.sh /root/plantuml.sh
