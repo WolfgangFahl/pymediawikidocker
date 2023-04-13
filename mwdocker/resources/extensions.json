@@ -82,6 +82,7 @@
 		{
 			"name": "ImageLink",
 			"extension": "ImageLink",
+			"require_once_until": "139",
 			"giturl": "https://github.com/BITPlan/ImageLink",
 			"url": "https://wiki.bitplan.com/index.php/ImageLink"
 		},
