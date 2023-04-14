@@ -61,16 +61,16 @@ COPY phpinfo.php /var/www/html
 COPY wiki.sql /tmp
 
 # copy the initdb.sh script
-COPY initdb.sh /tmp
+COPY initdb.sh /root
 
 # copy the installExtensions.sh script
-COPY installExtensions.sh /tmp
+COPY installExtensions.sh /root
 
 # copy the update.sh script
-COPY update.sh /tmp
+COPY update.sh /root
 
 # copy the addSysopUser.sh script
-COPY addSysopUser.sh /tmp
+COPY addSysopUser.sh /root
 
 #copy the startRunJobs.sh script
 COPY startRunJobs.sh /root
@@ -86,7 +86,7 @@ COPY plantuml.sh /root
 
 
 # make the scripts executable
-RUN chmod +x /tmp/initdb.sh /tmp/update.sh /tmp/addSysopUser.sh /tmp/installExtensions.sh /root/addCronTabEntry.sh /root/startRunJobs.sh /root/plantuml.sh
+RUN chmod +x /root/initdb.sh /root/update.sh /root/addSysopUser.sh /root/installExtensions.sh /root/addCronTabEntry.sh /root/startRunJobs.sh /root/plantuml.sh
 
 # restore the mediawiki initial database backup
 # can not do this before SQL server is up see https://docs.docker.com/compose/startup-order/

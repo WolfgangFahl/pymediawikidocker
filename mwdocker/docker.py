@@ -257,17 +257,19 @@ class DockerApplication(object):
         initialize my SQL database
         '''
         # restore the mySQL dump data
-        self.execute("/tmp/initdb.sh")
+        self.execute("/root/initdb.sh")
         # update the database e.g. to initialize Semantic MediaWiki tables
-        self.execute("/tmp/update.sh")
+        self.execute("/root/update.sh")
         # add an initial sysop user as specified
-        self.execute("/tmp/addSysopUser.sh")
+        self.execute("/root/addSysopUser.sh")
             
     def installExtensions(self):
         '''
         install all extensions
         '''
-        self.execute("/tmp/installExtensions.sh")
+        self.execute("/root/installExtensions.sh")
+        # update again to fix potential semantic mediawiki issues
+        self.execute("/root/update.sh")
         
     def startUp(self):
         '''
