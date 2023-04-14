@@ -118,15 +118,20 @@ class TestInstall(Basetest):
                 ]:
                 fpath=f"{epath}/{fname}"
                 self.assertTrue(os.path.isfile(fpath))
+                
+    def newClusterApps(self):
+        self.removeFolderContent(self.docker_path)
+        mwCluster=self.getMwCluster(withGenerate=True)
+        mwCluster.down(forceRebuild=True)
+        mwCluster.start(forceRebuild=True)
+        apps=mwCluster.apps.values()
+        return mwCluster,apps
     
     def testInstallation(self):
         '''
         test the MediaWiki docker image installation
         '''
-        mwCluster=self.getMwCluster(withGenerate=True)
-        mwCluster.down(forceRebuild=True)
-        mwCluster.start(forceRebuild=True)
-        apps=mwCluster.apps.values()
+        mwCluster,apps=self.newClusterApps()
         self.assertEqual(len(mwCluster.config.versions),len(apps))
         for mwApp in apps:
             self.assertTrue(mwApp.dbContainer is not None)
@@ -145,10 +150,7 @@ class TestInstall(Basetest):
         
         refactor port binding access 
         """    
-        mwCluster=self.getMwCluster(withGenerate=True)
-        mwCluster.down(forceRebuild=True)
-        mwCluster.start(forceRebuild=True)
-        apps=mwCluster.apps.values()
+        mwCluster,apps=self.newClusterApps()
         debug=self.debug
         debug=True
         for mwApp in apps:
