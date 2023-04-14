@@ -124,6 +124,7 @@ class TestInstall(Basetest):
         test the MediaWiki docker image installation
         '''
         mwCluster=self.getMwCluster(withGenerate=True)
+        mwCluster.down(forceRebuild=True)
         mwCluster.start(forceRebuild=True)
         apps=mwCluster.apps.values()
         self.assertEqual(len(mwCluster.config.versions),len(apps))
@@ -144,7 +145,9 @@ class TestInstall(Basetest):
         
         refactor port binding access 
         """    
-        mwCluster=self.getMwCluster(withGenerate=False)
+        mwCluster=self.getMwCluster(withGenerate=True)
+        mwCluster.down(forceRebuild=True)
+        mwCluster.start(forceRebuild=True)
         apps=mwCluster.apps.values()
         debug=self.debug
         debug=True
