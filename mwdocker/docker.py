@@ -268,8 +268,6 @@ class DockerApplication(object):
         install all extensions
         '''
         self.execute("/root/installExtensions.sh")
-        # update again to fix potential semantic mediawiki issues
-        self.execute("/root/update.sh")
         
     def startUp(self):
         '''
