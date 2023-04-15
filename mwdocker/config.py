@@ -44,6 +44,7 @@ class MwConfig:
     user:str="Sysop"
     prefix:str="mw"
     password_length:int = 15
+    create_random_password:bool=False
     password:str="sysop-1234!"
     mySQLRootPassword:str=None
     mySQLPassword:str=None
@@ -118,7 +119,7 @@ class MwConfig:
         shortVersion=f"{versionMatch.group('major')}{separator}{versionMatch.group('minor')}"
         return shortVersion
     
-    def random_password(self,length:int = 15)->str:
+    def create_random_password(self,length:int = 15)->str:
         """
         create a random password
 
@@ -196,13 +197,16 @@ class MwConfig:
         # passwords
         self.mySQLRootPassword=args.mysqlPassword
         if not self.mySQLRootPassword:
-            self.mySQLRootPassword=self.random_password(self.password_length)
-        self.mySQLPassword=self.random_password(self.password_length)    
+            self.mySQLRootPassword=self.create_random_password(self.password_length)
+        self.mySQLPassword=self.create_random_password(self.password_length)    
         self.prot=args.prot
         self.script_path=args.script_path
         self.versions=args.versions
         self.user=args.user
+        self.random_password=args.randomPassword
+        self.force_user=args.forceUser
         self.password=args.password
+        self.password_length=args.passwordLength
         self.basePort=args.basePort
         self.sqlPort=args.sqlPort
         self.smwVersion=args.smwVersion
@@ -219,6 +223,7 @@ class MwConfig:
         parser.add_argument('-el', '--extensionList', dest='extensionNameList', nargs="*",default=self.extensionNameList,help="list of extensions to be installed [default: %(default)s]")
         parser.add_argument('-ej', '--extensionJson',dest='extensionJsonFile',default=self.extensionJsonFile,help="additional extension descriptions default: [default: %(default)s]")
         parser.add_argument("-f", "--forceRebuild", action="store_true", help="force rebuilding  [default: %(default)s]")
+        parser.add_argument("-fu","--forceUser",action="store_true",help="force overwrite of wikiuser")
         parser.add_argument("--host", default=Host.get_default_host(),
                             help="the host to serve / listen from [default: %(default)s]")
         parser.add_argument("-dp","--dockerPath", default=self.default_docker_path(),
@@ -226,6 +231,7 @@ class MwConfig:
         parser.add_argument("--logo", default=self.logo, help="set Logo [default: %(default)s]")
         parser.add_argument('-mv', '--mariaDBVersion', dest='mariaDBVersion',default=self.mariaDBVersion,help="mariaDB Version to be installed [default: %(default)s]")
         parser.add_argument('--mysqlPassword',default=self.mySQLRootPassword, help="set sqlRootPassword [default: %(default)s] - random password if None")
+        parser.add_argument("-rp", "--randomPassword", action="store_true", help="create random password and create wikiuser while at it")
         parser.add_argument('-p','--password',dest='password',default=self.password, help="set password for initial user [default: %(default)s] ")
         parser.add_argument('-pl','--passwordLength',default=self.password_length, help="set the password length for random passwords[default: %(default)s] ")
         parser.add_argument("--prefix",default=self.prefix,help="the container name prefix to use [default: %(default)s]")

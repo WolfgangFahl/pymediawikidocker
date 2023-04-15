@@ -298,6 +298,24 @@ class DockerApplication(object):
             wikiUser.save()
         return wikiUser
     
+    def createOrModifyWikiUser(self,wikiId,force_overwrite:bool=False)->WikiUser:
+        """
+        create or modify the WikiUser for this DockerApplication
+        
+        Args:
+            wikiId(str): the wikiId to create or modify a wiki user for
+            force_overwrite(bool): if True overwrite the wikuser info
+        """
+        wikiUsers=WikiUser.getWikiUsers(lenient=True)
+        if wikiId in wikiUsers and not force_overwrite:
+            wikiUser=wikiUsers[wikiId]          
+            if self.config.password != wikiUser.getPassword():
+                raise Exception(f"wikiUser for wiki {wikiId} already exists but with different password")
+            pass
+        else:
+            wikiUser=self.createWikiUser(wikiId,store=True)
+        return wikiUser
+    
     def execute(self,command_str:str):
         '''
         execute the given command string
@@ -505,6 +523,10 @@ class DockerApplication(object):
         self.generate("mwCompose.yml",f"{self.dockerPath}/docker-compose.yml",mySQLRootPassword=self.config.mySQLRootPassword,mySQLPassword=self.config.mySQLPassword,container_base_name=self.config.container_base_name,overwrite=overwrite)
         self.generate(f"mwLocalSettings{self.config.shortVersion}.php",f"{self.dockerPath}/LocalSettings.php",mySQLPassword=self.config.mySQLPassword,hostname=self.config.host,extensions=self.config.extensionMap.values(),mwShortVersion=self.config.shortVersion,logo=self.config.logo,overwrite=overwrite)
         self.generate(f"mwWiki{self.config.shortVersion}.sql",f"{self.dockerPath}/wiki.sql",overwrite=overwrite)
+        if self.config.random_password:
+            self.config.password=self.config.create_random_password()
+            if self.config.wikiId:
+                self.createOrModifyWikiUser(self.config.wikiId, force_overwrite=self.config.force_user)
         self.generate(f"addSysopUser.sh",f"{self.dockerPath}/addSysopUser.sh",user=self.config.user,password=self.config.password,overwrite=overwrite)
         self.generate(f"installExtensions.sh",f"{self.dockerPath}/installExtensions.sh",extensions=self.config.extensionMap.values(),branch=self.branch,overwrite=overwrite)
         self.genComposerRequire(f"{self.dockerPath}/composer.local.json",overwrite=overwrite)
