@@ -60,7 +60,7 @@ class TestConfig(Basetest):
         """
         config=MwClusterConfig()
         for length,chars in [(11,15),(13,18),(15,20)]:
-            rp=config.random_password(length)
+            rp=config.create_random_password(length)
             debug=self.debug
             if debug:
                 print(f"{length} bytes:{len(rp)} chars:{rp}")
