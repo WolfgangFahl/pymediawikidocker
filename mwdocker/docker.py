@@ -524,7 +524,7 @@ class DockerApplication(object):
         self.generate(f"mwLocalSettings{self.config.shortVersion}.php",f"{self.dockerPath}/LocalSettings.php",mySQLPassword=self.config.mySQLPassword,hostname=self.config.host,extensions=self.config.extensionMap.values(),mwShortVersion=self.config.shortVersion,logo=self.config.logo,overwrite=overwrite)
         self.generate(f"mwWiki{self.config.shortVersion}.sql",f"{self.dockerPath}/wiki.sql",overwrite=overwrite)
         if self.config.random_password:
-            self.config.password=self.config.create_random_password()
+            self.config.password=self.config.create_random_password(lenght=self.config.password_length)
             if self.config.wikiId:
                 self.createOrModifyWikiUser(self.config.wikiId, force_overwrite=self.config.force_user)
         self.generate(f"addSysopUser.sh",f"{self.dockerPath}/addSysopUser.sh",user=self.config.user,password=self.config.password,overwrite=overwrite)
