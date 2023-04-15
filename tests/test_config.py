@@ -21,7 +21,8 @@ class TestConfig(Basetest):
         expected={'version': '1.39.3', 'smwVersion': None, 
                   'extensionNameList': ['Admin Links', 'Header Tabs', 'SyntaxHighlight', 'Variables'], 
                   'extensionJsonFile': None, 'user': 'Sysop', 'prefix': 'mw', 
-                  'password_length': 15, 'password': 'sysop-1234!', 
+                  'password_length': 15, 'password': 'sysop-1234!',
+                  'random_password': False, 
                   'mySQLRootPassword': None, 'mySQLPassword': None, 
                   'logo': '$wgResourceBasePath/resources/assets/wiki.png',
                    'port': 9080, 'sqlPort': 9306, 'prot': 'http', 
@@ -31,7 +32,7 @@ class TestConfig(Basetest):
 
         mwd=mwClusterConfig.as_dict()
         debug=self.debug
-        #debug=True
+        debug=True
         if debug:
             print(mwd)
             print(json.dumps(mwd,indent=2))
