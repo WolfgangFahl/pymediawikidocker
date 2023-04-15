@@ -405,7 +405,7 @@ class DockerApplication(object):
             if self.config.verbose:
                 print (f"{dbStatus.msg} established database returns: {rows[0]}")     
     
-    def checkDBConnection(self,timeout:float=10,initialSleep:float=2.5,maxTries:int=7)->DBStatus:
+    def checkDBConnection(self,timeout:float=10,initialSleep:float=2.5,factor=1.5,maxTries:int=11)->DBStatus:
         """
         check database connection with retries
         
@@ -413,7 +413,7 @@ class DockerApplication(object):
             timeout(float): number of seconds for timeout
             initialSleep(float): number of seconds to initially wait/sleep
             maxTries(int): maximum number of retries before giving up between each try a sleep is done that starts
-            with 0.5 secs and doubles on every retry
+            with 0.5 secs and multiplies on every retry
             
         Returns:
             dbStatus: the status
@@ -429,10 +429,10 @@ class DockerApplication(object):
                 self.doCheckDBConnection(dbStatus,timeout=timeout)
                 if not dbStatus.ok:
                     if self.config.verbose:
-                        print(f"Connection attempt #{dbStatus.attempts}/{dbStatus.max_tries} failed will retry in {sleep} secs" )   
+                        print(f"Connection attempt #{dbStatus.attempts}/{dbStatus.max_tries} failed will retry in {sleep:4.1f} secs" )   
                     # wait before trying
                     time.sleep(sleep)
-                    sleep=sleep*2
+                    sleep=sleep*factor
             except Exception as ex:
                 dbStatus.ex=ex
                 if self.config.verbose:
