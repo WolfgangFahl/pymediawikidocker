@@ -44,7 +44,7 @@ class MwConfig:
     user:str="Sysop"
     prefix:str="mw"
     password_length:int = 15
-    create_random_password:bool=False
+    random_password:bool=False
     password:str="sysop-1234!"
     mySQLRootPassword:str=None
     mySQLPassword:str=None
