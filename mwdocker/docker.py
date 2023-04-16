@@ -376,7 +376,7 @@ class DockerApplication(object):
                 self.dbConn = mysql.connector.connect(host=self.config.host,
                                  database=self.database,
                                  user=self.dbUser,
-                                 port=self.config.sqlPort,
+                                 port=self.config.sql_port,
                                  password=self.config.mySQLPassword,
                                  connection_timeout=timeout)
         
@@ -418,7 +418,7 @@ class DockerApplication(object):
         Returns:
             dbStatus: the status
         """ 
-        conn_msg=f"SQL-Connection to {self.database} on {self.config.host} port {self.config.sqlPort} with user {self.dbUser}"
+        conn_msg=f"SQL-Connection to {self.database} on {self.config.host} port {self.config.sql_port} with user {self.dbUser}"
         dbStatus=DBStatus(attempts=0,ok=False,msg=conn_msg,max_tries=maxTries)
         if self.config.debug:
             print (f"Trying {dbStatus.msg} with max {maxTries} tries and {timeout}s timeout per try - initial sleep {initialSleep}s")
@@ -471,7 +471,7 @@ class DockerApplication(object):
         try:
             template = self.env.get_template(templateName)
             timestamp=datetime.datetime.now().isoformat()
-            content=template.render(mwVersion=self.config.version,mariaDBVersion=self.config.mariaDBVersion,port=self.config.port,sqlPort=self.config.sqlPort,smwVersion=self.config.smwVersion,timestamp=timestamp,**kwArgs)
+            content=template.render(mwVersion=self.config.version,mariaDBVersion=self.config.mariaDBVersion,port=self.config.port,sqlPort=self.config.sql_port,smwVersion=self.config.smwVersion,timestamp=timestamp,**kwArgs)
             self.optionalWrite(targetPath, content, overwrite)
 
         except TemplateNotFound:

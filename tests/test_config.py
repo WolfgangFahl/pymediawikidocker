@@ -26,7 +26,7 @@ class TestConfig(Basetest):
                   'force_user': False,
                   'mySQLRootPassword': None, 'mySQLPassword': None, 
                   'logo': '$wgResourceBasePath/resources/assets/wiki.png',
-                   'port': 9080, 'sqlPort': 9306, 'prot': 'http', 
+                   'port': 9080, 'sql_port': 9306, 'prot': 'http', 
                    'host': Host.get_default_host(), 'script_path': '', 'container_base_name': 'mw-139', 'networkName': 'mwNetwork', 'mariaDBVersion': '10.11', 'forceRebuild': False, 'debug': False, 'verbose': True, 
                    'wikiId': None, 'versions': ['1.35.10','1.38.6', '1.39.3'], 'basePort': 9080,
                    'dockerPath': mwClusterConfig.dockerPath}

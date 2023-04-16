@@ -164,7 +164,7 @@ class TestInstall(Basetest):
             browser_port=mwApp.mwContainer.getHostPort(80)
             sql_port=mwApp.dbContainer.getHostPort(3306)
             self.assertEqual(str(browser_port),str(mwApp.config.port))
-            self.assertEqual(str(sql_port),str(mwApp.config.sqlPort))
+            self.assertEqual(str(sql_port),str(mwApp.config.sql_port))
             pass
         
     def testSocketGetHostname(self):
@@ -305,7 +305,7 @@ digraph mwcluster {{
             mwApp=mwCluster.apps[version]
             config=mwApp.config
             lines+=f'''  mew{index} [ label="{config.container_base_name}-mw\\n{config.fullVersion}\\nport {config.port}" ]\n'''
-            lines+=f'''  mdb{index} [ label="{config.container_base_name}-db\\nMariaDB {config.mariaDBVersion}\\nport {config.sqlPort}" ]\n'''
+            lines+=f'''  mdb{index} [ label="{config.container_base_name}-db\\nMariaDB {config.mariaDBVersion}\\nport {config.sql_port}" ]\n'''
             lines+=f'''  subgraph cluster_{index}{{\n'''
             lines+=f'''    label="{config.container_base_name}"\n'''
             lines+=f'''    mew{index}->mdb{index}\n'''

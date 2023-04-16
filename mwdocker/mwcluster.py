@@ -153,7 +153,7 @@ class MediaWikiCluster(object):
         appConfig.extensionMap=self.config.extensionMap.copy()
         appConfig.version=version
         appConfig.port=self.config.basePort+i
-        appConfig.sqlPort=self.config.sqlPort+i   
+        appConfig.sql_port=self.config.sql_port+i   
         # let post_init create a new container_base_name
         if count>1:
             appConfig.container_base_name=None

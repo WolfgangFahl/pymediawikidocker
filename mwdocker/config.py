@@ -51,7 +51,7 @@ class MwConfig:
     mySQLPassword:str=None
     logo:str="$wgResourceBasePath/resources/assets/wiki.png"
     port:int=9080
-    sqlPort:int=9306
+    sql_port:int=9306
     prot:str="http"
     host:str=Host.get_default_host()    
     script_path:str=""
@@ -209,7 +209,7 @@ class MwConfig:
         self.password=args.password
         self.password_length=args.passwordLength
         self.basePort=args.basePort
-        self.sqlPort=args.sqlPort
+        self.sql_port=args.sqlPort
         self.smwVersion=args.smwVersion
         self.verbose=not args.quiet
         self.debug=args.debug
