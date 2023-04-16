@@ -96,8 +96,6 @@ class MwConfig:
             pr=urlparse(url)
             self.prot=pr.scheme
             self.host=pr.hostname
-            if pr.port:
-                self.port=pr.port
             self.script_path=pr.path
             self.base_url=f"{self.prot}://{self.host}"
             self.full_url=url
