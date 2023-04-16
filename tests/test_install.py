@@ -312,7 +312,7 @@ digraph mwcluster {{
             lines+=f'''  }}\n'''
         lines+="}"
         show=self.debug
-        #show=True
+        show=True
         # show only for wiki documentation
         if show:
             print (lines)
