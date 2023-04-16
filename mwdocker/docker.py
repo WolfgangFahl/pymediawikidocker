@@ -614,7 +614,7 @@ class DockerApplication(object):
         self.up(forceRebuild=forceRebuild) 
         if withInitDB:
             if self.config.verbose:
-                print("Initializing MediaWiki SQL tables")
+                print("Initializing MediaWiki SQL tables ...")
             dbStatus=self.checkDBConnection()
             if dbStatus.ok:
                 # first install extensions
@@ -623,3 +623,5 @@ class DockerApplication(object):
                 self.initDB()
                 # then run startUp scripts
                 self.startUp()
+        if self.config.verbose:
+            print(f"MediaWiki {self.config.container_base_name} is ready at {self.config.full_url}")        
