@@ -121,8 +121,8 @@ class DockerApplication(object):
         # jinja and docker prerequisites
         self.env=self.getJinjaEnv()
         # docker file location
-        self.dockerPath=f'{self.config.dockerPath}/{self.config.container_base_name}' 
-        os.makedirs(self.dockerPath,exist_ok=True)
+        self.docker_path=f'{self.config.docker_path}/{self.config.container_base_name}' 
+        os.makedirs(self.docker_path,exist_ok=True)
         
         self.getContainers()
         self.dbConn=None
@@ -519,19 +519,19 @@ class DockerApplication(object):
         Args:
             overwrite(bool): if True overwrite the existing files
         '''
-        self.generate("mwDockerfile",f"{self.dockerPath}/Dockerfile",composerVersion=self.composerVersion,overwrite=overwrite)
-        self.generate("mwCompose.yml",f"{self.dockerPath}/docker-compose.yml",mySQLRootPassword=self.config.mySQLRootPassword,mySQLPassword=self.config.mySQLPassword,container_base_name=self.config.container_base_name,overwrite=overwrite)
-        self.generate(f"mwLocalSettings{self.config.shortVersion}.php",f"{self.dockerPath}/LocalSettings.php",mySQLPassword=self.config.mySQLPassword,hostname=self.config.host,extensions=self.config.extensionMap.values(),mwShortVersion=self.config.shortVersion,logo=self.config.logo,overwrite=overwrite)
-        self.generate(f"mwWiki{self.config.shortVersion}.sql",f"{self.dockerPath}/wiki.sql",overwrite=overwrite)
+        self.generate("mwDockerfile",f"{self.docker_path}/Dockerfile",composerVersion=self.composerVersion,overwrite=overwrite)
+        self.generate("mwCompose.yml",f"{self.docker_path}/docker-compose.yml",mySQLRootPassword=self.config.mySQLRootPassword,mySQLPassword=self.config.mySQLPassword,container_base_name=self.config.container_base_name,overwrite=overwrite)
+        self.generate(f"mwLocalSettings{self.config.shortVersion}.php",f"{self.docker_path}/LocalSettings.php",mySQLPassword=self.config.mySQLPassword,hostname=self.config.host,extensions=self.config.extensionMap.values(),mwShortVersion=self.config.shortVersion,logo=self.config.logo,overwrite=overwrite)
+        self.generate(f"mwWiki{self.config.shortVersion}.sql",f"{self.docker_path}/wiki.sql",overwrite=overwrite)
         if self.config.random_password:
             self.config.password=self.config.create_random_password(length=self.config.password_length)
             if self.config.wikiId:
                 self.createOrModifyWikiUser(self.config.wikiId, force_overwrite=self.config.force_user)
-        self.generate(f"addSysopUser.sh",f"{self.dockerPath}/addSysopUser.sh",user=self.config.user,password=self.config.password,overwrite=overwrite)
-        self.generate(f"installExtensions.sh",f"{self.dockerPath}/installExtensions.sh",extensions=self.config.extensionMap.values(),branch=self.branch,overwrite=overwrite)
-        self.genComposerRequire(f"{self.dockerPath}/composer.local.json",overwrite=overwrite)
-        for fileName in ["addCronTabEntry.sh","startRunJobs.sh","initdb.sh","update.sh","phpinfo.php","upload.ini","lang.sh","plantuml.sh"]:
-            self.generate(f"{fileName}",f"{self.dockerPath}/{fileName}",overwrite=overwrite)
+        self.generate(f"addSysopUser.sh",f"{self.docker_path}/addSysopUser.sh",user=self.config.user,password=self.config.password,overwrite=overwrite)
+        self.generate(f"installExtensions.sh",f"{self.docker_path}/installExtensions.sh",extensions=self.config.extensionMap.values(),branch=self.branch,overwrite=overwrite)
+        self.genComposerRequire(f"{self.docker_path}/composer.local.json",overwrite=overwrite)
+        for file_name in ["addCronTabEntry.sh","startRunJobs.sh","initdb.sh","update.sh","phpinfo.php","upload.ini","lang.sh","plantuml.sh"]:
+            self.generate(f"{file_name}",f"{self.docker_path}/{file_name}",overwrite=overwrite)
         
     def down(self,forceRebuild:bool=False):
         """
@@ -547,7 +547,7 @@ class DockerApplication(object):
             print(f"running docker compose down for {self.config.container_base_name} {self.config.version} docker application ...")
         # remember current directory 
         cwd = os.getcwd()    
-        os.chdir(self.dockerPath)
+        os.chdir(self.docker_path)
         docker.compose.down(volumes=forceRebuild) 
         # switch back to previous current directory
         os.chdir(cwd)
@@ -591,7 +591,7 @@ class DockerApplication(object):
         cwd = os.getcwd()    
      
         # change directory so that docker CLI will find the relevant dockerfile and docker-compose.yml
-        os.chdir(self.dockerPath)
+        os.chdir(self.docker_path)
         #project_config = docker.compose.config()
         if forceRebuild:
             docker.compose.build()

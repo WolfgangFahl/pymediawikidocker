@@ -28,8 +28,8 @@ class TestConfig(Basetest):
                   'logo': '$wgResourceBasePath/resources/assets/wiki.png',
                    'port': 9080, 'sql_port': 9306, 'prot': 'http', 
                    'host': Host.get_default_host(), 'script_path': '', 'container_base_name': 'mw-139', 'networkName': 'mwNetwork', 'mariaDBVersion': '10.11', 'forceRebuild': False, 'debug': False, 'verbose': True, 
-                   'wikiId': None, 'versions': ['1.35.10','1.38.6', '1.39.3'], 'basePort': 9080,
-                   'dockerPath': mwClusterConfig.dockerPath}
+                   'wikiId': None, 'versions': ['1.35.10','1.38.6', '1.39.3'], 'base_port': 9080,
+                   'docker_path': mwClusterConfig.docker_path}
 
         mwd=mwClusterConfig.as_dict()
         debug=self.debug
@@ -46,15 +46,31 @@ class TestConfig(Basetest):
         parser = ArgumentParser()
         mwClusterConfig=MwClusterConfig()
         mwClusterConfig.addArgs(parser)
-        argv=["--prot","https"]
-        args = parser.parse_args(argv)
-        mwClusterConfig.fromArgs(args)
-        json_str=mwClusterConfig.as_json()
-        debug=self.debug
-        #debug=True
-        if debug:
-            print(json_str)
-        self.assertEqual("https",mwClusterConfig.prot)
+        argv_examples=[
+            (
+                ["--prot","https"],
+                {"prot":"https"},
+                
+            ),
+            (   
+                ["--url","http://profiwiki.bitplan.com"],
+                {
+                    "prot":"http",
+                    "host":"profiwiki.bitplan.com",
+                    "script_path":""
+                },
+            )
+        ]    
+        for argv,expected in argv_examples:
+            args = parser.parse_args(argv)
+            mwClusterConfig.fromArgs(args)
+            json_str=mwClusterConfig.as_json()
+            debug=self.debug
+            debug=True
+            if debug:
+                print(json_str)
+                for key,value in expected.items():
+                    self.assertEqual(value,getattr(mwClusterConfig,key))
         
     def test_random_password(self):
         """

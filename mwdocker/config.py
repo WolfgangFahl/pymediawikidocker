@@ -10,6 +10,7 @@ import json
 import re
 import secrets
 import socket
+from urllib.parse import urlparse
 from typing import Optional, List
 from mwdocker.mw import ExtensionList
 
@@ -52,6 +53,8 @@ class MwConfig:
     logo:str="$wgResourceBasePath/resources/assets/wiki.png"
     port:int=9080
     sql_port:int=9306
+    url=None
+    full_url=None
     prot:str="http"
     host:str=Host.get_default_host()    
     script_path:str=""
@@ -62,7 +65,7 @@ class MwConfig:
     debug:bool=False
     verbose:bool=True
     wikiId:str=None
-    dockerPath:str=None
+    docker_path:str=None
     
     def default_docker_path(self)->str:
         home = str(Path.home())
@@ -76,14 +79,39 @@ class MwConfig:
         self.fullVersion=f"MediaWiki {self.version}"
         self.underscoreVersion=self.version.replace(".","_")
         self.shortVersion=self.getShortVersion()
-        self.base_url=f"{self.prot}://{self.host}"
-        self.url=f"{self.base_url}{self.script_path}:{self.port}"
-        if not self.dockerPath:
-            self.dockerPath=self.default_docker_path()
+        if not self.docker_path:
+            self.docker_path=self.default_docker_path()
         if not self.container_base_name:
             self.container_base_name=f"{self.prefix}-{self.shortVersion}"
+        self.reset_url(self.url)
+            
+    def reset_url(self,url:str):     
+        """
+        reset my url
+        
+        Args:
+            url(str): the url to set
+        """  
+        if url:
+            pr=urlparse(url)
+            self.prot=pr.scheme
+            self.host=pr.hostname
+            if pr.port:
+                self.port=pr.port
+            self.script_path=pr.path
+            self.base_url=f"{self.prot}://{self.host}"
+            self.full_url=url
+        else:
+            self.base_url=f"{self.prot}://{self.host}"
+            self.full_url=f"{self.base_url}{self.script_path}:{self.port}"
           
     def reset_container_base_name(self,container_base_name:str=None):
+        """
+        reset the container base name to the given name
+        
+        Args:
+            container_base_name(str): the new container base name
+        """
         self.container_base_name=container_base_name
         self.__post_init__()
           
@@ -188,7 +216,7 @@ class MwConfig:
         """
         self.prefix=args.prefix
         self.container_base_name=args.container_name
-        self.dockerPath=args.dockerPath
+        self.docker_path=args.docker_path
         self.extensionNameList=args.extensionNameList
         self.extensionJsonFile=args.extensionJsonFile
         self.forceRebuild=args.forceRebuild
@@ -208,12 +236,13 @@ class MwConfig:
         self.force_user=args.forceUser
         self.password=args.password
         self.password_length=args.passwordLength
-        self.basePort=args.basePort
+        self.base_port=args.basePort
         self.sql_port=args.sqlPort
         self.smwVersion=args.smwVersion
         self.verbose=not args.quiet
         self.debug=args.debug
         self.getExtensionMap(self.extensionNameList, self.extensionJsonFile)
+        self.reset_url(args.url)
    
     def addArgs(self,parser):
         """
@@ -227,7 +256,7 @@ class MwConfig:
         parser.add_argument("-fu","--forceUser",action="store_true",help="force overwrite of wikiuser")
         parser.add_argument("--host", default=Host.get_default_host(),
                             help="the host to serve / listen from [default: %(default)s]")
-        parser.add_argument("-dp","--dockerPath", default=self.default_docker_path(),
+        parser.add_argument("-dp","--docker_path", default=self.default_docker_path(),
                             help="the base directory to store docker and jinja template files [default: %(default)s]")
         parser.add_argument("--logo", default=self.logo, help="set Logo [default: %(default)s]")
         parser.add_argument('-mv', '--mariaDBVersion', dest='mariaDBVersion',default=self.mariaDBVersion,help="mariaDB Version to be installed [default: %(default)s]")
@@ -238,7 +267,8 @@ class MwConfig:
         parser.add_argument("--prefix",default=self.prefix,help="the container name prefix to use [default: %(default)s]")
         parser.add_argument("--prot",default=self.prot,help="change to https in case [default: %(default)s]")
         parser.add_argument("--script_path",default=self.script_path,help="change to any script_path you might need to set [default: %(default)s]")
-        parser.add_argument('-sp', '--sqlBasePort',dest='sqlPort',type=int,default=self.sqlPort,help="set base mySql port 3306 to be exposed - incrementing by one for each version [default: %(default)s]")
+        parser.add_argument("--url",default=self.url,help="will set prot host,script_path, and optionally port based on the url given [default: %(default)s]")
+        parser.add_argument('-sp', '--sqlBasePort',dest='sqlPort',type=int,default=self.sql_port,help="set base mySql port 3306 to be exposed - incrementing by one for each version [default: %(default)s]")
         parser.add_argument('-smw','--smwVersion',dest='smwVersion',default=self.smwVersion,help="set SemanticMediaWiki Version to be installed default is None - no installation of SMW")
         parser.add_argument('-u','--user',dest='user',default=self.user, help="set username of initial user with sysop rights [default: %(default)s] ")
         parser.add_argument('-q', '--quiet', help="not verbose [default: %(default)s]",action="store_true")
@@ -249,12 +279,12 @@ class MwClusterConfig(MwConfig):
     MediaWiki Cluster configuration for multiple wikis
     """
     versions:Optional[List[str]]=field(default_factory=lambda: ["1.35.10","1.38.6","1.39.3"])
-    basePort:int=9080
+    base_port:int=9080
     
     def addArgs(self,parser):
         """
         add my arguments to the given parser
         """
         super().addArgs(parser) 
-        parser.add_argument('-bp', '--basePort',dest='basePort',type=int,default=self.basePort,help="set how base html port 80 to be exposed - incrementing by one for each version [default: %(default)s]")
+        parser.add_argument('-bp', '--basePort',dest='basePort',type=int,default=self.base_port,help="set how base html port 80 to be exposed - incrementing by one for each version [default: %(default)s]")
         parser.add_argument('-vl', '--versionList', dest='versions', nargs="*",default=self.versions,help="mediawiki versions to create docker applications for [default: %(default)s] ")    

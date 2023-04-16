@@ -30,7 +30,7 @@ class TestInstall(Basetest):
         Basetest.setUp(self, debug=debug, profile=profile)
         # make sure we don't use the $HOME directory
         self.docker_path="/tmp/.pmw" 
-        self.argv=["--dockerPath",self.docker_path]
+        self.argv=["--docker_path",self.docker_path]
         
     def getMwConfig(self,argv=None):
         """
