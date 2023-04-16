@@ -15,7 +15,6 @@ from jinja2 import Environment, FileSystemLoader
 from jinja2.exceptions import TemplateNotFound
 import mysql.connector
 from mysql.connector import Error
-from pathlib import Path
 from wikibot3rd.wikiuser import WikiUser
 from mwdocker.logger import Logger
 from mwdocker.config import MwClusterConfig
@@ -174,7 +173,7 @@ class DockerApplication(object):
             host_port=mw.getHostPort(80)
             if host_port:
                 Logger.check_and_log_equal(f"port binding",host_port,"expected  port",str(self.config.port))
-                url=self.config.url
+                url=self.config.full_url
                 # fix url to local port
                 # @TODO isn't this superfluous / has no effect ...?
                 url=url.replace(str(self.config.port),host_port)
