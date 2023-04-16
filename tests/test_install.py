@@ -198,10 +198,10 @@ class TestInstall(Basetest):
         and composer
         '''
         args=["--prefix","smw4",
-            "--versionList","1.39.3",
-            "--smwVersion","4.1.1",
-            "--basePort","9480",
-            "--sqlBasePort","10306"]
+            "--version_list","1.39.3",
+            "--smw_version","4.1.1",
+            "--base_port","9480",
+            "--sql_base_port","10306"]
         self.printCommand("--down -f",args)
         mwCluster=self.getMwCluster(args,createApps=False)
         mwCluster.config.addExtensions(["MagicNoCache","Data Transfer","Page Forms","Semantic Result Formats"])
@@ -215,10 +215,10 @@ class TestInstall(Basetest):
         support legacy require_once extension registration
         '''
         version="1.27.7"
-        args=["--versionList",version,
+        args=["--version_list",version,
             "--prefix","rqotest",
-            "--basePort","9481",
-            "--sqlBasePort","10307"]
+            "--base_port","9481",
+            "--sql_base_port","10307"]
         self.printCommand("--down -f",args)
         forceRebuild=True
         mwCluster=self.getMwCluster(args,createApps=False)
@@ -236,7 +236,7 @@ class TestInstall(Basetest):
         test a cluster with no LocalSettingsTemplate available
         '''
         version="1.36.0"
-        args=["--versionList",version,
+        args=["--version_list",version,
             "--prefix","mittest",
             "--container_name","mittest",
             "-f"

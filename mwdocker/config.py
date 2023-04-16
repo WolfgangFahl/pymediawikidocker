@@ -39,7 +39,7 @@ class MwConfig:
     MediaWiki configuration for a Single Wiki
     """
     version:str="1.39.3"
-    smwVersion:str=None
+    smw_version:str=None
     extensionNameList:Optional[List[str]]=field(default_factory=lambda: ["Admin Links","Header Tabs","SyntaxHighlight","Variables"])
     extensionJsonFile:str=None
     user:str="Sysop"
@@ -236,9 +236,9 @@ class MwConfig:
         self.force_user=args.forceUser
         self.password=args.password
         self.password_length=args.passwordLength
-        self.base_port=args.basePort
-        self.sql_port=args.sqlPort
-        self.smwVersion=args.smwVersion
+        self.base_port=args.base_port
+        self.sql_port=args.sql_port
+        self.smw_version=args.smw_version
         self.verbose=not args.quiet
         self.debug=args.debug
         self.getExtensionMap(self.extensionNameList, self.extensionJsonFile)
@@ -268,8 +268,8 @@ class MwConfig:
         parser.add_argument("--prot",default=self.prot,help="change to https in case [default: %(default)s]")
         parser.add_argument("--script_path",default=self.script_path,help="change to any script_path you might need to set [default: %(default)s]")
         parser.add_argument("--url",default=self.url,help="will set prot host,script_path, and optionally port based on the url given [default: %(default)s]")
-        parser.add_argument('-sp', '--sqlBasePort',dest='sqlPort',type=int,default=self.sql_port,help="set base mySql port 3306 to be exposed - incrementing by one for each version [default: %(default)s]")
-        parser.add_argument('-smw','--smwVersion',dest='smwVersion',default=self.smwVersion,help="set SemanticMediaWiki Version to be installed default is None - no installation of SMW")
+        parser.add_argument('-sp', '--sql_base_port',dest='sql_port',type=int,default=self.sql_port,help="set base mySql port 3306 to be exposed - incrementing by one for each version [default: %(default)s]")
+        parser.add_argument('-smw','--smw_version',dest='smw_version',default=self.smw_version,help="set SemanticMediaWiki Version to be installed default is None - no installation of SMW")
         parser.add_argument('-u','--user',dest='user',default=self.user, help="set username of initial user with sysop rights [default: %(default)s] ")
         parser.add_argument('-q', '--quiet', help="not verbose [default: %(default)s]",action="store_true")
 
@@ -286,5 +286,5 @@ class MwClusterConfig(MwConfig):
         add my arguments to the given parser
         """
         super().addArgs(parser) 
-        parser.add_argument('-bp', '--basePort',dest='basePort',type=int,default=self.base_port,help="set how base html port 80 to be exposed - incrementing by one for each version [default: %(default)s]")
-        parser.add_argument('-vl', '--versionList', dest='versions', nargs="*",default=self.versions,help="mediawiki versions to create docker applications for [default: %(default)s] ")    
+        parser.add_argument('-bp', '--base_port',dest='base_port',type=int,default=self.base_port,help="set how base html port 80 to be exposed - incrementing by one for each version [default: %(default)s]")
+        parser.add_argument('-vl', '--version_list', dest='versions', nargs="*",default=self.versions,help="mediawiki versions to create docker applications for [default: %(default)s] ")    

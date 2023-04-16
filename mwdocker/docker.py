@@ -471,7 +471,7 @@ class DockerApplication(object):
         try:
             template = self.env.get_template(templateName)
             timestamp=datetime.datetime.now().isoformat()
-            content=template.render(mwVersion=self.config.version,mariaDBVersion=self.config.mariaDBVersion,port=self.config.port,sqlPort=self.config.sql_port,smwVersion=self.config.smwVersion,timestamp=timestamp,**kwArgs)
+            content=template.render(mwVersion=self.config.version,mariaDBVersion=self.config.mariaDBVersion,port=self.config.port,sql_port=self.config.sql_port,smw_version=self.config.smw_version,timestamp=timestamp,**kwArgs)
             self.optionalWrite(targetPath, content, overwrite)
 
         except TemplateNotFound:
@@ -490,8 +490,8 @@ class DockerApplication(object):
         indent="     "
         delim="" if len(requires)==0 else ",\n"
         requireList=""
-        if self.config.smwVersion:
-            requireList+=f'{indent}"mediawiki/semantic-media-wiki": "~{self.config.smwVersion}"{delim}'
+        if self.config.smw_version:
+            requireList+=f'{indent}"mediawiki/semantic-media-wiki": "~{self.config.smw_version}"{delim}'
         for i,require in enumerate(requires):
             delim="" if i>=len(requires)-1 else ",\n"
             requireList+=f"{indent}{require}{delim}"
