@@ -171,13 +171,27 @@ class MwConfig:
         print(json_str,  file=open(path, 'w'))
         return path
     
-    def load(self,path:str):
+    def load(self,path:str=None)->"MwConfig":
+        """
+        load the the MwConfig from the given path of if path is None (default)
+        use the config_path for the current configuration
+        
+        restores the ExtensionMap on load
+        
+        Args:
+            path(str): the path to load from
+            
+        Returns:
+            MwConfig: a MediaWiki Configuration
+        """
         if path is None:
             path=self.get_config_path()
         with open(path, 'r') as json_file:
             json_str = json_file.read()
             config_dict=json.loads(json_str)
             config=dacite.from_dict(data_class=self.__class__ ,data=config_dict)
+            # restore extension map
+            config.getExtensionMap(config.extensionNameList, config.extensionJsonFile)
             return config
         
     def getShortVersion(self,separator=""):

@@ -70,6 +70,15 @@
 			"url": "https://www.mediawiki.org/wiki/Extension:Diagrams",
 			"composer": "\"samwilson\/diagrams\": \"~0.11.0\""
         },
+        {
+			"name": "Graph",
+			"extension": "Graph",
+			"giturl": "https://github.com/wikimedia/mediawiki-extensions-Graph",
+			"require_once_until": "127",
+			"purpose": "The Graph extension allows a ‎<graph> tag to describe data visualizations such as bar charts, pie charts, timelines, and histograms (demo) in a JSON format that renders a Vega-based graph. ",
+			"since": "2014-05-02T00:00:00",
+			"url": "https://www.mediawiki.org/wiki/Extension:Graph"
+        },
 		{
 			"name": "Header Tabs",
 			"extension": "HeaderTabs",
