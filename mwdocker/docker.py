@@ -518,6 +518,9 @@ class DockerApplication(object):
         Args:
             overwrite(bool): if True overwrite the existing files
         '''
+        # remember the configuration we used for generating
+        self.config.save()
+        # then generate
         self.generate("mwDockerfile",f"{self.docker_path}/Dockerfile",composerVersion=self.composerVersion,overwrite=overwrite)
         self.generate("mwCompose.yml",f"{self.docker_path}/docker-compose.yml",mySQLRootPassword=self.config.mySQLRootPassword,mySQLPassword=self.config.mySQLPassword,container_base_name=self.config.container_base_name,overwrite=overwrite)
         self.generate(f"mwLocalSettings{self.config.shortVersion}.php",f"{self.docker_path}/LocalSettings.php",mySQLPassword=self.config.mySQLPassword,hostname=self.config.host,extensions=self.config.extensionMap.values(),mwShortVersion=self.config.shortVersion,logo=self.config.logo,overwrite=overwrite)
