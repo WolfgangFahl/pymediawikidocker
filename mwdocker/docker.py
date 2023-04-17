@@ -518,8 +518,6 @@ class DockerApplication(object):
         Args:
             overwrite(bool): if True overwrite the existing files
         '''
-        # remember the configuration we used for generating
-        self.config.save()
         # then generate
         self.generate("mwDockerfile",f"{self.docker_path}/Dockerfile",composerVersion=self.composerVersion,overwrite=overwrite)
         self.generate("mwCompose.yml",f"{self.docker_path}/docker-compose.yml",mySQLRootPassword=self.config.mySQLRootPassword,mySQLPassword=self.config.mySQLPassword,container_base_name=self.config.container_base_name,overwrite=overwrite)
@@ -534,6 +532,12 @@ class DockerApplication(object):
         self.genComposerRequire(f"{self.docker_path}/composer.local.json",overwrite=overwrite)
         for file_name in ["addCronTabEntry.sh","startRunJobs.sh","initdb.sh","update.sh","phpinfo.php","upload.ini","lang.sh","plantuml.sh"]:
             self.generate(f"{file_name}",f"{self.docker_path}/{file_name}",overwrite=overwrite)
+        # remember the configuration we used for generating
+        # avoid endless loop - forceRebuilds - we have rebuild already
+        forceRebuild=self.config.forceRebuild
+        self.config.forceRebuild=False
+        self.config.save()
+        self.config.forceRebuild=forceRebuild
         
     def down(self,forceRebuild:bool=False):
         """
