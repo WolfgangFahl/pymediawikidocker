@@ -275,10 +275,10 @@ class MwConfig:
         self.script_path=args.script_path
         self.versions=args.versions
         self.user=args.user
-        self.random_password=args.randomPassword
-        self.force_user=args.forceUser
+        self.random_password=args.random_password
+        self.force_user=args.force_user
         self.password=args.password
-        self.password_length=args.passwordLength
+        self.password_length=args.password_length
         self.base_port=args.base_port
         self.sql_port=args.sql_port
         self.smw_version=args.smw_version
@@ -292,11 +292,11 @@ class MwConfig:
         add Arguments to the given parser
         """
         parser.add_argument('-cn','--container_name',default=self.container_base_name,help="set container name (only valid and recommended for single version call)")
-        parser.add_argument("-d", "--debug", dest="debug",   action="store_true", help="enable debug mode [default: %(default)s]")
+        parser.add_argument("-d", "--debug", dest="debug",   action="store_true", default=self.debug, help="enable debug mode [default: %(default)s]")
         parser.add_argument('-el', '--extensionList', dest='extensionNameList', nargs="*",default=self.extensionNameList,help="list of extensions to be installed [default: %(default)s]")
         parser.add_argument('-ej', '--extensionJson',dest='extensionJsonFile',default=self.extensionJsonFile,help="additional extension descriptions default: [default: %(default)s]")
-        parser.add_argument("-f", "--forceRebuild", action="store_true", help="force rebuilding  [default: %(default)s]")
-        parser.add_argument("-fu","--forceUser",action="store_true",help="force overwrite of wikiuser")
+        parser.add_argument("-f", "--forceRebuild", action="store_true", default=self.forceRebuild,help="force rebuilding  [default: %(default)s]")
+        parser.add_argument("-fu","--force_user",action="store_true",default=self.force_user,help="force overwrite of wikiuser")
         parser.add_argument("--host", default=Host.get_default_host(),
                             help="the host to serve / listen from [default: %(default)s]")
         parser.add_argument("-dp","--docker_path", default=self.default_docker_path(),
@@ -304,9 +304,9 @@ class MwConfig:
         parser.add_argument("--logo", default=self.logo, help="set Logo [default: %(default)s]")
         parser.add_argument('-mv', '--mariaDBVersion', dest='mariaDBVersion',default=self.mariaDBVersion,help="mariaDB Version to be installed [default: %(default)s]")
         parser.add_argument('--mysqlPassword',default=self.mySQLRootPassword, help="set sqlRootPassword [default: %(default)s] - random password if None")
-        parser.add_argument("-rp", "--randomPassword", action="store_true", help="create random password and create wikiuser while at it")
+        parser.add_argument("-rp", "--random_password", action="store_true", default=self.random_password, help="create random password and create wikiuser while at it")
         parser.add_argument('-p','--password',dest='password',default=self.password, help="set password for initial user [default: %(default)s] ")
-        parser.add_argument('-pl','--passwordLength',default=self.password_length, help="set the password length for random passwords[default: %(default)s] ")
+        parser.add_argument('-pl','--password_length',default=self.password_length, help="set the password length for random passwords[default: %(default)s] ")
         parser.add_argument("--prefix",default=self.prefix,help="the container name prefix to use [default: %(default)s]")
         parser.add_argument("--prot",default=self.prot,help="change to https in case [default: %(default)s]")
         parser.add_argument("--script_path",default=self.script_path,help="change to any script_path you might need to set [default: %(default)s]")
@@ -314,7 +314,7 @@ class MwConfig:
         parser.add_argument('-sp', '--sql_base_port',dest='sql_port',type=int,default=self.sql_port,help="set base mySql port 3306 to be exposed - incrementing by one for each version [default: %(default)s]")
         parser.add_argument('-smw','--smw_version',dest='smw_version',default=self.smw_version,help="set SemanticMediaWiki Version to be installed default is None - no installation of SMW")
         parser.add_argument('-u','--user',dest='user',default=self.user, help="set username of initial user with sysop rights [default: %(default)s] ")
-        parser.add_argument('-q', '--quiet', help="not verbose [default: %(default)s]",action="store_true")
+        parser.add_argument('-q', '--quiet', default=not self.verbose,help="not verbose [default: %(default)s]",action="store_true")
 
 @dataclass
 class MwClusterConfig(MwConfig):
