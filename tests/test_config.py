@@ -4,7 +4,7 @@ Created on 2023-04-06
 @author: wf
 '''
 from tests.basetest import Basetest
-from mwdocker.config import MwClusterConfig, Host
+from mwdocker.config import MwConfig,MwClusterConfig, Host
 import json
 from argparse import ArgumentParser
 
@@ -38,6 +38,27 @@ class TestConfig(Basetest):
             print(mwd)
             print(json.dumps(mwd,indent=2))
         self.assertEqual(expected,mwd)
+        
+    def testSaveAndLoad(self):
+        """
+        test saving a reloading configuration
+        """
+        config=MwConfig()
+        config_dict=config.as_dict()
+        debug=self.debug
+        if debug:
+            print(config.as_json())
+        config.docker_path="/tmp"
+        path=config.save()
+        if debug:
+            print(path)
+        config2=config.load(path)
+        if debug:
+            print(config2.as_json())
+        config2_dict=config.as_dict()
+        for key,value in config_dict.items():
+            if key!="docker_path":
+                self.assertEqual(value,config2_dict[key],key)
             
     def testArgs(self):
         """

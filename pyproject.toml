@@ -31,6 +31,8 @@ dependencies = [
 	# Beautiful Soup HTML parser
 	# https://pypi.org/project/beautifulsoup4/
 	'beautifulsoup4',
+	# https://github.com/konradhalas/dacite
+	'dacite>=1.7.0',
 ]
 
 requires-python = ">=3.8"

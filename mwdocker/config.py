@@ -4,9 +4,11 @@ Created on 2023-04-06
 @author: wf
 '''
 import dataclasses
+import dacite
 from dataclasses import dataclass, field
 from pathlib import Path
 import json
+import os
 import re
 import secrets
 import socket
@@ -39,17 +41,17 @@ class MwConfig:
     MediaWiki configuration for a Single Wiki
     """
     version:str="1.39.3"
-    smw_version:str=None
+    smw_version:Optional[str]=None
     extensionNameList:Optional[List[str]]=field(default_factory=lambda: ["Admin Links","Header Tabs","SyntaxHighlight","Variables"])
-    extensionJsonFile:str=None
+    extensionJsonFile:Optional[str]=None
     user:str="Sysop"
     prefix:str="mw"
     password_length:int = 15
     random_password:bool=False
     force_user:bool=False
     password:str="sysop-1234!"
-    mySQLRootPassword:str=None
-    mySQLPassword:str=None
+    mySQLRootPassword:Optional[str]=None
+    mySQLPassword:Optional[str]=None
     logo:str="$wgResourceBasePath/resources/assets/wiki.png"
     port:int=9080
     sql_port:int=9306
@@ -64,10 +66,16 @@ class MwConfig:
     forceRebuild:bool=False
     debug:bool=False
     verbose:bool=True
-    wikiId:str=None
-    docker_path:str=None
+    wikiId:Optional[str]=None
+    docker_path:Optional[str]=None
     
     def default_docker_path(self)->str:
+        """
+        get the default docker path
+        
+        Returns:
+            str: $HOME/.pymediawikidocker
+        """
         home = str(Path.home())
         docker_path=f'{home}/.pymediawikidocker' 
         return docker_path
@@ -134,6 +142,43 @@ class MwConfig:
         config_dict=self.as_dict()
         json_str=json.dumps(config_dict,indent=2)
         return json_str
+    
+    def get_config_path(self)->str:
+        """
+        get my configuration base path
+        
+        Returns:
+            str: the path to my configuration
+        """
+        config_base_path=f"{self.docker_path}/{self.container_base_name}"
+        os.makedirs(config_base_path, exist_ok=True)
+        path=f"{config_base_path}/MwConfig.json"
+        return path
+    
+    def save(self,path:str=None)->str:
+        """
+        save my json
+        
+        Args:
+            path(str): the path to store to - if None use {docker_path}/{container_base_name}/MwConfig.json
+        Returns:
+            str: the path 
+        """
+        if path is None:
+            path=self.get_config_path()
+        
+        json_str=self.as_json()
+        print(json_str,  file=open(path, 'w'))
+        return path
+    
+    def load(self,path:str):
+        if path is None:
+            path=self.get_config_path()
+        with open(path, 'r') as json_file:
+            json_str = json_file.read()
+            config_dict=json.loads(json_str)
+            config=dacite.from_dict(data_class=self.__class__ ,data=config_dict)
+            return config
         
     def getShortVersion(self,separator=""):
         '''
