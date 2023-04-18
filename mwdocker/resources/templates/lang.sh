@@ -81,7 +81,7 @@ lang_images () {
     then
       color_msg $blue "downloading $imgname ..."
       mkdir -p $l_target/$imgpath
-      curl -o -q $l_target/$img $from/$img
+      curl -s -o $l_target/$img $from/$img
       chown www-data.www-data $imgpath
     else
       color_msg $green "$imgname already downloaded"
