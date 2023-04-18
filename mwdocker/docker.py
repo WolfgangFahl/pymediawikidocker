@@ -325,11 +325,12 @@ class DockerApplication(object):
         Args:
             commands: str - the command strings to be executed ...
         """
+        command_list=list(commands)
         if self.mwContainer:
             if self.config.verbose:
-                command_line=" ".join(commands)
+                command_line=" ".join(command_list)
                 print(f"Executing docker command {command_line}")
-            docker.execute(container=self.mwContainer.container,command=commands)
+            docker.execute(container=self.mwContainer.container,command=command_list)
         else:
             mwContainerNameDash=self.getContainerName("mw", "-")
             mwContainerNameUnderscore=self.getContainerName("mw", "_")
