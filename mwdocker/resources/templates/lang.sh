@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#   Copyright (C) 2015 BITPlan GmbH
+#   Copyright (C) 2015-2023 BITPlan GmbH
 #   http://www.bitplan.com
 # 
 #   WF 2015-11-08
@@ -73,19 +73,20 @@ lang_images () {
     error "image directory $l_target does not exist"
   fi
   from=http://semantic-mediawiki.org/w/
-for img in images/e/e7/Lang-De.gif images/7/78/Lang-En.gif images/6/61/Lang-Es.gif images/f/f0/Lang-Fr.gif images/9/95/Lang-Ja.gif images/c/cb/Lang-Nl.gif images/3/38/Lang-Ru.gif images/8/85/Lang-Zh-hans.gif images/2/20/Lang-Uk.gif
-do
-  imgpath=`echo $img | cut -f1-3 -d/`
-  imgname=`echo $img | cut -f4 -d/`
-  if [ ! -f $l_target/$img ]
-  then
-    mkdir -p $l_target/$imgpath
-    curl -o $l_target/$img $from/$img
-    chown www-data.www-data $imgpath
-  else
-    color_msg $green "$imgname already downloaded"
-  fi
-done
+  for img in images/e/e7/Lang-De.gif images/7/78/Lang-En.gif images/6/61/Lang-Es.gif images/f/f0/Lang-Fr.gif images/9/95/Lang-Ja.gif images/c/cb/Lang-Nl.gif images/3/38/Lang-Ru.gif images/8/85/Lang-Zh-hans.gif images/2/20/Lang-Uk.gif
+  do
+    imgpath=`echo $img | cut -f1-3 -d/`
+    imgname=`echo $img | cut -f4 -d/`
+    if [ ! -f $l_target/$img ]
+    then
+      color_msg $blue "downloading $imgname ..."
+      mkdir -p $l_target/$imgpath
+      curl -o -q $l_target/$img $from/$img
+      chown www-data.www-data $imgpath
+    else
+      color_msg $green "$imgname already downloaded"
+   fi
+  done
 }
 
 if [ $# -lt 1 ]

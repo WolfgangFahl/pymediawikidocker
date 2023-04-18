@@ -272,6 +272,9 @@ class DockerApplication(object):
         '''
         run startUp scripts
         '''
+        # add language icons
+        self.execute("/root/lang.sh --site /var/www/html")
+        # start cron job
         self.execute("/root/addCronTabEntry.sh")
             
     def createWikiUser(self,wikiId:str=None,store:bool=False):

@@ -86,7 +86,7 @@ COPY plantuml.sh /root
 
 
 # make the scripts executable
-RUN chmod +x /root/initdb.sh /root/update.sh /root/addSysopUser.sh /root/installExtensions.sh /root/addCronTabEntry.sh /root/startRunJobs.sh /root/plantuml.sh
+RUN chmod +x /root/initdb.sh /root/update.sh /root/addSysopUser.sh /root/installExtensions.sh /root/addCronTabEntry.sh /root/startRunJobs.sh /root/lang.sh /root/plantuml.sh
 
 # restore the mediawiki initial database backup
 # can not do this before SQL server is up see https://docs.docker.com/compose/startup-order/
