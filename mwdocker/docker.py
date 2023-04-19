@@ -272,6 +272,9 @@ class DockerApplication(object):
         '''
         run startUp scripts
         '''
+        # add language icons
+        self.execute("/root/lang.sh","--site","/var/www/html")
+        # start cron job
         self.execute("/root/addCronTabEntry.sh")
             
     def createWikiUser(self,wikiId:str=None,store:bool=False):
@@ -315,17 +318,19 @@ class DockerApplication(object):
             wikiUser=self.createWikiUser(wikiId,store=True)
         return wikiUser
     
-    def execute(self,command_str:str):
-        '''
-        execute the given command string
+    def execute(self,*commands:str):
+        """
+        execute the given variable list of command strings
         
         Args:
-            command_str: str - a command string to be executed ...
-        '''
+            commands: str - the command strings to be executed ...
+        """
+        command_list=list(commands)
         if self.mwContainer:
             if self.config.verbose:
-                print(f"Executing docker command {command_str}")
-            docker.execute(container=self.mwContainer.container,command=[command_str])
+                command_line=" ".join(command_list)
+                print(f"Executing docker command {command_line}")
+            docker.execute(container=self.mwContainer.container,command=command_list)
         else:
             mwContainerNameDash=self.getContainerName("mw", "-")
             mwContainerNameUnderscore=self.getContainerName("mw", "_")
