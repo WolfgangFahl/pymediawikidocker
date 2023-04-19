@@ -3,275 +3,323 @@
 		{
 			"name": "Admin Links",
 			"extension": "AdminLinks",
-			"giturl": "https://github.com/wikimedia/mediawiki-extensions-AdminLinks",
-			"require_once_until": "131",
+			"wikidata_id": "Q21676187",
 			"purpose": "Admin Links is an extension to MediaWiki that defines a special page, \"Special:AdminLinks\",\nthat holds links meant to be helpful for wiki administrators;\nit is meant to serve as a \"control panel\" for the functions an administrator would typically perform in a wiki.\nAll users can view this page; however, for those with the 'adminlinks' permission (sysops/administrators, by default),\na link to the page also shows up in their \"Personal URLs\", between \"Talk\" and \"Preferences\".",
+			"url": "https://www.mediawiki.org/wiki/Extension:Admin_Links",
+			"giturl": "https://github.com/wikimedia/mediawiki-extensions-AdminLinks",
 			"since": "2009-05-13T00:00:00",
-			"url": "https://www.mediawiki.org/wiki/Extension:Admin_Links"
+			"require_once_until": "131"
 		},
 		{
 			"name": "BreadCrumbs2",
 			"extension": "BreadCrumbs2",
-			"giturl": "https://github.com/wikimedia/mediawiki-extensions-BreadCrumbs2",
-			"require_once_until": "131",
+			"wikidata_id": "Q21676848",
 			"purpose": "Implements a breadcrumb navigation based on categories",
-			"url": "https://www.mediawiki.org/wiki/Extension:BreadCrumbs2"
+			"url": "https://www.mediawiki.org/wiki/Extension:BreadCrumbs2",
+			"giturl": "https://github.com/wikimedia/mediawiki-extensions-BreadCrumbs2",
+			"require_once_until": "131"
 		},
 		{
 			"extension": "Cargo",
 			"name": "Cargo",
+			"wikidata_id": "Q21676223",
 			"purpose": "Storage and querying of template data",
-			"giturl": "https://github.com/wikimedia/mediawiki-extensions-Cargo",
-			"url": "https://www.mediawiki.org/wiki/Extension:Cargo"
+			"url": "https://www.mediawiki.org/wiki/Extension:Cargo",
+			"giturl": "https://github.com/wikimedia/mediawiki-extensions-Cargo"
 		},
 		{
 			"extension": "CategoryTree",
-			"giturl": "https://github.com/wikimedia/mediawiki-extensions-CategoryTree",
 			"name": "CategoryTree",
+			"wikidata_id": "Q21676245",
+			"purpose": "provides a dynamic view of the wiki's category structure as a tree",
+			"giturl": "https://github.com/wikimedia/mediawiki-extensions-CategoryTree",
 			"url": "https://www.mediawiki.org/wiki/Extension:CategoryTree"
 		},
 		{
 			"extension": "ConfirmAccount",
-			"giturl": "https://github.com/wikimedia/mediawiki-extensions-ConfirmAccount",
 			"name": "ConfirmAccount",
-			"require_once_until": "134",
+			"wikidata_id": "Q21676649",
 			"purpose": "Gives bureaucrats the ability to confirm account requests",
+			"giturl": "https://github.com/wikimedia/mediawiki-extensions-ConfirmAccount",
+			"require_once_until": "134",
 			"url": "https://www.mediawiki.org/wiki/Extension:ConfirmAccount"
 		},
 		{
 			"extension": "ConfirmEdit",
-			"giturl": "https://github.com/wikimedia/mediawiki-extensions-ConfirmEdit",
 			"name": "ConfirmEdit",
+			"wikidata_id": "Q21676645",
 			"purpose": "Provides CAPTCHA techniques to protect against spam and password-guessing",
-			"url": "https://www.mediawiki.org/wiki/Extension:ConfirmEdit"
+			"url": "https://www.mediawiki.org/wiki/Extension:ConfirmEdit",
+			"giturl": "https://github.com/wikimedia/mediawiki-extensions-ConfirmEdit"
 		},
 		{
 			"extension": "ContributionScores",
 			"name": "Contribution Scores",
-			"giturl": "https://github.com/wikimedia/mediawiki-extensions-ContributionScores",
+			"wikidata_id": "Q21676708",
 			"purpose": "The Contribution Scores extension polls the wiki database to locate contributors with the highest contribution volume.It is intended to add a fun metric for contributors to see how much they are helping out. ",
-			"require_once_until": "135",
-			"url": "https://www.mediawiki.org/wiki/Extension:Contribution_Scores"
+			"url": "https://www.mediawiki.org/wiki/Extension:Contribution_Scores",
+			"giturl": "https://github.com/wikimedia/mediawiki-extensions-ContributionScores",
+			"require_once_until": "135"
 		},
 		{
-			"name": "Data Transfer",
 			"extension": "DataTransfer",
-			"giturl": "https://github.com/wikimedia/mediawiki-extensions-DataTransfer",
+			"name": "Data Transfer",
+			"wikidata_id": "Q21677041",
 			"purpose": " Data Transfer is an extension to MediaWiki that allows users to both export and import data from and to the wiki, with export done in XML format and import possible in both XML, CSV and some spreadsheet formats. ",
-			"since": "2008-02-19T00:00:00",
-			"url": "https://www.mediawiki.org/wiki/Extension:Data_Transfer"
+			"url": "https://www.mediawiki.org/wiki/Extension:Data_Transfer",
+			"giturl": "https://github.com/wikimedia/mediawiki-extensions-DataTransfer",
+			"since": "2008-02-19T00:00:00"
 		},
 		{
 			"name": "Diagrams",
 			"extension": "Diagrams",
-			"giturl": "https://github.com/samwilson/diagrams-extension.git",
+			"wikidata_id": "Q84791451",
 			"purpose": "Render Graphviz, Mscgen, and PlantUML diagrams in wiki pages.",
-			"since": "2019-12-12T00:00:00",
 			"url": "https://www.mediawiki.org/wiki/Extension:Diagrams",
+			"giturl": "https://github.com/samwilson/diagrams-extension.git",
+			"since": "2019-12-12T00:00:00",
 			"composer": "\"samwilson\/diagrams\": \"~0.11.0\""
         },
         {
-			"name": "Graph",
 			"extension": "Graph",
-			"giturl": "https://github.com/wikimedia/mediawiki-extensions-Graph",
-			"require_once_until": "127",
+			"name": "Graph",
+			"wikidata_id": "Q21677460",
 			"purpose": "The Graph extension allows a ‎<graph> tag to describe data visualizations such as bar charts, pie charts, timelines, and histograms (demo) in a JSON format that renders a Vega-based graph. ",
+			"url": "https://www.mediawiki.org/wiki/Extension:Graph",
+			"giturl": "https://github.com/wikimedia/mediawiki-extensions-Graph",
 			"since": "2014-05-02T00:00:00",
-			"url": "https://www.mediawiki.org/wiki/Extension:Graph"
+			"require_once_until": "127"
         },
 		{
-			"name": "Header Tabs",
 			"extension": "HeaderTabs",
-			"giturl": "https://github.com/wikimedia/mediawiki-extensions-HeaderTabs",
-			"require_once_until": "127",
+			"name": "Header Tabs",
+			"wikidata_id": "Q21676903",
 			"purpose": "The Header Tabs extension transforms top-level MediaWiki headers into tabs using the jQuery UI JavaScript library.",
+			"url": "https://www.mediawiki.org/wiki/Extension:Header_Tabs",
+			"giturl": "https://github.com/wikimedia/mediawiki-extensions-HeaderTabs",
 			"since": "2008-03-20T00:00:00",
-			"url": "https://www.mediawiki.org/wiki/Extension:Header_Tabs"
+			"require_once_until": "127"
 		},
 		{
-			"name": "ImageLink",
 			"extension": "ImageLink",
-			"require_once_until": "139",
+			"name": "ImageLink",
+			"purpose": "This extension allows for external images to be used as clickable icons.",
+			"url": "https://wiki.bitplan.com/index.php/ImageLink",
 			"giturl": "https://github.com/BITPlan/ImageLink",
-			"url": "https://wiki.bitplan.com/index.php/ImageLink"
+			"require_once_until": "139"
 		},
 		{
 			"name": "ImageMap",
 			"extension": "ImageMap",
-			"giturl": "https://github.com/wikimedia/mediawiki-extensions-ImageMap",
+			"wikidata_id": "Q21677197",
+			"purpose": "The ImageMap extension allows clickable image maps.",
 			"url": "https://www.mediawiki.org/wiki/Extension:ImageMap",
+			"giturl": "https://github.com/wikimedia/mediawiki-extensions-ImageMap",
 			"localSettings": "$wgEnableUploads = true;\r\n$wgUseImageMagick = true;\r\n$wgImageMagickConvertCommand = \"\/usr\/bin\/convert\";"
 		},
 		{
 			"extension": "InputBox",
-			"giturl": "https://github.com/wikimedia/mediawiki-extensions-InputBox",
 			"name": "InputBox",
+			"wikidata_id": "Q8615333",
 			"purpose": "Allow inclusion of predefined HTML forms",
-			"url": "https://www.mediawiki.org/wiki/Extension:InputBox"
+			"url": "https://www.mediawiki.org/wiki/Extension:InputBox",
+			"giturl": "https://github.com/wikimedia/mediawiki-extensions-InputBox"
 		},
 		{
-			"name": "Language Selector",
 			"extension": "LanguageSelector",
-			"giturl": "https://github.com/wikimedia/mediawiki-extensions-LanguageSelector",
+			"name": "Language Selector",
+			"wikidata_id": "Q21677114",
 			"purpose": "Language selector on every page, also for visitors",
-			"url": "https://mediawiki.org/wiki/Extension:LanguageSelector"
+			"url": "https://mediawiki.org/wiki/Extension:LanguageSelector",
+			"giturl": "https://github.com/wikimedia/mediawiki-extensions-LanguageSelector"
 		},
 		{
-			"name": "MagicNoCache",
 			"extension": "MagicNoCache",
-			"giturl": "https://github.com/wikimedia/mediawiki-extensions-MagicNoCache",
-			"require_once_until": "127",
+			"name": "MagicNoCache",
+			"wikidata_id": "Q21677510",
 			"purpose": "The MagicNoCache extension creates a new magic word __NOCACHE__ and disables the cache for any page in which it finds it. Thus it makes sure that specific pages never get cached as they get updated extremely frequently",
+			"url": "https://www.mediawiki.org/wiki/Extension:MagicNoCache",
+			"giturl": "https://github.com/wikimedia/mediawiki-extensions-MagicNoCache",
 			"since": "2012-01-01T00:00:00",
-			"url": "https://www.mediawiki.org/wiki/Extension:MagicNoCache"
+			"require_once_until": "127"
 		},
 		{
-			"name": "Maps7",
 			"extension": "Maps",
+			"name": "Maps7",
+			"wikidata_id": "Q21677553",
 			"purpose": "Enables embedding of dynamic maps into wiki pages, geocoding of addresses and other geographical operations",
 			"url": "https://github.com/JeroenDeDauw/Maps/blob/master/README.md#maps",
 			"composer": "\"mediawiki\/maps\": \"~7.0\""
 		},
 		{
-			"name": "Maps9",
 			"extension": "Maps",
+			"name": "Maps9",
+			"wikidata_id": "Q21677553",
 			"purpose": "Enables embedding of dynamic maps into wiki pages, geocoding of addresses and other geographical operations",
 			"url": "https://github.com/JeroenDeDauw/Maps/blob/master/README.md#maps",
 			"composer": "\"mediawiki\/maps\": \"~9.0.5\""
 		},
 		{
-			"name": "Mermaid",
 			"extension": "Mermaid",
-			"url": "https://github.com/SemanticMediaWiki/Mermaid",
+			"name": "Mermaid",
+			"wikidata_id": "Q47005306",
 			"purpose": "This extension provides the #mermaid parser function to support the generation of diagrams and flowcharts with the help of the mermaid script language.",
+			"url": "https://github.com/SemanticMediaWiki/Mermaid",
 			"since": "2017-12-30T00:00:00",
 			"composer": "\"mediawiki\/mermaid\": \"~3.0\""
 		},
 		{
-			"name": "MsUpload",
 			"extension": "MsUpload",
-			"url": "https://www.mediawiki.org/wiki/Extension:MsUpload",
+			"name": "MsUpload",
+			"wikidata_id": "Q21677697",
+            "purpose": "The MsUpload extension allows users to upload multiple files by drag & drop in the standard MediaWiki edit page. ",
+            "url": "https://www.mediawiki.org/wiki/Extension:MsUpload",
 			"giturl": "https://github.com/wikimedia/mediawiki-extensions-MsUpload",
-			"since": "2013-04-13T00:00:00",
-            "purpose": "The MsUpload extension allows users to upload multiple files by drag & drop in the standard MediaWiki edit page. "
-        },
+			"since": "2013-04-13T00:00:00"
+		},
         {
-			"name": "Network",
 			"extension": "Network",
-			"giturl": "https://github.com/ProfessionalWiki/Network",
-			"url": "https://www.mediawiki.org/wiki/Extension:Network",
+			"name": "Network",
+			"wikidata_id": "Q96374434",
 			"purpose": "The Network extension allows visualizing connections between wiki pages via an interactive network graph.",
+			"url": "https://www.mediawiki.org/wiki/Extension:Network",
+			"giturl": "https://github.com/ProfessionalWiki/Network",
 			"composer": "\"professional-wiki\/network\": \"~2.0\""
 		},
 	    {
 			"name": "Nuke",
 			"extension": "Nuke",
-			"url": "https://www.mediawiki.org/wiki/Extension:Nuke",
-			"purpose": "The Nuke extension makes it possible for sysops to mass delete pages. "
+			"wikidata_id": "Q19921530",
+			"purpose": "The Nuke extension makes it possible for sysops to mass delete pages. ",
+			"url": "https://www.mediawiki.org/wiki/Extension:Nuke"
 		},
 		{
-			"name": "Page Forms",
 			"extension": "PageForms",
-			"composer": "\"mediawiki\/page-forms\": \"5.5.1\"",
+			"name": "Page Forms",
+			"wikidata_id": "Q21678466",
 			"purpose": "(known before 2016 as Semantic Forms) is an extension to MediaWiki that allows users to add, edit and query data using forms",
+			"url": "https://www.mediawiki.org/wiki/Extension:Page_Forms",
 			"since": "2016-09-07T00:00:00",
-			"url": "https://www.mediawiki.org/wiki/Extension:Page_Forms"
+			"composer": "\"mediawiki\/page-forms\": \"5.6.1\""
 		},
 		{
-			"name": "ParserFunctions",
 			"extension": "ParserFunctions",
-			"giturl": "https://github.com/wikimedia/mediawiki-extensions-ParserFunctions",
+			"name": "ParserFunctions",
+			"wikidata_id": "Q21677990",
 			"purpose": "Enhance parser with logical functions",
-			"url": "https://www.mediawiki.org/wiki/Extension:ParserFunctions"
+			"url": "https://www.mediawiki.org/wiki/Extension:ParserFunctions",
+			"giturl": "https://github.com/wikimedia/mediawiki-extensions-ParserFunctions"
 		},
 		{
-			"name": "PDFEmbed",
 			"extension": "PDFEmbed",
-			"giturl": "https://github.com/WolfgangFahl/PDFEmbed",
+			"name": "PDFEmbed",
+			"wikidata_id": "Q21677908",
 			"purpose": "Media handler extension for PDF files.",
-			"url": "https://www.mediawiki.org/wiki/Extension:PDFEmbed"
+			"url": "https://www.mediawiki.org/wiki/Extension:PDFEmbed",
+			"giturl": "https://github.com/WolfgangFahl/PDFEmbed"
 		},
 		{
-			"name": "Renameuser",
 			"extension": "Renameuser",
-			"url": "https://www.mediawiki.org/wiki/Extension:Renameuser",
-			"purpose": "Adds a special page to rename a user (need renameuser right)"
+			"name": "Renameuser",
+			"wikidata_id": "Q21678251",
+			"purpose": "Adds a special page to rename a user (need renameuser right)",
+			"url": "https://www.mediawiki.org/wiki/Extension:Renameuser"
 		},
 		{
-			"name": "Replace Text",
 			"extension": "ReplaceText",
-			"url": "https://www.mediawiki.org/wiki/Extension:ReplaceText",
-			"purpose": "Provides a special page to allow administrators to do a global string find-and-replace on all the content pages of a wiki"
+			"name": "Replace Text",
+			"wikidata_id": "Q21678303", 
+			"purpose": "Provides a special page to allow administrators to do a global string find-and-replace on all the content pages of a wiki",
+			"url": "https://www.mediawiki.org/wiki/Extension:ReplaceText"
 		},
 		{
 			"extension": "SemanticCite",
 			"name": "Semantic Cite",
-			"url": "https://github.com/SemanticMediaWiki/SemanticCite/",
+			"wikidata_id": "Q21678464",
 			"purpose": "Semantic Cite (a.k.a. SCI) is a Semantic Mediawiki extension that provides a simple way of organizing citation resources with the help of semantic annotations.",
+			"url": "https://github.com/SemanticMediaWiki/SemanticCite/",
 			"composer": "\"mediawiki\/semantic-cite\": \"~2.1\""
 		},
 		{
-			"name": "Semantic Result Formats",
 			"extension": "SemanticResultFormats",
-			"composer": "\"mediawiki\/semantic-result-formats\": \"~4.0.1\"",
+			"name": "Semantic Result Formats",
+			"wikidata_id": "Q21678508",
 			"purpose": "Additional result formats for Semantic MediaWiki queries",
-			"url": "https://www.semantic-mediawiki.org/wiki/Extension:Semantic_Result_Formats"
+			"url": "https://www.semantic-mediawiki.org/wiki/Extension:Semantic_Result_Formats",
+			"composer": "\"mediawiki\/semantic-result-formats\": \"~4.0.1\""
 		},
 		{
 			"extension": "SimpleMathJax",
 			"name": "SimpleMathJax",
-			"url": "https://www.mediawiki.org/wiki/Extension:SimpleMathJax"
+			"wikidata_id": "Q21678600",
+			"purpose":	"The SimpleMathJax extension enables MathJax, a JavaScript library, for typesetting TeX formula in MediaWiki inside math environments.",
+			"url": "https://www.mediawiki.org/wiki/Extension:SimpleMathJax",
+			"giturl": "https://github.com/jmnote/SimpleMathJax.git"
+		},
+		{
+			"extension": "Slides",
+			"name": "Slides",
+			"purpose": "Adds a 'Slideshow' action to turn any wikipage into a slideshow. Each level 1 sections are turned into a slide.",
+			"url": "https://www.mediawiki.org/wiki/Extension:Slides",
+			"giturl": "https://github.com/PascalNoisette/mediawiki-extensions-Slides"
 		},
 		{
 			"extension": "SparqlResultFormat",
 			"name": "SparqlResultFormat",
-			"giturl": "https://github.com/imolainformatica/SparqlResultFormat",
 			"purpose": "Enable the execution of sparql query to different endpoint and produce various output format.",
-			"url": "https://www.mediawiki.org/wiki/Extension:SparqlResultFormat"
+			"url": "https://www.mediawiki.org/wiki/Extension:SparqlResultFormat",
+			"giturl": "https://github.com/imolainformatica/SparqlResultFormat"
 		},
 		{
-			"name": "SyntaxHighlight",
 			"extension": "SyntaxHighlight_GeSHi",
+			"name": "SyntaxHighlight",
+			"wikidata_id": "Q21678766",
 			"purpose": "syntax highlighting of diverse programming languages",
-			"since": "2007-04-03T00:00:00",
-			"url": "https://www.mediawiki.org/wiki/Extension:SyntaxHighlight"
+			"url": "https://www.mediawiki.org/wiki/Extension:SyntaxHighlight",
+			"since": "2007-04-03T00:00:00"
 		},
 		{
-			"name": "TitleBlacklist",
 			"extension": "TitleBlacklist",
-			"giturl": "https://github.com/wikimedia/mediawiki-extensions-TitleBlacklist",
-			"url": "https://www.mediawiki.org/wiki/Extension:TitleBlacklist"
+			"name": "TitleBlacklist",
+			"wikidata_id": "Q21678866",
+			"purpose": "Blocks the creation of pages matching a regular expression blacklist",
+			"url": "https://www.mediawiki.org/wiki/Extension:TitleBlacklist",
+			"giturl": "https://github.com/wikimedia/mediawiki-extensions-TitleBlacklist"
 		},
 		{
-			"name": "UrlGetParameters",
 			"extension": "UrlGetParameters",
-			"giturl": "https://github.com/wikimedia/mediawiki-extensions-UrlGetParameters",
-			"require_once_until": "131",
+			"name": "UrlGetParameters",
+			"wikidata_id": "Q21678958",
 			"purpose": "Allows to use and/or display the \"GET\" parameters of the URL on a wiki page",
-			"url": "https://www.mediawiki.org/wiki/Extension:UrlGetParameters"
+			"url": "https://www.mediawiki.org/wiki/Extension:UrlGetParameters",
+			"giturl": "https://github.com/wikimedia/mediawiki-extensions-UrlGetParameters",
+			"require_once_until": "131"
 		},
 		{
-			"name": "UserFunctions",
 			"extension": "UserFunctions",
-			"giturl": "https://github.com/wikimedia/mediawiki-extensions-UserFunctions",
+			"name": "UserFunctions",
+			"wikidata_id": "Q21678996",
 			"purpose": "Enhance parser with user functions",
-			"url": "https://www.mediawiki.org/wiki/Extension:UserFunctions"
+			"url": "https://www.mediawiki.org/wiki/Extension:UserFunctions",
+			"giturl": "https://github.com/wikimedia/mediawiki-extensions-UserFunctions"
 		},
 		{
-			"name": "Variables",
 			"extension": "Variables",
-			"giturl": "https://github.com/wikimedia/mediawiki-extensions-Variables",
-			"require_once_until": "127",
+			"name": "Variables",
+			"wikidata_id": "Q21679056",
 			"purpose": "The Variables extension allows you to define a variable on a page, use it later in that same page or included templates",
+			"url": "https://www.mediawiki.org/wiki/Extension:Variables",
+			"giturl": "https://github.com/wikimedia/mediawiki-extensions-Variables",
 			"since": "2011-11-13T00:00:00",
-			"url": "https://www.mediawiki.org/wiki/Extension:Variables"
+			"require_once_until": "127"
 		},
 		{
-			"name": "YouTube",
 			"extension": "YouTube",
-			"giturl": "https://github.com/wikimedia/mediawiki-extensions-YouTube",
+			"name": "YouTube",
+			"wikidata_id": "Q21679376",
 			"purpose": "Embeds YouTube movies, Archive.org audio and video, WeGame and Gametrailers video, and Tangler forum",
-			"url": "https://www.mediawiki.org/wiki/Extension:YouTube"
+			"url": "https://www.mediawiki.org/wiki/Extension:YouTube",
+			"giturl": "https://github.com/wikimedia/mediawiki-extensions-YouTube"
 		}
 	]
 }
