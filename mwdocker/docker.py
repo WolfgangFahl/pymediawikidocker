@@ -539,7 +539,7 @@ class DockerApplication(object):
         self.generate(f"addSysopUser.sh",f"{self.docker_path}/addSysopUser.sh",user=self.config.user,password=self.config.password,overwrite=overwrite)
         self.generate(f"installExtensions.sh",f"{self.docker_path}/installExtensions.sh",extensions=self.config.extensionMap.values(),branch=self.branch,overwrite=overwrite)
         self.genComposerRequire(f"{self.docker_path}/composer.local.json",overwrite=overwrite)
-        for file_name in ["addCronTabEntry.sh","startRunJobs.sh","initdb.sh","update.sh","phpinfo.php","upload.ini","lang.sh","plantuml.sh"]:
+        for file_name in ["addCronTabEntry.sh","fixPermissions.sh","initdb.sh","lang.sh","phpinfo.php","plantuml.sh","startRunJobs.sh","upload.ini","update.sh"]:
             self.generate(f"{file_name}",f"{self.docker_path}/{file_name}",overwrite=overwrite)
         # remember the configuration we used for generating
         # avoid endless loop - forceRebuilds - we have rebuild already
