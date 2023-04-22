@@ -267,15 +267,19 @@ class DockerApplication(object):
         install all extensions
         '''
         self.execute("/root/installExtensions.sh")
+        self.execute("/root/fixPermissions.sh")
         
     def startUp(self):
         '''
         run startUp scripts
         '''
+        # fix permissions
+        self.execute("/root/fixPermissions.sh")
         # add language icons
         self.execute("/root/lang.sh","--site","/var/www/html")
         # start cron job
         self.execute("/root/addCronTabEntry.sh")
+        
             
     def createWikiUser(self,wikiId:str=None,store:bool=False):
         '''

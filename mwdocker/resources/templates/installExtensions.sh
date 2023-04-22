@@ -7,5 +7,3 @@ cd /var/www/html/extensions
 # {{ extension.url }}
 {{ extension.asScript(branch) | safe }}
 {% endfor %}
-cd /var/www/html
-chown -R www-data.www-data .

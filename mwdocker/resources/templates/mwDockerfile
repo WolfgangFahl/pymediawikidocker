@@ -60,33 +60,20 @@ COPY phpinfo.php /var/www/html
 # copy the SQL dump
 COPY wiki.sql /tmp
 
-# copy the initdb.sh script
-COPY initdb.sh /root
-
-# copy the installExtensions.sh script
-COPY installExtensions.sh /root
-
-# copy the update.sh script
-COPY update.sh /root
-
-# copy the addSysopUser.sh script
-COPY addSysopUser.sh /root
-
-#copy the startRunJobs.sh script
-COPY startRunJobs.sh /root
-
-# copy the script to add a crontab entry
-COPY addCronTabEntry.sh /root
-
-# copy the script to add languages
-COPY lang.sh /root
-
-# copy the plantuml script
-COPY plantuml.sh /root
-
+# copy the 
+#    addCronTabEntry   - adds a crontab entry and starts the service
+#    addSysopUser      - adds the sysop user to the mediawiki wiki sql database
+#    fixPermissions    - fixes the /var/www/html permissions to www-data.www-data
+#    initdb            - initializes the database
+#    installExtensions - installs all extensions
+#    lang              - script to add language icons
+#    update            - runs maintainance update.php with parameters to ignore warnings        
+#    startRunJobs      - start script for runjobs
+# scripts
+COPY addCronTabEntry.sh addSysopUser.sh fixPermissions.sh initdb.sh installExtensions.sh lang.sh plantuml.sh startRunJobs.sh update.sh   /root
 
 # make the scripts executable
-RUN chmod +x /root/initdb.sh /root/update.sh /root/addSysopUser.sh /root/installExtensions.sh /root/addCronTabEntry.sh /root/startRunJobs.sh /root/lang.sh /root/plantuml.sh
+RUN chmod +x /root/addCronTabEntry.sh  /root/addSysopUser.sh /root/fixPermissions.sh /root/initdb.sh /root/installExtensions.sh /root/lang.sh /root/plantuml.sh /root/startRunJobs.sh /root/update.sh 
 
 # restore the mediawiki initial database backup
 # can not do this before SQL server is up see https://docs.docker.com/compose/startup-order/
