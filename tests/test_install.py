@@ -218,7 +218,7 @@ class TestInstall(Basetest):
         args=["--version_list",version,
             "--prefix","rqotest",
             "--base_port","9481",
-            "--sql_base_port","10307"]
+            "--sql_base_port","10337"]
         self.printCommand("--down -f",args)
         forceRebuild=True
         mwCluster=self.getMwCluster(args,createApps=False)
@@ -242,7 +242,7 @@ class TestInstall(Basetest):
             "-f"
         ]
         debug=self.debug
-        debug=True
+        #debug=True
         try:
             mwCluster=self.getMwCluster(args,createApps=True)
             mwCluster.start()
