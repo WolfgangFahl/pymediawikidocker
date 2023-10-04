@@ -22,6 +22,7 @@ class MediaWikiCluster(object):
     # MediaWiki Extensions and Skins Security Release Supplement (1.35.9/1.38.4/1.39.1)
     # 2023-02-23 1.39.2 released
     # 2023-04-04 1.39.3 upgrade
+    # 2023-10-04 1.39.5 upgrade
     
     def __init__(self,config:MwClusterConfig):
         '''

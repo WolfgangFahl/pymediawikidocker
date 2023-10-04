@@ -18,7 +18,7 @@ class TestConfig(Basetest):
         test the defaults
         """
         mwClusterConfig=MwClusterConfig()
-        expected={'version': '1.39.3', 'smw_version': None, 
+        expected={'version': '1.39.5', 'smw_version': None, 
                   'extensionNameList': ['Admin Links', 'Header Tabs', 'SyntaxHighlight', 'Variables'], 
                   'extensionJsonFile': None, 'user': 'Sysop', 'prefix': 'mw', 
                   'password_length': 15, 'password': 'sysop-1234!',
