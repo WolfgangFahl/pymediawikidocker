@@ -28,7 +28,7 @@ class TestConfig(Basetest):
                   'logo': '$wgResourceBasePath/resources/assets/wiki.png',
                    'port': 9080, 'sql_port': 9306, 'prot': 'http', 
                    'host': Host.get_default_host(), 'script_path': '', 'container_base_name': 'mw-139', 'networkName': 'mwNetwork', 'mariaDBVersion': '10.11', 'forceRebuild': False, 'debug': False, 'verbose': True, 
-                   'wikiId': None, 'versions': ['1.35.10','1.38.6', '1.39.3'], 'base_port': 9080,
+                   'wikiId': None, 'versions': ['1.35.12','1.38.6', '1.39.5','1.40.1'], 'base_port': 9080,
                    'docker_path': mwClusterConfig.docker_path}
 
         mwd=mwClusterConfig.as_dict()
