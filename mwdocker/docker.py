@@ -615,7 +615,7 @@ class DockerApplication(object):
         # run docker compose up
         try:
             docker.compose.up(detach=True,force_recreate=forceRebuild)      
-        except DockerException as de:
+        except Exception as de:
             print(f"docker compose up failed in {self.docker_path}")
             raise de
             pass
