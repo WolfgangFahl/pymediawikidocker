@@ -216,7 +216,7 @@ class TestInstall(Basetest):
         '''
         version="1.27.7"
         args=["--version_list",version,
-            "--prefix","rqotest",
+            "--container_name","rqotest-127", 
             "--base_port","9481",
             "--sql_base_port","10337"]
         self.printCommand("--down -f",args)
