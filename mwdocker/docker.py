@@ -22,8 +22,6 @@ from mwdocker.html_table import HtmlTables
 from mwdocker.mariadb import MariaDB
 from lodstorage.lod import LOD
 from dataclasses import dataclass
-from python_on_whales.exceptions import DockerException
-from docutils.languages import de
 
 class DockerMap():
     '''
