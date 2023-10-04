@@ -40,7 +40,7 @@ class MwConfig:
     """
     MediaWiki configuration for a Single Wiki
     """
-    version:str="1.39.5"
+    version:str="1.39.4"
     smw_version:Optional[str]=None
     extensionNameList:Optional[List[str]]=field(default_factory=lambda: ["Admin Links","Header Tabs","SyntaxHighlight","Variables"])
     extensionJsonFile:Optional[str]=None
