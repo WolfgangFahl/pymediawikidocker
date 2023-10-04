@@ -22,6 +22,8 @@ from mwdocker.html_table import HtmlTables
 from mwdocker.mariadb import MariaDB
 from lodstorage.lod import LOD
 from dataclasses import dataclass
+from python_on_whales.exceptions import DockerException
+from docutils.languages import de
 
 class DockerMap():
     '''
@@ -613,7 +615,12 @@ class DockerApplication(object):
         # run docker compose up
         # this might take a while e.g. downloading
         # run docker compose up
-        docker.compose.up(detach=True,force_recreate=forceRebuild)      
+        try:
+            docker.compose.up(detach=True,force_recreate=forceRebuild)      
+        except DockerException as de:
+            print(f"docker compose up failed in {self.docker_path}")
+            raise de
+            pass
         # switch back to previous current directory
         os.chdir(cwd)
     
