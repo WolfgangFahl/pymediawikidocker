@@ -197,7 +197,7 @@ class TestInstall(Basetest):
         test MediaWiki with SemanticMediaWiki 
         and composer
         '''
-        args=["--prefix","smw4",
+        args=["-cn","smw4",
             "--version_list","1.39.4",
             "--smw_version","4.1.1",
             "--base_port","9480",
