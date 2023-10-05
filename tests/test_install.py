@@ -198,6 +198,7 @@ class TestInstall(Basetest):
         and composer
         '''
         args=["-cn","smw4",
+            "--prefix","smw4",
             "--version_list","1.39.4",
             "--smw_version","4.1.1",
             "--base_port","9480",
@@ -217,6 +218,7 @@ class TestInstall(Basetest):
         version="1.27.7"
         args=["--version_list",version,
             "-cn","rqotest",
+            "--prefix","rqo",
             "--base_port","9481",
             "--sql_base_port","10337"]
         self.printCommand("--down -f",args)
