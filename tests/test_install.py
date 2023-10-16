@@ -31,27 +31,32 @@ class TestInstall(Basetest):
         # make sure we don't use the $HOME directory
         self.docker_path="/tmp/.pmw" 
         self.argv=["--docker_path",self.docker_path]
+        self.default_config=MwClusterConfig()
         
-    def getMwConfig(self,argv=None):
+    def getMwConfig(self,argv=None,version=None):
         """
         get a mediawiki configuration for the given command line arguments
         """
         if not argv:
             argv=self.argv
         parser = ArgumentParser()
-        mwClusterConfig=MwClusterConfig()
+        if version is None:
+            version=self.default_config.version
+        mwClusterConfig=MwClusterConfig(version=version)
         mwClusterConfig.addArgs(parser)
         args = parser.parse_args(argv)
         mwClusterConfig.fromArgs(args)
         return mwClusterConfig
     
-    def getMwCluster(self,argv=None,createApps:bool=True,withGenerate:bool=False):
+    def getMwCluster(self,argv=None,createApps:bool=True,withGenerate:bool=False,version=None):
         """
         get a mediawiki cluster as configured by the command line arguments
         """
         if not argv:
             argv=self.argv
-        config=self.getMwConfig(argv)
+        if version is None:
+            version=self.default_config.version
+        config=self.getMwConfig(argv,version=version)
         mwCluster=MediaWikiCluster(config=config)
         mwCluster.checkDocker()
         if createApps:
@@ -223,7 +228,7 @@ class TestInstall(Basetest):
             "--sql_base_port","10337"]
         self.printCommand("--down -f",args)
         forceRebuild=True
-        mwCluster=self.getMwCluster(args,createApps=False)
+        mwCluster=self.getMwCluster(args,version=version,createApps=False)
         mwCluster.config.addExtensions(["MagicNoCache"])
         mwCluster.config.forceRebuild=forceRebuild
         mwCluster.config.reset_container_base_name()
