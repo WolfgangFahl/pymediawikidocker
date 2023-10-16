@@ -199,7 +199,7 @@ class TestInstall(Basetest):
         '''
         args=["-cn","smw4",
             "--prefix","smw4",
-            "--version_list","1.39.4",
+            "--version_list","1.39.5",
             "--smw_version","4.1.1",
             "--base_port","9480",
             "--sql_base_port","10306"]
@@ -207,7 +207,7 @@ class TestInstall(Basetest):
         mwCluster=self.getMwCluster(args,createApps=False)
         mwCluster.config.addExtensions(["MagicNoCache","Data Transfer","Page Forms","Semantic Result Formats"])
         apps=mwCluster.createApps(withGenerate=True)
-        app=apps["1.39.4"]
+        app=apps["1.39.5"]
         app.start(forceRebuild=True)
         
     def testInstallationWithRequireOnce(self):
@@ -277,7 +277,7 @@ class TestInstall(Basetest):
         for argv,expected in [
             (["-h"],"--user"),
             (["-V"],Version.updated),
-            (["--list"],"1.39.4")
+            (["--list"],"1.39.5")
         ]:
             try:
                 stdout = io.StringIO()
