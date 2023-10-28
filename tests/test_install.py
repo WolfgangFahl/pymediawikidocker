@@ -205,7 +205,7 @@ class TestInstall(Basetest):
         args=["-cn","smw4",
             "--prefix","smw4",
             "--version_list","1.39.5",
-            "--smw_version","4.1.1",
+            "--smw_version","4.1.2",
             "--base_port","9480",
             "--sql_base_port","10306"]
         self.printCommand("--down -f",args)
