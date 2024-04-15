@@ -151,7 +151,7 @@ class DockerApplication(object):
         """
         errMsg = None
         if not docker.compose.is_installed():
-            errMsg = """docker composer up needs to be working"""
+            errMsg = """docker compose up needs to be working"""
         os_path = os.environ["PATH"]
         paths = ["/usr/local/bin"]
         for path in paths:
