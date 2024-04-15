@@ -1,50 +1,55 @@
-'''
+"""
 Created on 2021-06-23
 
 @author: wf
-'''
+"""
 import unittest
+
 from mwdocker.config import MwClusterConfig
 from mwdocker.docker import DockerApplication
-from mwdocker.mw import ExtensionList, Extension
+from mwdocker.mw import Extension, ExtensionList
 from tests.basetest import Basetest
 
+
 class TestExtensions(Basetest):
-    '''
+    """
     test the extension handling
-    '''
+    """
 
     def setUp(self):
         Basetest.setUp(self)
         pass
-    
+
     def testReadExtensions(self):
         """
         read the extensions
         """
-        extensionList=ExtensionList()
+        extensionList = ExtensionList()
         extensionList.restoreFromJsonFile(ExtensionList.storeFilePrefix())
-        self.assertTrue(len(extensionList.extensions)>=35)
+        self.assertTrue(len(extensionList.extensions) >= 35)
         pass
-    
+
     def testExtensionDetailsFromUrl(self):
-        '''
+        """
         test getting details of an extension
-        '''
-        ext=Extension()
-        ext.name="UrlGetParameters"
-        ext.url="https://www.mediawiki.org/wiki/Extension:UrlGetParameters"
-        debug=self.debug
+        """
+        ext = Extension()
+        ext.name = "UrlGetParameters"
+        ext.url = "https://www.mediawiki.org/wiki/Extension:UrlGetParameters"
+        debug = self.debug
         ext.getDetailsFromUrl(showHtml=debug)
         if debug:
             print(ext)
-        self.assertEqual("https://github.com/wikimedia/mediawiki-extensions-UrlGetParameters",ext.giturl)
+        self.assertEqual(
+            "https://github.com/wikimedia/mediawiki-extensions-UrlGetParameters",
+            ext.giturl,
+        )
 
     def testExtensionHandling(self):
-        '''
+        """
         test extension handling
-        '''
-        jsonStr="""{
+        """
+        jsonStr = """{
     "extensions": [
         {
             "giturl": "https://github.com/wikimedia/mediawiki-extensions-Variables",
@@ -56,59 +61,60 @@ class TestExtensions(Basetest):
         }
     ]
 }"""
-        extensionJsonFile="/tmp/extensions4Mw.json"
+        extensionJsonFile = "/tmp/extensions4Mw.json"
         with open(extensionJsonFile, "w") as jsonFile:
-                jsonFile.write(jsonStr)
-        extensionNames=["Admin Links","BreadCrumbs2","Variables","ImageMap"]
-        config=MwClusterConfig()
-        extMap=config.getExtensionMap(extensionNames,extensionJsonFile)
-        mwShortVersion="131"
-        expectedUrl={
+            jsonFile.write(jsonStr)
+        extensionNames = ["Admin Links", "BreadCrumbs2", "Variables", "ImageMap"]
+        config = MwClusterConfig()
+        extMap = config.getExtensionMap(extensionNames, extensionJsonFile)
+        mwShortVersion = "131"
+        expectedUrl = {
             "Admin Links": "https://www.mediawiki.org/wiki/Extension:Admin_Links",
-            "BreadCrumbs2": "https://www.mediawiki.org/wiki/Extension:BreadCrumbs2"
+            "BreadCrumbs2": "https://www.mediawiki.org/wiki/Extension:BreadCrumbs2",
         }
-        expectedScript={
-            "Admin Links":"git clone https://github.com/wikimedia/mediawiki-extensions-AdminLinks --single-branch --branch master AdminLinks"
+        expectedScript = {
+            "Admin Links": "git clone https://github.com/wikimedia/mediawiki-extensions-AdminLinks --single-branch --branch master AdminLinks"
         }
         for extensionName in extensionNames:
-            ext=extMap[extensionName]
+            ext = extMap[extensionName]
             if self.debug:
-                print (ext)
-                print (ext.asScript())
-                localSettingsLine=ext.getLocalSettingsLine(mwShortVersion)
+                print(ext)
+                print(ext.asScript())
+                localSettingsLine = ext.getLocalSettingsLine(mwShortVersion)
                 print(localSettingsLine)
             if extensionName in expectedUrl:
-                self.assertEqual(expectedUrl[extensionName],ext.url)
+                self.assertEqual(expectedUrl[extensionName], ext.url)
             if extensionName in expectedScript:
-                self.assertEqual(expectedScript[extensionName],ext.asScript())
+                self.assertEqual(expectedScript[extensionName], ext.asScript())
         pass
-    
+
     def testSpecialVersionHandling(self):
-        '''
+        """
         https://github.com/WolfgangFahl/pymediawikidocker/issues/16
-        Option to Extract extension.json / extensionNameList contents from Special:Version 
-        '''
-        debug=self.debug
-        #debug=False
-        for url,expected in [
-            #"https://www.openresearch.org/wiki/Special:Version",
-            #"https://confident.dbis.rwth-aachen.de/or/index.php?title=Special:Version",
-            ("https://wiki.bitplan.com/index.php/Special:Version",36),
-            ("https://cr.bitplan.com/index.php/Special:Version",35),
-            
+        Option to Extract extension.json / extensionNameList contents from Special:Version
+        """
+        debug = self.debug
+        # debug=False
+        for url, expected in [
+            # "https://www.openresearch.org/wiki/Special:Version",
+            # "https://confident.dbis.rwth-aachen.de/or/index.php?title=Special:Version",
+            ("https://wiki.bitplan.com/index.php/Special:Version", 36),
+            ("https://cr.bitplan.com/index.php/Special:Version", 35),
         ]:
-            extList=ExtensionList.fromSpecialVersion(url,showHtml=False,debug=debug)
-            extList.extensions=sorted(extList.extensions,key=lambda ext:ext.name)
-            print(f"checking {len(extList.extensions)}>={expected} extensions for {url}")
-            self.assertTrue(len(extList.extensions)>=expected)
+            extList = ExtensionList.fromSpecialVersion(url, showHtml=False, debug=debug)
+            extList.extensions = sorted(extList.extensions, key=lambda ext: ext.name)
+            print(
+                f"checking {len(extList.extensions)}>={expected} extensions for {url}"
+            )
+            self.assertTrue(len(extList.extensions) >= expected)
             if debug:
                 for ext in extList.extensions:
-                    print (ext)
+                    print(ext)
                 for ext in extList.extensions:
-                    print (ext.asWikiMarkup())
-                print(extList.toJSON())    
-                
+                    print(ext.asWikiMarkup())
+                print(extList.toJSON())
+
 
 if __name__ == "__main__":
-    #import sys;sys.argv = ['', 'Test.testName']
+    # import sys;sys.argv = ['', 'Test.testName']
     unittest.main()
