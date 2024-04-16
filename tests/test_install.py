@@ -322,10 +322,10 @@ class TestInstall(Basetest):
                 pass
             stdout_txt = stdout.getvalue()
             debug = self.debug
-            #debug=True
+            # debug=True
             if debug:
                 print(stdout_txt)
-            self.assertTrue(expected in stdout_txt,f"for argv {argv}")
+            self.assertTrue(expected in stdout_txt, f"for argv {argv}")
 
     def testGraphViz(self):
         """

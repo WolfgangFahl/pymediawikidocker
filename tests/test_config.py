@@ -51,14 +51,14 @@ class TestConfig(Basetest):
             "debug": False,
             "verbose": True,
             "wikiId": None,
-            "versions": ["1.35.13", "1.38.6", "1.39.7", "1.40.3","1.41.1"],
+            "versions": ["1.35.13", "1.38.6", "1.39.7", "1.40.3", "1.41.1"],
             "base_port": 9080,
             "docker_path": mwClusterConfig.docker_path,
         }
 
         mwd = mwClusterConfig.as_dict()
         debug = self.debug
-        #debug=True
+        # debug=True
         if debug:
             print(mwd)
             print(json.dumps(mwd, indent=2))

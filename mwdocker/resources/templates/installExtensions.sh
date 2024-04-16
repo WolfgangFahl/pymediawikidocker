@@ -7,3 +7,6 @@ cd /var/www/html/extensions
 # {{ extension.url }}
 {{ extension.asScript(branch) | safe }}
 {% endfor %}
+# install composer based extensions
+cd /var/www/html
+composer update --no-dev
