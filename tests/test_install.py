@@ -311,7 +311,7 @@ class TestInstall(Basetest):
         for argv, expected in [
             (["-h"], "--user"),
             (["-V"], Version.updated),
-            (["--list"], "1.39.5"),
+            (["--list"], "1.39.7"),
         ]:
             try:
                 stdout = io.StringIO()
@@ -322,10 +322,10 @@ class TestInstall(Basetest):
                 pass
             stdout_txt = stdout.getvalue()
             debug = self.debug
-            # debug=True
+            #debug=True
             if debug:
                 print(stdout_txt)
-            self.assertTrue(expected in stdout_txt)
+            self.assertTrue(expected in stdout_txt,f"for argv {argv}")
 
     def testGraphViz(self):
         """
