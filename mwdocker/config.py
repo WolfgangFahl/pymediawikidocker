@@ -42,14 +42,12 @@ class Host:
             host = "localhost"  # host="127.0.0.1"
         return host
 
-
 @dataclass
 class MwConfig:
     """
     MediaWiki configuration for a Single Wiki
     """
-
-    version: str = "1.39.5"
+    version: str = "1.39.7"
     smw_version: Optional[str] = None
     extensionNameList: Optional[List[str]] = field(
         default_factory=lambda: [

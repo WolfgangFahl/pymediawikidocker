@@ -335,7 +335,7 @@ class DockerApplication(object):
 
         Args:
             wikiId(str): the wikiId to create or modify a wiki user for
-            force_overwrite(bool): if True overwrite the wikuser info
+            force_overwrite(bool): if True overwrite the wikiuser info
         """
         wikiUsers = WikiUser.getWikiUsers(lenient=True)
         if wikiId in wikiUsers and not force_overwrite:
