@@ -216,9 +216,9 @@ class TestInstall(Basetest):
             "--prefix",
             "smw4",
             "--version_list",
-            "1.39.5",
+            "1.39.7",
             "--smw_version",
-            "4.1.2",
+            "4.1.3",
             "--base_port",
             "9480",
             "--sql_base_port",
@@ -230,7 +230,7 @@ class TestInstall(Basetest):
             ["MagicNoCache", "Data Transfer", "Page Forms", "Semantic Result Formats"]
         )
         apps = mwCluster.createApps(withGenerate=True)
-        app = apps["1.39.5"]
+        app = apps["1.39.7"]
         app.start(forceRebuild=True)
 
     def testInstallationWithRequireOnce(self):
