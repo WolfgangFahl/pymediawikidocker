@@ -20,3 +20,7 @@ $smwgQMaxInlineLimit=2000;
 $wgEnableUploads = true;
 # https://github.com/WolfgangFahl/pymediawikidocker/issues/30:
 $wgDeprecationReleaseLimit = "1.35.0";
+# settings for warnings
+# error_reporting( E_ALL & ~E_DEPRECATED & ~E_STRICT );
+# no warnings
+# ini_set( 'display_errors', 0 );
