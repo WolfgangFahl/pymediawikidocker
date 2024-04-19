@@ -266,7 +266,13 @@ extensions:
   wikidata_id: Q21678996
   localSettings: |
     // Enable Personal Data Functions
-    $wgUFEnablePersonalDataFunctions = true;
+    $wgUFEnabledPersonalDataFunctions = [
+      'ip',
+      'nickname',
+      'realname',
+      'useremail',
+      'username',
+    ];
     // Enable UserFunctions in Main and Template Namespace
     $wgUFAllowedNamespaces = array(
             NS_MAIN => true,
