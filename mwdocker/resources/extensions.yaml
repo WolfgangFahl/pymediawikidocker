@@ -1,0 +1,296 @@
+#
+# Default extension list for pymediawiki docker
+# https://github.com/WolfgangFahl/pymediawikidocker
+# WF 2024-04-19 
+#
+extensions:
+- name: Admin Links
+  url: https://www.mediawiki.org/wiki/Extension:Admin_Links
+  extension: AdminLinks
+  purpose: |-
+    Admin Links is an extension to MediaWiki that defines a special page, "Special:AdminLinks",
+    that holds links meant to be helpful for wiki administrators;
+    it is meant to serve as a "control panel" for the functions an administrator would typically perform in a wiki.
+    All users can view this page; however, for those with the 'adminlinks' permission (sysops/administrators, by default),
+    a link to the page also shows up in their "Personal URLs", between "Talk" and "Preferences".
+  giturl: https://github.com/wikimedia/mediawiki-extensions-AdminLinks
+  wikidata_id: Q21676187
+  since: '2009-05-13T00:00:00'
+  require_once_until: '131'
+- name: BreadCrumbs2
+  url: https://www.mediawiki.org/wiki/Extension:BreadCrumbs2
+  extension: BreadCrumbs2
+  purpose: Implements a breadcrumb navigation based on categories
+  giturl: https://github.com/wikimedia/mediawiki-extensions-BreadCrumbs2
+  wikidata_id: Q21676848
+  require_once_until: '131'
+- name: Cargo
+  url: https://www.mediawiki.org/wiki/Extension:Cargo
+  extension: Cargo
+  purpose: Storage and querying of template data
+  giturl: https://github.com/wikimedia/mediawiki-extensions-Cargo
+  wikidata_id: Q21676223
+- name: CategoryTree
+  url: https://www.mediawiki.org/wiki/Extension:CategoryTree
+  extension: CategoryTree
+  purpose: provides a dynamic view of the wiki's category structure as a tree
+  giturl: https://github.com/wikimedia/mediawiki-extensions-CategoryTree
+  wikidata_id: Q21676245
+- name: ConfirmAccount
+  url: https://www.mediawiki.org/wiki/Extension:ConfirmAccount
+  extension: ConfirmAccount
+  purpose: Gives bureaucrats the ability to confirm account requests
+  giturl: https://github.com/wikimedia/mediawiki-extensions-ConfirmAccount
+  wikidata_id: Q21676649
+  require_once_until: '134'
+- name: ConfirmEdit
+  url: https://www.mediawiki.org/wiki/Extension:ConfirmEdit
+  extension: ConfirmEdit
+  purpose: Provides CAPTCHA techniques to protect against spam and password-guessing
+  giturl: https://github.com/wikimedia/mediawiki-extensions-ConfirmEdit
+  wikidata_id: Q21676645
+- name: Contribution Scores
+  url: https://www.mediawiki.org/wiki/Extension:Contribution_Scores
+  extension: ContributionScores
+  purpose: 'The Contribution Scores extension polls the wiki database to locate contributors
+    with the highest contribution volume.It is intended to add a fun metric for contributors
+    to see how much they are helping out. '
+  giturl: https://github.com/wikimedia/mediawiki-extensions-ContributionScores
+  wikidata_id: Q21676708
+  require_once_until: '135'
+- name: Data Transfer
+  url: https://www.mediawiki.org/wiki/Extension:Data_Transfer
+  extension: DataTransfer
+  purpose: ' Data Transfer is an extension to MediaWiki that allows users to both
+    export and import data from and to the wiki, with export done in XML format and
+    import possible in both XML, CSV and some spreadsheet formats. '
+  giturl: https://github.com/wikimedia/mediawiki-extensions-DataTransfer
+  wikidata_id: Q21677041
+  since: '2008-02-19T00:00:00'
+- name: Diagrams
+  url: https://www.mediawiki.org/wiki/Extension:Diagrams
+  extension: Diagrams
+  purpose: Render Graphviz, Mscgen, and PlantUML diagrams in wiki pages.
+  giturl: https://github.com/samwilson/diagrams-extension.git
+  wikidata_id: Q84791451
+  since: '2019-12-12T00:00:00'
+- name: Graph
+  url: https://www.mediawiki.org/wiki/Extension:Graph
+  extension: Graph
+  purpose: 'The Graph extension allows a ‎<graph> tag to describe data visualizations
+    such as bar charts, pie charts, timelines, and histograms (demo) in a JSON format
+    that renders a Vega-based graph. '
+  giturl: https://github.com/wikimedia/mediawiki-extensions-Graph
+  wikidata_id: Q21677460
+  since: '2014-05-02T00:00:00'
+  require_once_until: '127'
+- name: Header Tabs
+  url: https://www.mediawiki.org/wiki/Extension:Header_Tabs
+  extension: HeaderTabs
+  purpose: The Header Tabs extension transforms top-level MediaWiki headers into tabs
+    using the jQuery UI JavaScript library.
+  giturl: https://github.com/wikimedia/mediawiki-extensions-HeaderTabs
+  wikidata_id: Q21676903
+  since: '2008-03-20T00:00:00'
+  require_once_until: '127'
+- name: ImageLink
+  url: https://wiki.bitplan.com/index.php/ImageLink
+  extension: ImageLink
+  purpose: This extension allows for external images to be used as clickable icons.
+  giturl: https://github.com/BITPlan/ImageLink
+  require_once_until: '139'
+- name: ImageMap
+  url: https://www.mediawiki.org/wiki/Extension:ImageMap
+  extension: ImageMap
+  purpose: The ImageMap extension allows clickable image maps.
+  giturl: https://github.com/wikimedia/mediawiki-extensions-ImageMap
+  wikidata_id: Q21677197
+  localSettings: |
+    $wgEnableUploads = true;
+    $wgUseImageMagick = true;
+    $wgImageMagickConvertCommand = "/usr/bin/convert";
+- name: InputBox
+  url: https://www.mediawiki.org/wiki/Extension:InputBox
+  extension: InputBox
+  purpose: Allow inclusion of predefined HTML forms
+  giturl: https://github.com/wikimedia/mediawiki-extensions-InputBox
+  wikidata_id: Q8615333
+- name: Language Selector
+  url: https://mediawiki.org/wiki/Extension:LanguageSelector
+  extension: LanguageSelector
+  purpose: Language selector on every page, also for visitors
+  giturl: https://github.com/wikimedia/mediawiki-extensions-LanguageSelector
+  wikidata_id: Q21677114
+- name: MagicNoCache
+  url: https://www.mediawiki.org/wiki/Extension:MagicNoCache
+  extension: MagicNoCache
+  purpose: The MagicNoCache extension creates a new magic word __NOCACHE__ and disables
+    the cache for any page in which it finds it. Thus it makes sure that specific
+    pages never get cached as they get updated extremely frequently
+  giturl: https://github.com/wikimedia/mediawiki-extensions-MagicNoCache
+  wikidata_id: Q21677510
+  since: '2012-01-01T00:00:00'
+  require_once_until: '127'
+- name: Maps7
+  url: https://github.com/JeroenDeDauw/Maps/blob/master/README.md#maps
+  extension: Maps
+  purpose: Enables embedding of dynamic maps into wiki pages, geocoding of addresses
+    and other geographical operations
+  wikidata_id: Q21677553
+- name: Maps9
+  url: https://github.com/JeroenDeDauw/Maps/blob/master/README.md#maps
+  extension: Maps
+  purpose: Enables embedding of dynamic maps into wiki pages, geocoding of addresses
+    and other geographical operations
+  wikidata_id: Q21677553
+- name: Mermaid
+  url: https://github.com/SemanticMediaWiki/Mermaid
+  extension: Mermaid
+  purpose: 'This extension provides the #mermaid parser function to support the generation
+    of diagrams and flowcharts with the help of the mermaid script language.'
+  wikidata_id: Q47005306
+  since: '2017-12-30T00:00:00'
+- name: MsUpload
+  url: https://www.mediawiki.org/wiki/Extension:MsUpload
+  extension: MsUpload
+  purpose: 'The MsUpload extension allows users to upload multiple files by drag &
+    drop in the standard MediaWiki edit page. '
+  giturl: https://github.com/wikimedia/mediawiki-extensions-MsUpload
+  wikidata_id: Q21677697
+  since: '2013-04-13T00:00:00'
+- name: Network
+  url: https://www.mediawiki.org/wiki/Extension:Network
+  extension: Network
+  purpose: The Network extension allows visualizing connections between wiki pages
+    via an interactive network graph.
+  giturl: https://github.com/ProfessionalWiki/Network
+  wikidata_id: Q96374434
+- name: Nuke
+  url: https://www.mediawiki.org/wiki/Extension:Nuke
+  extension: Nuke
+  purpose: 'The Nuke extension makes it possible for sysops to mass delete pages. '
+  wikidata_id: Q19921530
+- name: Page Forms
+  url: https://www.mediawiki.org/wiki/Extension:Page_Forms
+  extension: PageForms
+  purpose: (known before 2016 as Semantic Forms) is an extension to MediaWiki that
+    allows users to add, edit and query data using forms
+  wikidata_id: Q21678466
+  since: '2016-09-07T00:00:00'
+- name: ParserFunctions
+  url: https://www.mediawiki.org/wiki/Extension:ParserFunctions
+  extension: ParserFunctions
+  purpose: Enhance parser with logical functions
+  giturl: https://github.com/wikimedia/mediawiki-extensions-ParserFunctions
+  wikidata_id: Q21677990
+- name: PDFEmbed
+  url: https://www.mediawiki.org/wiki/Extension:PDFEmbed
+  extension: PDFEmbed
+  purpose: Media handler extension for PDF files.
+  giturl: https://github.com/WolfgangFahl/PDFEmbed
+  wikidata_id: Q21677908
+- name: Renameuser
+  url: https://www.mediawiki.org/wiki/Extension:Renameuser
+  extension: Renameuser
+  purpose: Adds a special page to rename a user (need renameuser right)
+  wikidata_id: Q21678251
+- name: Replace Text
+  url: https://www.mediawiki.org/wiki/Extension:ReplaceText
+  extension: ReplaceText
+  purpose: Provides a special page to allow administrators to do a global string find-and-replace
+    on all the content pages of a wiki
+  wikidata_id: Q21678303
+- name: Semantic Cite
+  url: https://github.com/SemanticMediaWiki/SemanticCite/
+  extension: SemanticCite
+  purpose: Semantic Cite (a.k.a. SCI) is a Semantic Mediawiki extension that provides
+    a simple way of organizing citation resources with the help of semantic annotations.
+  wikidata_id: Q21678464
+- name: Semantic Result Formats
+  url: https://www.semantic-mediawiki.org/wiki/Extension:Semantic_Result_Formats
+  extension: SemanticResultFormats
+  purpose: Additional result formats for Semantic MediaWiki queries
+  wikidata_id: Q21678508
+- name: SimpleMathJax
+  url: https://www.mediawiki.org/wiki/Extension:SimpleMathJax
+  extension: SimpleMathJax
+  purpose: The SimpleMathJax extension enables MathJax, a JavaScript library, for
+    typesetting TeX formula in MediaWiki inside math environments.
+  giturl: https://github.com/jmnote/SimpleMathJax.git
+  wikidata_id: Q21678600
+- name: Slides
+  url: https://www.mediawiki.org/wiki/Extension:Slides
+  extension: Slides
+  purpose: Adds a 'Slideshow' action to turn any wikipage into a slideshow. Each level
+    1 sections are turned into a slide.
+  giturl: https://github.com/PascalNoisette/mediawiki-extensions-Slides
+- name: SparqlResultFormat
+  url: https://www.mediawiki.org/wiki/Extension:SparqlResultFormat
+  extension: SparqlResultFormat
+  purpose: Enable the execution of sparql query to different endpoint and produce
+    various output format.
+  giturl: https://github.com/imolainformatica/SparqlResultFormat
+- name: SyntaxHighlight
+  url: https://www.mediawiki.org/wiki/Extension:SyntaxHighlight
+  extension: SyntaxHighlight_GeSHi
+  purpose: syntax highlighting of diverse programming languages
+  wikidata_id: Q21678766
+  since: '2007-04-03T00:00:00'
+- name: TitleBlacklist
+  url: https://www.mediawiki.org/wiki/Extension:TitleBlacklist
+  extension: TitleBlacklist
+  purpose: Blocks the creation of pages matching a regular expression blacklist
+  giturl: https://github.com/wikimedia/mediawiki-extensions-TitleBlacklist
+  wikidata_id: Q21678866
+- name: UrlGetParameters
+  url: https://www.mediawiki.org/wiki/Extension:UrlGetParameters
+  extension: UrlGetParameters
+  purpose: Allows to use and/or display the "GET" parameters of the URL on a wiki
+    page
+  giturl: https://github.com/wikimedia/mediawiki-extensions-UrlGetParameters
+  wikidata_id: Q21678958
+  require_once_until: '131'
+- name: UserFunctions
+  url: https://www.mediawiki.org/wiki/Extension:UserFunctions
+  extension: UserFunctions
+  purpose: Enhance parser with user functions
+  giturl: https://github.com/wikimedia/mediawiki-extensions-UserFunctions
+  wikidata_id: Q21678996
+  localSettings: |
+    // Enable Personal Data Functions
+    $wgUFEnablePersonalDataFunctions = true;
+    // Enable UserFunctions in Main and Template Namespace
+    $wgUFAllowedNamespaces = array(
+            NS_MAIN => true,
+            NS_TEMPLATE => true
+    );
+- name: Variables
+  url: https://www.mediawiki.org/wiki/Extension:Variables
+  extension: Variables
+  purpose: The Variables extension allows you to define a variable on a page, use
+    it later in that same page or included templates
+  giturl: https://github.com/wikimedia/mediawiki-extensions-Variables
+  wikidata_id: Q21679056
+  since: '2011-11-13T00:00:00'
+  require_once_until: '127'
+  localSettings: |
+    // see https://phabricator.wikimedia.org/T250963
+    global $wgVersion; // Make sure to declare it global if you are inside a function or method
+    
+    if (version_compare($wgVersion, '1.35', '>=')) {
+        class CustomMWDebug extends MWDebug {
+            public static function addDeprecationFilter($pattern, $callback = null) {
+                self::$deprecationFilters[$pattern] = $callback;
+            }
+        }
+    
+        // Call to add a deprecation filter
+        CustomMWDebug::addDeprecationFilter('/Use of InternalParseBeforeSanitize hook/');
+    }
+- name: YouTube
+  url: https://www.mediawiki.org/wiki/Extension:YouTube
+  extension: YouTube
+  purpose: Embeds YouTube movies, Archive.org audio and video, WeGame and Gametrailers
+    video, and Tangler forum
+  giturl: https://github.com/wikimedia/mediawiki-extensions-YouTube
+  wikidata_id: Q21679376

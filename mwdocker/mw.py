@@ -3,96 +3,32 @@ Created on 2021-06-23
 
 @author: wf
 """
+from dataclasses import field
 import os
 import urllib
 from datetime import datetime
 
-from lodstorage.jsonable import JSONAble, JSONAbleList
+from lodstorage.yamlable import lod_storable
 from lodstorage.lod import LOD
 
 from mwdocker.webscrape import WebScrape
+from typing import List, Optional
 
 
-class ExtensionList(JSONAbleList):
-    """
-    represents a list of MediaWiki extensions
-    """
-
-    def __init__(self):
-        """
-        constructor
-        """
-        super(ExtensionList, self).__init__("extensions", Extension)
-
-    @staticmethod
-    def storeFilePrefix():
-        """
-        get my storeFilePrefix
-
-        Returns:
-            str: the path to where my stored files (e.g. JSON) should be kept
-        """
-        scriptdir = os.path.dirname(os.path.realpath(__file__))
-        resourcePath = os.path.realpath(f"{scriptdir}/resources")
-        storeFilePrefix = f"{resourcePath}/extensions"
-        return storeFilePrefix
-
-    @classmethod
-    def fromSpecialVersion(
-        cls, url: str, excludes=["skin", "editor"], showHtml=False, debug=False
-    ):
-        """
-        get an extension List from the given url
-
-        Args:
-            url(str): the Special:Version MediaWiki page to read the information from
-            exclude (list): a list of types of extensions to exclude
-            showHtml(bool): True if the html code should be printed for debugging
-            debug(bool): True if debugging should be active
-
-        Returns:
-            ExtensionList: an extension list derived from the url
-        """
-        webscrape = WebScrape()
-        soup = webscrape.getSoup(url, showHtml=showHtml)
-
-        # search for
-        # <tr class="mw-version-ext" id="mw-version-ext-media-PDF_Handler">
-        exttrs = soup.findAll(attrs={"class": "mw-version-ext"})
-        extList = ExtensionList()
-        for exttr in exttrs:
-            if showHtml:
-                print(exttr)
-            doExclude = False
-            for exclude in excludes:
-                if f"-{exclude}-" in exttr.get("id"):
-                    doExclude = True
-            if not doExclude:
-                ext = Extension.fromSpecialVersionTR(exttr, debug=debug)
-                if ext:
-                    extList.extensions.append(ext)
-        return extList
-
-    @classmethod
-    def restore(cls):
-        """
-        restore
-        """
-        extList = ExtensionList()
-        extList.restoreFromJsonFile(ExtensionList.storeFilePrefix())
-        return extList
-
-    def save(self):
-        """
-        save the extension list
-        """
-        super().storeToJsonFile(ExtensionList.storeFilePrefix())
-
-
-class Extension(JSONAble):
+@lod_storable
+class Extension:
     """
     represents a MediaWiki extension
     """
+    name: str;
+    url: str;
+    extension: Optional[str]=None;
+    purpose: Optional[str]=None;
+    giturl: Optional[str]=None;
+    wikidata_id: Optional[str]=None;
+    since: Optional[str]=None;
+    localSettings: Optional[str]=None;
+    require_once_until: Optional[str]=None;
 
     @classmethod
     def getSamples(cls):
@@ -124,22 +60,18 @@ a link to the page also shows up in their "Personal URLs", between "Talk" and "P
             debug(bool): if True show debugging information
         """
         ext = None
+        purpose=None
         extNameTag = exttr.find(attrs={"class": "mw-version-ext-name"})
         extPurposeTag = exttr.find(attrs={"class": "mw-version-ext-description"})
         if extNameTag:
-            ext = Extension()
-            ext.name = extNameTag.string
-            ext.extension = ext.name.replace(" ", "")
-            ext.url = extNameTag.get("href")
+            name = extNameTag.string
+            extension = name.replace(" ", "")
+            url = extNameTag.get("href")
             if extPurposeTag and extPurposeTag.string:
-                ext.purpose = extPurposeTag.string
+                purpose = extPurposeTag.string
+            ext = Extension(name=name,extension=extension,url=url,purpose=purpose)
             ext.getDetailsFromUrl(debug=debug)
         return ext
-
-    def __init__(self):
-        """
-        Constructor
-        """
 
     def __str__(self):
         text = ""
@@ -216,3 +148,69 @@ a link to the page also shows up in their "Personal URLs", between "Talk" and "P
             if hasattr(self, "composer"):
                 text += f"\n# installed with composer require {self.composer}"
             return text
+        
+@lod_storable
+class ExtensionList:
+    """
+    represents a list of MediaWiki extensions
+    """
+    extensions: List[Extension]=field(default_factory=list)
+    
+    @staticmethod
+    def storeFilePrefix():
+        """
+        get my storeFilePrefix
+
+        Returns:
+            str: the path to where my stored files (e.g. JSON) should be kept
+        """
+        scriptdir = os.path.dirname(os.path.realpath(__file__))
+        resourcePath = os.path.realpath(f"{scriptdir}/resources")
+        storeFilePrefix = f"{resourcePath}/extensions"
+        return storeFilePrefix
+
+    @classmethod
+    def fromSpecialVersion(
+        cls, url: str, excludes=["skin", "editor"], showHtml=False, debug=False
+    ):
+        """
+        get an extension List from the given url
+
+        Args:
+            url(str): the Special:Version MediaWiki page to read the information from
+            exclude (list): a list of types of extensions to exclude
+            showHtml(bool): True if the html code should be printed for debugging
+            debug(bool): True if debugging should be active
+
+        Returns:
+            ExtensionList: an extension list derived from the url
+        """
+        webscrape = WebScrape()
+        soup = webscrape.getSoup(url, showHtml=showHtml)
+
+        # search for
+        # <tr class="mw-version-ext" id="mw-version-ext-media-PDF_Handler">
+        exttrs = soup.findAll(attrs={"class": "mw-version-ext"})
+        extList = ExtensionList()
+        for exttr in exttrs:
+            if showHtml:
+                print(exttr)
+            doExclude = False
+            for exclude in excludes:
+                if f"-{exclude}-" in exttr.get("id"):
+                    doExclude = True
+            if not doExclude:
+                ext = Extension.fromSpecialVersionTR(exttr, debug=debug)
+                if ext:
+                    extList.extensions.append(ext)
+        return extList
+   
+    @classmethod
+    def restore(cls)->"ExtensionList":
+        """
+        restore the extension list
+        """
+        path=ExtensionList.storeFilePrefix()
+        yaml_file=f"{path}.yaml"
+        extlist=ExtensionList.load_from_yaml_file(yaml_file)
+        return extlist

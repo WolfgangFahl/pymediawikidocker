@@ -10,6 +10,7 @@ import re
 import secrets
 import socket
 from dataclasses import dataclass, field
+from lodstorage.lod import LOD
 from pathlib import Path
 from typing import List, Optional
 from urllib.parse import urlparse
@@ -253,19 +254,16 @@ class MwConfig:
         get map of extensions to handle
 
         Args:
-            extensionNameList(list): a lit of extension names
+            extensionNameList(list): a list of extension names
             extensionJsonFile(str): the name of an extra extensionJsonFile (if any)
         """
         self.extensionMap = {}
         extensionList = ExtensionList.restore()
         if extensionJsonFile is not None:
-            extraExtensionList = ExtensionList()
-            extraExtensionList.restoreFromJsonFile(
-                extensionJsonFile.replace(".json", "")
-            )
+            extraExtensionList = ExtensionList.load_from_json_file(extensionJsonFile)
             for ext in extraExtensionList.extensions:
                 extensionList.extensions.append(ext)
-        self.extByName, duplicates = extensionList.getLookup("name")
+        self.extByName, duplicates = LOD.getLookup(extensionList.extensions,"name")
         if len(duplicates) > 0:
             print(f"{len(duplicates)} duplicate extensions: ")
             for duplicate in duplicates:

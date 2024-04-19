@@ -3,10 +3,7 @@ Created on 2021-06-23
 
 @author: wf
 """
-import unittest
-
 from mwdocker.config import MwClusterConfig
-from mwdocker.docker import DockerApplication
 from mwdocker.mw import Extension, ExtensionList
 from tests.basetest import Basetest
 
@@ -24,18 +21,21 @@ class TestExtensions(Basetest):
         """
         read the extensions
         """
-        extensionList = ExtensionList()
-        extensionList.restoreFromJsonFile(ExtensionList.storeFilePrefix())
+        extensionList = ExtensionList.restore()
         self.assertTrue(len(extensionList.extensions) >= 35)
         pass
+    
+    def test_convert_to_yaml(self):
+        extension_list = ExtensionList.restore()
+        yaml_str=extension_list.to_yaml()
+        print(yaml_str)
 
     def testExtensionDetailsFromUrl(self):
         """
         test getting details of an extension
         """
-        ext = Extension()
-        ext.name = "UrlGetParameters"
-        ext.url = "https://www.mediawiki.org/wiki/Extension:UrlGetParameters"
+        ext = Extension(name = "UrlGetParameters",
+            url = "https://www.mediawiki.org/wiki/Extension:UrlGetParameters")
         debug = self.debug
         ext.getDetailsFromUrl(showHtml=debug)
         if debug:
@@ -113,8 +113,3 @@ class TestExtensions(Basetest):
                 for ext in extList.extensions:
                     print(ext.asWikiMarkup())
                 print(extList.toJSON())
-
-
-if __name__ == "__main__":
-    # import sys;sys.argv = ['', 'Test.testName']
-    unittest.main()
