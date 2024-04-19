@@ -72,6 +72,7 @@ extensions:
   extension: Diagrams
   purpose: Render Graphviz, Mscgen, and PlantUML diagrams in wiki pages.
   giturl: https://github.com/samwilson/diagrams-extension.git
+  composer: '"samwilson/diagrams": "~0.11.0"'
   wikidata_id: Q84791451
   since: '2019-12-12T00:00:00'
 - name: Graph
@@ -136,18 +137,21 @@ extensions:
   extension: Maps
   purpose: Enables embedding of dynamic maps into wiki pages, geocoding of addresses
     and other geographical operations
+  composer: '"mediawiki/maps": "~7.0"'
   wikidata_id: Q21677553
 - name: Maps9
   url: https://github.com/JeroenDeDauw/Maps/blob/master/README.md#maps
   extension: Maps
   purpose: Enables embedding of dynamic maps into wiki pages, geocoding of addresses
     and other geographical operations
+  composer: '"mediawiki/maps": "~9.0.5"'
   wikidata_id: Q21677553
 - name: Mermaid
   url: https://github.com/SemanticMediaWiki/Mermaid
   extension: Mermaid
   purpose: 'This extension provides the #mermaid parser function to support the generation
     of diagrams and flowcharts with the help of the mermaid script language.'
+  composer: '"mediawiki/mermaid": "~3.0"'
   wikidata_id: Q47005306
   since: '2017-12-30T00:00:00'
 - name: MsUpload
@@ -163,6 +167,7 @@ extensions:
   extension: Network
   purpose: The Network extension allows visualizing connections between wiki pages
     via an interactive network graph.
+  composer: '"professional-wiki/network": "~2.0"'
   giturl: https://github.com/ProfessionalWiki/Network
   wikidata_id: Q96374434
 - name: Nuke
@@ -175,6 +180,7 @@ extensions:
   extension: PageForms
   purpose: (known before 2016 as Semantic Forms) is an extension to MediaWiki that
     allows users to add, edit and query data using forms
+  composer: '"mediawiki/page-forms": "5.6.1"'
   wikidata_id: Q21678466
   since: '2016-09-07T00:00:00'
 - name: ParserFunctions
@@ -203,6 +209,7 @@ extensions:
 - name: Semantic Cite
   url: https://github.com/SemanticMediaWiki/SemanticCite/
   extension: SemanticCite
+  composer: '"mediawiki/semantic-cite": "~2.1"'
   purpose: Semantic Cite (a.k.a. SCI) is a Semantic Mediawiki extension that provides
     a simple way of organizing citation resources with the help of semantic annotations.
   wikidata_id: Q21678464
@@ -210,6 +217,7 @@ extensions:
   url: https://www.semantic-mediawiki.org/wiki/Extension:Semantic_Result_Formats
   extension: SemanticResultFormats
   purpose: Additional result formats for Semantic MediaWiki queries
+  composer: '"mediawiki/semantic-result-formats": "~4.0.1"'
   wikidata_id: Q21678508
 - name: SimpleMathJax
   url: https://www.mediawiki.org/wiki/Extension:SimpleMathJax

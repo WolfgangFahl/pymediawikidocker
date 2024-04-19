@@ -25,6 +25,7 @@ class Extension:
     extension: Optional[str]=None;
     purpose: Optional[str]=None;
     giturl: Optional[str]=None;
+    composer: Optional[str]=None;
     wikidata_id: Optional[str]=None;
     since: Optional[str]=None;
     localSettings: Optional[str]=None;
@@ -78,8 +79,8 @@ a link to the page also shows up in their "Personal URLs", between "Talk" and "P
         delim = ""
         samples = self.getJsonTypeSamples()
         for attr in LOD.getFields(samples):
-            if hasattr(self, attr):
-                text += f"{delim}{attr}={self.__dict__[attr]}"
+            if hasattr(self, attr) and self.attr:
+                text += f"{delim}{attr}={self.attr}"
                 delim = "\n"
         return text
 
@@ -104,8 +105,8 @@ a link to the page also shows up in their "Personal URLs", between "Talk" and "P
         samples = self.getJsonTypeSamples()
         nameValues = ""
         for attr in LOD.getFields(samples):
-            if hasattr(self, attr):
-                nameValues += f"|{attr}={self.__dict__[attr]}\n"
+            if hasattr(self, attr) and self.attr:
+                nameValues += f"|{attr}={self.attr}\n"
         wikison = f"""{{{{Extension
 {nameValues}
 }}}}"""
@@ -122,11 +123,11 @@ a link to the page also shows up in their "Personal URLs", between "Talk" and "P
             entry for LocalSettings
         """
         localSettingsLine = f"wfLoadExtension( '{self.extension}' );"
-        if hasattr(self, "require_once_until"):
+        if self.require_once_until:
             if self.require_once_until >= mwShortVersion:
                 localSettingsLine = f'require_once "$IP/extensions/{self.extension}/{self.extension}.php";'
 
-        if hasattr(self, "localSettings"):
+        if self.localSettings:
             localSettingsLine += f"\n  {self.localSettings}"
         return localSettingsLine
 
@@ -137,7 +138,7 @@ a link to the page also shows up in their "Personal URLs", between "Talk" and "P
         Args:
             branch(str): the branch to clone
         """
-        if hasattr(self, "giturl"):
+        if self.giturl:
             if "//github.com/wikimedia/" in self.giturl:
                 # glone from the branch
                 return f"git clone {self.giturl} --single-branch --branch {branch} {self.extension}"
@@ -145,7 +146,7 @@ a link to the page also shows up in their "Personal URLs", between "Talk" and "P
                 return f"git clone {self.giturl} {self.extension}"
         else:
             text = "# no installation script command specified"
-            if hasattr(self, "composer"):
+            if self.composer:
                 text += f"\n# installed with composer require {self.composer}"
             return text
         
