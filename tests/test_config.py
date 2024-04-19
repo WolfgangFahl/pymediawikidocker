@@ -21,7 +21,7 @@ class TestConfig(Basetest):
         """
         mwClusterConfig = MwClusterConfig()
         expected = {
-            "version": "1.39.5",
+            "version": "1.39.7",
             "smw_version": None,
             "extensionNameList": [
                 "Admin Links",
