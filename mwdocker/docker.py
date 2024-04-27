@@ -644,6 +644,7 @@ class DockerApplication(object):
             "initdb.sh",
             "lang.sh",
             "phpinfo.php",
+            "install_djvu.sh",
             "plantuml.sh",
             "startRunJobs.sh",
             "upload.ini",
