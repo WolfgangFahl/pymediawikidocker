@@ -24,18 +24,20 @@ class TestExtensions(Basetest):
         extensionList = ExtensionList.restore()
         self.assertTrue(len(extensionList.extensions) >= 35)
         pass
-    
+
     def test_convert_to_yaml(self):
         extension_list = ExtensionList.restore()
-        yaml_str=extension_list.to_yaml()
+        yaml_str = extension_list.to_yaml()
         print(yaml_str)
 
     def testExtensionDetailsFromUrl(self):
         """
         test getting details of an extension
         """
-        ext = Extension(name = "UrlGetParameters",
-            url = "https://www.mediawiki.org/wiki/Extension:UrlGetParameters")
+        ext = Extension(
+            name="UrlGetParameters",
+            url="https://www.mediawiki.org/wiki/Extension:UrlGetParameters",
+        )
         debug = self.debug
         ext.getDetailsFromUrl(showHtml=debug)
         if debug:

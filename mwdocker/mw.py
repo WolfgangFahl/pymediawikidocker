@@ -3,16 +3,16 @@ Created on 2021-06-23
 
 @author: wf
 """
-from dataclasses import field
 import os
 import urllib
+from dataclasses import field
 from datetime import datetime
+from typing import List, Optional
 
-from lodstorage.yamlable import lod_storable
 from lodstorage.lod import LOD
+from lodstorage.yamlable import lod_storable
 
 from mwdocker.webscrape import WebScrape
-from typing import List, Optional
 
 
 @lod_storable
@@ -20,16 +20,17 @@ class Extension:
     """
     represents a MediaWiki extension
     """
-    name: str;
-    url: str;
-    extension: Optional[str]=None;
-    purpose: Optional[str]=None;
-    giturl: Optional[str]=None;
-    composer: Optional[str]=None;
-    wikidata_id: Optional[str]=None;
-    since: Optional[str]=None;
-    localSettings: Optional[str]=None;
-    require_once_until: Optional[str]=None;
+
+    name: str
+    url: str
+    extension: Optional[str] = None
+    purpose: Optional[str] = None
+    giturl: Optional[str] = None
+    composer: Optional[str] = None
+    wikidata_id: Optional[str] = None
+    since: Optional[str] = None
+    localSettings: Optional[str] = None
+    require_once_until: Optional[str] = None
 
     @classmethod
     def getSamples(cls):
@@ -61,7 +62,7 @@ a link to the page also shows up in their "Personal URLs", between "Talk" and "P
             debug(bool): if True show debugging information
         """
         ext = None
-        purpose=None
+        purpose = None
         extNameTag = exttr.find(attrs={"class": "mw-version-ext-name"})
         extPurposeTag = exttr.find(attrs={"class": "mw-version-ext-description"})
         if extNameTag:
@@ -70,7 +71,7 @@ a link to the page also shows up in their "Personal URLs", between "Talk" and "P
             url = extNameTag.get("href")
             if extPurposeTag and extPurposeTag.string:
                 purpose = extPurposeTag.string
-            ext = Extension(name=name,extension=extension,url=url,purpose=purpose)
+            ext = Extension(name=name, extension=extension, url=url, purpose=purpose)
             ext.getDetailsFromUrl(debug=debug)
         return ext
 
@@ -149,14 +150,16 @@ a link to the page also shows up in their "Personal URLs", between "Talk" and "P
             if self.composer:
                 text += f"\n# installed with composer require {self.composer}"
             return text
-        
+
+
 @lod_storable
 class ExtensionList:
     """
     represents a list of MediaWiki extensions
     """
-    extensions: List[Extension]=field(default_factory=list)
-    
+
+    extensions: List[Extension] = field(default_factory=list)
+
     @staticmethod
     def storeFilePrefix():
         """
@@ -205,13 +208,13 @@ class ExtensionList:
                 if ext:
                     extList.extensions.append(ext)
         return extList
-   
+
     @classmethod
-    def restore(cls)->"ExtensionList":
+    def restore(cls) -> "ExtensionList":
         """
         restore the extension list
         """
-        path=ExtensionList.storeFilePrefix()
-        yaml_file=f"{path}.yaml"
-        extlist=ExtensionList.load_from_yaml_file(yaml_file)
+        path = ExtensionList.storeFilePrefix()
+        yaml_file = f"{path}.yaml"
+        extlist = ExtensionList.load_from_yaml_file(yaml_file)
         return extlist

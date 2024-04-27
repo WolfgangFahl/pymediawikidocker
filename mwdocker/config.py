@@ -10,12 +10,12 @@ import re
 import secrets
 import socket
 from dataclasses import dataclass, field
-from lodstorage.lod import LOD
 from pathlib import Path
 from typing import List, Optional
 from urllib.parse import urlparse
 
 import dacite
+from lodstorage.lod import LOD
 
 from mwdocker.mw import ExtensionList
 
@@ -43,11 +43,13 @@ class Host:
             host = "localhost"  # host="127.0.0.1"
         return host
 
+
 @dataclass
 class MwConfig:
     """
     MediaWiki configuration for a Single Wiki
     """
+
     version: str = "1.39.7"
     smw_version: Optional[str] = None
     extensionNameList: Optional[List[str]] = field(
@@ -264,7 +266,7 @@ class MwConfig:
             extraExtensionList = ExtensionList.load_from_json_file(extensionJsonFile)
             for ext in extraExtensionList.extensions:
                 extensionList.extensions.append(ext)
-        self.extByName, duplicates = LOD.getLookup(extensionList.extensions,"name")
+        self.extByName, duplicates = LOD.getLookup(extensionList.extensions, "name")
         if len(duplicates) > 0:
             print(f"{len(duplicates)} duplicate extensions: ")
             for duplicate in duplicates:
