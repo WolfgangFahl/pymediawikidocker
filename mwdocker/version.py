@@ -26,7 +26,7 @@ class Version(object):
     chat_url = "https://github.com/WolfgangFahl/pymediawikidocker/discussions"
     doc_url = "https://wiki.bitplan.com/index.php/Pymediawikidocker"
 
-    license = f"""Copyright 2020-2023 contributors. All rights reserved.
+    license = f"""Copyright 2020-2024 contributors. All rights reserved.
   Licensed under the Apache License 2.0
   http://www.apache.org/licenses/LICENSE-2.0
   Distributed on an "AS IS" basis without warranties

@@ -65,12 +65,13 @@ COPY wiki.sql /tmp
 #    addSysopUser      - adds the sysop user to the mediawiki wiki sql database
 #    fixPermissions    - fixes the /var/www/html permissions to www-data.www-data
 #    initdb            - initializes the database
+#    install_djvu.sh   - install DjVu 
 #    installExtensions - installs all extensions
 #    lang              - script to add language icons
 #    update            - runs maintainance update.php with parameters to ignore warnings        
 #    startRunJobs      - start script for runjobs
 # scripts
-COPY addCronTabEntry.sh addSysopUser.sh fixPermissions.sh initdb.sh installExtensions.sh lang.sh plantuml.sh startRunJobs.sh update.sh   /root
+COPY addCronTabEntry.sh addSysopUser.sh fixPermissions.sh initdb.sh install_djvu.sh	installExtensions.sh lang.sh plantuml.sh startRunJobs.sh update.sh   /root
 
 # make the scripts executable
 RUN chmod +x /root/addCronTabEntry.sh  /root/addSysopUser.sh /root/fixPermissions.sh /root/initdb.sh /root/installExtensions.sh /root/lang.sh /root/plantuml.sh /root/startRunJobs.sh /root/update.sh 
