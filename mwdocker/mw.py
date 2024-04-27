@@ -123,7 +123,9 @@ a link to the page also shows up in their "Personal URLs", between "Talk" and "P
         Returns:
             entry for LocalSettings
         """
-        localSettingsLine = f"wfLoadExtension( '{self.extension}' );"
+        localSettingsLine=""
+        if self.extension:
+            localSettingsLine = f"wfLoadExtension( '{self.extension}' );"
         if self.require_once_until:
             if self.require_once_until >= mwShortVersion:
                 localSettingsLine = f'require_once "$IP/extensions/{self.extension}/{self.extension}.php";'
