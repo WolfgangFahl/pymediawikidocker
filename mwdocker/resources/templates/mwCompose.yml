@@ -41,7 +41,8 @@ services:
     # use the Dockerfile in this directory
     build: .
     
-    user: www-data
+    # non root config - commented due to follow-up issues 
+    # user: www-data
        
     restart: always
     
