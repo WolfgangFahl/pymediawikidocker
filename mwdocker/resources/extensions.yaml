@@ -75,7 +75,9 @@ extensions:
   composer: '"samwilson/diagrams": "~0.11.0"'
   wikidata_id: Q84791451
   since: '2019-12-12T00:00:00'
-- name: 
+- name: DjVu
+  url: https://www.mediawiki.org/wiki/Manual:How_to_use_DjVu_with_MediaWiki
+  purpose: Render DjVu graphics
   localSettings: |
     $wgFileExtensions[] = 'djvu';
     $wgDjvuDump = "djvudump";

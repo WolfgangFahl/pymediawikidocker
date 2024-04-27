@@ -54,6 +54,7 @@ class MwConfig:
         default_factory=lambda: [
             "Admin Links",
             "Header Tabs",
+            "ParserFunctions",
             "SyntaxHighlight",
             "Variables",
         ]
