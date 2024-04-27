@@ -26,6 +26,7 @@ class TestConfig(Basetest):
             "extensionNameList": [
                 "Admin Links",
                 "Header Tabs",
+                "ParserFunctions",
                 "SyntaxHighlight",
                 "Variables",
             ],
@@ -58,7 +59,7 @@ class TestConfig(Basetest):
 
         mwd = mwClusterConfig.as_dict()
         debug = self.debug
-        # debug=True
+        #debug=True
         if debug:
             print(mwd)
             print(json.dumps(mwd, indent=2))
