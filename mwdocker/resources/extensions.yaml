@@ -85,6 +85,9 @@ extensions:
     $wgDjvuTxt = "djvutxt";
     $wgDjvuPostProcessor = "pnmtojpeg";
     $wgDjvuOutputExtension = 'jpg';
+    $wgDjvuPostProcessor = "ppmtojpeg -quality=100";
+    $wgDjvuPostProcessor = "pnmtopng";
+    $wgDjvuOutputExtension = 'png';
 - name: Graph
   url: https://www.mediawiki.org/wiki/Extension:Graph
   extension: Graph
