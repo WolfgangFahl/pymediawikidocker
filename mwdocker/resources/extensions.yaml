@@ -75,6 +75,14 @@ extensions:
   composer: '"samwilson/diagrams": "~0.11.0"'
   wikidata_id: Q84791451
   since: '2019-12-12T00:00:00'
+- name: 
+  localSettings: |
+    $wgFileExtensions[] = 'djvu';
+    $wgDjvuDump = "djvudump";
+    $wgDjvuRenderer = "ddjvu";
+    $wgDjvuTxt = "djvutxt";
+    $wgDjvuPostProcessor = "pnmtojpeg";
+    $wgDjvuOutputExtension = 'jpg';
 - name: Graph
   url: https://www.mediawiki.org/wiki/Extension:Graph
   extension: Graph

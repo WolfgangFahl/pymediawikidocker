@@ -6,7 +6,6 @@
 #
 # Access via "http://localhost:{{port}}"
 #   (or "http://docker-machine ip:{{port}}" if using docker-machine)
-version: "3.8"
 
 # 2 services
 #   db - database
@@ -41,6 +40,8 @@ services:
     # image: mediawiki:{{mwVersion}}
     # use the Dockerfile in this directory
     build: .
+    
+    user: www-data
        
     restart: always
     
