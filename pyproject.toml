@@ -12,7 +12,7 @@ maintainers = [
   { name = "Wolfgang Fahl", email = "wf@bitplan.com" },
 ]
 readme = "README.md"
-license = {text = "Apache-2.0"} 
+license = {text = "Apache-2.0"}
 dependencies = [
 	#python-on-whales
 	'python-on-whales>=0.70.1',
@@ -66,9 +66,11 @@ test = [
 ]
 
 [tool.hatch.build.targets.wheel]
-packages = [
-  "mwdocker",
-]
+only-include = ["mwdocker"]
+
+[tool.hatch.build.targets.wheel.sources]
+"mwdocker" = "mwdocker"
+
 
 [project.scripts]
 mwcluster = "mwdocker.mwcluster:main"
