@@ -216,7 +216,7 @@ class TestInstall(Basetest):
             "--prefix",
             "smw4",
             "--version_list",
-            "1.39.7",
+            "1.39.8",
             "--smw_version",
             "4.1.3",
             "--base_port",
