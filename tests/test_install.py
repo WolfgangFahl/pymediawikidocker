@@ -230,7 +230,7 @@ class TestInstall(Basetest):
             ["MagicNoCache", "Data Transfer", "Page Forms", "Semantic Result Formats"]
         )
         apps = mwCluster.createApps(withGenerate=True)
-        app = apps["1.39.7"]
+        app = apps["1.39.8"]
         app.start(forceRebuild=True)
 
     def testInstallationWithRequireOnce(self):
@@ -311,7 +311,7 @@ class TestInstall(Basetest):
         for argv, expected in [
             (["-h"], "--user"),
             (["-V"], Version.updated),
-            (["--list"], "1.39.7"),
+            (["--list"], "1.39.8"),
         ]:
             try:
                 stdout = io.StringIO()
