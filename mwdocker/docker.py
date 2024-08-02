@@ -78,7 +78,7 @@ class DockerContainer:
         get the host port for the given local port
 
         Args:
-            local_port(int): the local port to get the mapping for
+            local_port (int): the local port to get the mapping for
 
         Returns:
             int: the  host port or None
@@ -144,7 +144,7 @@ class DockerApplication(object):
         check the docker environment
 
         Args:
-            debug(bool): if True show debug information
+            debug (bool): if True show debug information
 
         Returns:
             str: an error message or None
@@ -311,7 +311,7 @@ class DockerApplication(object):
         create my wikiUser and optionally save it
 
         Args:
-           store(bool): if True save my user data to the relevant ini File
+           store (bool): if True save my user data to the relevant ini File
         """
         if not wikiId:
             wikiId = f"{self.config.container_base_name}"
@@ -334,8 +334,8 @@ class DockerApplication(object):
         create or modify the WikiUser for this DockerApplication
 
         Args:
-            wikiId(str): the wikiId to create or modify a wiki user for
-            force_overwrite(bool): if True overwrite the wikiuser info
+            wikiId (str): the wikiId to create or modify a wiki user for
+            force_overwrite (bool): if True overwrite the wikiuser info
         """
         wikiUsers = WikiUser.getWikiUsers(lenient=True)
         if wikiId in wikiUsers and not force_overwrite:
@@ -403,7 +403,7 @@ class DockerApplication(object):
         connect to the database and return the connection
 
         Args:
-            timeout(int): number of seconds for timeout
+            timeout (int): number of seconds for timeout
 
         Returns:
             the connection
@@ -433,7 +433,7 @@ class DockerApplication(object):
         check the database connection of this application
 
         Args:
-            timeout(int): how many seconds to wait
+            timeout (int): how many seconds to wait
 
         Returns:
             DBStatus
@@ -457,9 +457,9 @@ class DockerApplication(object):
         check database connection with retries
 
         Args:
-            timeout(float): number of seconds for timeout
-            initialSleep(float): number of seconds to initially wait/sleep
-            maxTries(int): maximum number of retries before giving up between each try a sleep is done that starts
+            timeout (float): number of seconds for timeout
+            initialSleep (float): number of seconds to initially wait/sleep
+            maxTries (int): maximum number of retries before giving up between each try a sleep is done that starts
             with 0.5 secs and multiplies on every retry
 
         Returns:
@@ -500,15 +500,15 @@ class DockerApplication(object):
         optionally Write the modified content to the given targetPath
 
         Args:
-            targetPath(str): the path to write the content to
-            content(str): the content to write
-            overwrite(bool): if True overwrite the existing content
+            targetPath (str): the path to write the content to
+            content (str): the content to write
+            overwrite (bool): if True overwrite the existing content
         """
         if not overwrite and os.path.isfile(targetPath):
             if self.config.verbose:
                 print(f"{targetPath} already exists!")
             return
-        with open(targetPath, "w") as targetFile:
+        with open(targetPath, "w",newline="") as targetFile:
             targetFile.write(content)
 
     def generate(
@@ -518,9 +518,9 @@ class DockerApplication(object):
         generate file at targetPath using the given templateName
 
         Args:
-            templateName(str): the Jinja2 template to use
-            targetPath(str): the path to the target file
-            overwrite(bool): if True overwrite existing files
+            templateName (str): the Jinja2 template to use
+            targetPath (str): the path to the target file
+            overwrite (bool): if True overwrite existing files
             kwArgs(): generic keyword arguments to pass on to template rendering
         """
         try:
@@ -559,10 +559,10 @@ class DockerApplication(object):
         for i, require in enumerate(requires):
             delim = "" if i >= len(requires) - 1 else ",\n"
             requireList += f"{indent}{require}{delim}"
-        requireJson = f"""{{   
+        requireJson = f"""{{
   "require": {{
-{requireList} 
-  }} 
+{requireList}
+  }}
 }}"""
         return requireJson
 
@@ -571,7 +571,7 @@ class DockerApplication(object):
         gen the composer.local.json require file
 
         Args:
-            composerFilePath(str): the name of the file to generate
+            composerFilePath (str): the name of the file to generate
         """
         requireJson = self.getComposerRequire()
         self.optionalWrite(composerFilePath, requireJson, overwrite)
@@ -581,7 +581,7 @@ class DockerApplication(object):
         generate all files needed for the docker handling
 
         Args:
-            overwrite(bool): if True overwrite the existing files
+            overwrite (bool): if True overwrite the existing files
         """
         # then generate
         self.generate(
@@ -686,7 +686,7 @@ class DockerApplication(object):
         start this docker application
 
         Args:
-            forceRebuild(bool): if true stop and remove the existing containers
+            forceRebuild (bool): if true stop and remove the existing containers
         """
         DockerApplication.checkDockerEnvironment(self.config.debug)
         if self.config.verbose:
@@ -745,8 +745,8 @@ class DockerApplication(object):
         start my containers
 
         Args:
-            forceRebuild(bool): if True force rebuilding
-            withInitDB(bool): if True intialize my database
+            forceRebuild (bool): if True force rebuilding
+            withInitDB (bool): if True intialize my database
         """
         self.up(forceRebuild=forceRebuild)
         if withInitDB:
