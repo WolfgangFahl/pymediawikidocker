@@ -2606,7 +2606,7 @@ of the computer the server runs on</p>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">versions</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
-        <span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;1.35.13&quot;</span><span class="p">,</span> <span class="s2">&quot;1.38.6&quot;</span><span class="p">,</span> <span class="s2">&quot;1.39.7&quot;</span><span class="p">,</span> <span class="s2">&quot;1.40.3&quot;</span><span class="p">,</span> <span class="s2">&quot;1.41.1&quot;</span><span class="p">]</span>
+        <span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;1.35.13&quot;</span><span class="p">,</span> <span class="s2">&quot;1.38.6&quot;</span><span class="p">,</span> <span class="s2">&quot;1.39.8&quot;</span><span class="p">,</span> <span class="s2">&quot;1.40.4&quot;</span><span class="p">,</span> <span class="s2">&quot;1.41.2&quot;</span><span class="p">,</span><span class="s2">&quot;1.42.1&quot;</span><span class="p">]</span>
     <span class="p">)</span>
     <span class="n">base_port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">9080</span>
 
@@ -3163,7 +3163,7 @@ of the computer the server runs on</p>
 <span class="sd">    MediaWiki configuration for a Single Wiki</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">version</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;1.39.7&quot;</span>
+    <span class="n">version</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;1.39.8&quot;</span>
     <span class="n">smw_version</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">extensionNameList</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
         <span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="p">[</span>
@@ -5858,7 +5858,7 @@ use the config_path for the current configuration</p>
 <span class="sd">        check the docker environment</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            debug(bool): if True show debug information</span>
+<span class="sd">            debug (bool): if True show debug information</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            str: an error message or None</span>
@@ -6025,7 +6025,7 @@ use the config_path for the current configuration</p>
 <span class="sd">        create my wikiUser and optionally save it</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">           store(bool): if True save my user data to the relevant ini File</span>
+<span class="sd">           store (bool): if True save my user data to the relevant ini File</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">wikiId</span><span class="p">:</span>
             <span class="n">wikiId</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">container_base_name</span><span class="si">}</span><span class="s2">&quot;</span>
@@ -6048,8 +6048,8 @@ use the config_path for the current configuration</p>
 <span class="sd">        create or modify the WikiUser for this DockerApplication</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            wikiId(str): the wikiId to create or modify a wiki user for</span>
-<span class="sd">            force_overwrite(bool): if True overwrite the wikiuser info</span>
+<span class="sd">            wikiId (str): the wikiId to create or modify a wiki user for</span>
+<span class="sd">            force_overwrite (bool): if True overwrite the wikiuser info</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">wikiUsers</span> <span class="o">=</span> <span class="n">WikiUser</span><span class="o">.</span><span class="n">getWikiUsers</span><span class="p">(</span><span class="n">lenient</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">wikiId</span> <span class="ow">in</span> <span class="n">wikiUsers</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">force_overwrite</span><span class="p">:</span>
@@ -6117,7 +6117,7 @@ use the config_path for the current configuration</p>
 <span class="sd">        connect to the database and return the connection</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            timeout(int): number of seconds for timeout</span>
+<span class="sd">            timeout (int): number of seconds for timeout</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            the connection</span>
@@ -6147,7 +6147,7 @@ use the config_path for the current configuration</p>
 <span class="sd">        check the database connection of this application</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            timeout(int): how many seconds to wait</span>
+<span class="sd">            timeout (int): how many seconds to wait</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            DBStatus</span>
@@ -6171,9 +6171,9 @@ use the config_path for the current configuration</p>
 <span class="sd">        check database connection with retries</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            timeout(float): number of seconds for timeout</span>
-<span class="sd">            initialSleep(float): number of seconds to initially wait/sleep</span>
-<span class="sd">            maxTries(int): maximum number of retries before giving up between each try a sleep is done that starts</span>
+<span class="sd">            timeout (float): number of seconds for timeout</span>
+<span class="sd">            initialSleep (float): number of seconds to initially wait/sleep</span>
+<span class="sd">            maxTries (int): maximum number of retries before giving up between each try a sleep is done that starts</span>
 <span class="sd">            with 0.5 secs and multiplies on every retry</span>
 
 <span class="sd">        Returns:</span>
@@ -6214,15 +6214,15 @@ use the config_path for the current configuration</p>
 <span class="sd">        optionally Write the modified content to the given targetPath</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            targetPath(str): the path to write the content to</span>
-<span class="sd">            content(str): the content to write</span>
-<span class="sd">            overwrite(bool): if True overwrite the existing content</span>
+<span class="sd">            targetPath (str): the path to write the content to</span>
+<span class="sd">            content (str): the content to write</span>
+<span class="sd">            overwrite (bool): if True overwrite the existing content</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">overwrite</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">targetPath</span><span class="p">):</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">targetPath</span><span class="si">}</span><span class="s2"> already exists!&quot;</span><span class="p">)</span>
             <span class="k">return</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">targetPath</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">targetFile</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">targetPath</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span><span class="n">newline</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">targetFile</span><span class="p">:</span>
             <span class="n">targetFile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span>
@@ -6232,9 +6232,9 @@ use the config_path for the current configuration</p>
 <span class="sd">        generate file at targetPath using the given templateName</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            templateName(str): the Jinja2 template to use</span>
-<span class="sd">            targetPath(str): the path to the target file</span>
-<span class="sd">            overwrite(bool): if True overwrite existing files</span>
+<span class="sd">            templateName (str): the Jinja2 template to use</span>
+<span class="sd">            targetPath (str): the path to the target file</span>
+<span class="sd">            overwrite (bool): if True overwrite existing files</span>
 <span class="sd">            kwArgs(): generic keyword arguments to pass on to template rendering</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
@@ -6273,10 +6273,10 @@ use the config_path for the current configuration</p>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">require</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">requires</span><span class="p">):</span>
             <span class="n">delim</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">requires</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="k">else</span> <span class="s2">&quot;,</span><span class="se">\n</span><span class="s2">&quot;</span>
             <span class="n">requireList</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">indent</span><span class="si">}{</span><span class="n">require</span><span class="si">}{</span><span class="n">delim</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="n">requireJson</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span><span class="se">{{</span><span class="s2">   </span>
+        <span class="n">requireJson</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span><span class="se">{{</span>
 <span class="s2">  &quot;require&quot;: </span><span class="se">{{</span>
-<span class="si">{</span><span class="n">requireList</span><span class="si">}</span><span class="s2"> </span>
-<span class="s2">  </span><span class="se">}}</span><span class="s2"> </span>
+<span class="si">{</span><span class="n">requireList</span><span class="si">}</span>
+<span class="s2">  </span><span class="se">}}</span>
 <span class="se">}}</span><span class="s2">&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">requireJson</span>
 
@@ -6285,7 +6285,7 @@ use the config_path for the current configuration</p>
 <span class="sd">        gen the composer.local.json require file</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            composerFilePath(str): the name of the file to generate</span>
+<span class="sd">            composerFilePath (str): the name of the file to generate</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">requireJson</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getComposerRequire</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">optionalWrite</span><span class="p">(</span><span class="n">composerFilePath</span><span class="p">,</span> <span class="n">requireJson</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">)</span>
@@ -6295,7 +6295,7 @@ use the config_path for the current configuration</p>
 <span class="sd">        generate all files needed for the docker handling</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            overwrite(bool): if True overwrite the existing files</span>
+<span class="sd">            overwrite (bool): if True overwrite the existing files</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># then generate</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span>
@@ -6400,7 +6400,7 @@ use the config_path for the current configuration</p>
 <span class="sd">        start this docker application</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            forceRebuild(bool): if true stop and remove the existing containers</span>
+<span class="sd">            forceRebuild (bool): if true stop and remove the existing containers</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">DockerApplication</span><span class="o">.</span><span class="n">checkDockerEnvironment</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">debug</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
@@ -6459,8 +6459,8 @@ use the config_path for the current configuration</p>
 <span class="sd">        start my containers</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            forceRebuild(bool): if True force rebuilding</span>
-<span class="sd">            withInitDB(bool): if True intialize my database</span>
+<span class="sd">            forceRebuild (bool): if True force rebuilding</span>
+<span class="sd">            withInitDB (bool): if True intialize my database</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">up</span><span class="p">(</span><span class="n">forceRebuild</span><span class="o">=</span><span class="n">forceRebuild</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">withInitDB</span><span class="p">:</span>
@@ -6750,8 +6750,9 @@ use the config_path for the current configuration</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>timeout(float)</code></td>
+            <td><code>timeout</code></td>
             <td>
+                  <code>float</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -6759,12 +6760,13 @@ use the config_path for the current configuration</p>
               </div>
             </td>
             <td>
-                <em>required</em>
+                  <code>10</code>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>initialSleep(float)</code></td>
+            <td><code>initialSleep</code></td>
             <td>
+                  <code>float</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -6772,12 +6774,13 @@ use the config_path for the current configuration</p>
               </div>
             </td>
             <td>
-                <em>required</em>
+                  <code>4.0</code>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>maxTries(int)</code></td>
+            <td><code>maxTries</code></td>
             <td>
+                  <code>int</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -6785,7 +6788,7 @@ use the config_path for the current configuration</p>
               </div>
             </td>
             <td>
-                <em>required</em>
+                  <code>9</code>
             </td>
           </tr>
       </tbody>
@@ -6874,9 +6877,9 @@ use the config_path for the current configuration</p>
 <span class="sd">    check database connection with retries</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        timeout(float): number of seconds for timeout</span>
-<span class="sd">        initialSleep(float): number of seconds to initially wait/sleep</span>
-<span class="sd">        maxTries(int): maximum number of retries before giving up between each try a sleep is done that starts</span>
+<span class="sd">        timeout (float): number of seconds for timeout</span>
+<span class="sd">        initialSleep (float): number of seconds to initially wait/sleep</span>
+<span class="sd">        maxTries (int): maximum number of retries before giving up between each try a sleep is done that starts</span>
 <span class="sd">        with 0.5 secs and multiplies on every retry</span>
 
 <span class="sd">    Returns:</span>
@@ -6947,8 +6950,9 @@ use the config_path for the current configuration</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>debug(bool)</code></td>
+            <td><code>debug</code></td>
             <td>
+                  <code>bool</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -6956,7 +6960,7 @@ use the config_path for the current configuration</p>
               </div>
             </td>
             <td>
-                <em>required</em>
+                  <code>False</code>
             </td>
           </tr>
       </tbody>
@@ -7017,7 +7021,7 @@ use the config_path for the current configuration</p>
 <span class="sd">    check the docker environment</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        debug(bool): if True show debug information</span>
+<span class="sd">        debug (bool): if True show debug information</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        str: an error message or None</span>
@@ -7186,8 +7190,9 @@ use the config_path for the current configuration</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>wikiId(str)</code></td>
+            <td><code>wikiId</code></td>
             <td>
+                  <code>str</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -7199,8 +7204,9 @@ use the config_path for the current configuration</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>force_overwrite(bool)</code></td>
+            <td><code>force_overwrite</code></td>
             <td>
+                  <code>bool</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -7208,7 +7214,7 @@ use the config_path for the current configuration</p>
               </div>
             </td>
             <td>
-                <em>required</em>
+                  <code>False</code>
             </td>
           </tr>
       </tbody>
@@ -7239,8 +7245,8 @@ use the config_path for the current configuration</p>
 <span class="sd">    create or modify the WikiUser for this DockerApplication</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        wikiId(str): the wikiId to create or modify a wiki user for</span>
-<span class="sd">        force_overwrite(bool): if True overwrite the wikiuser info</span>
+<span class="sd">        wikiId (str): the wikiId to create or modify a wiki user for</span>
+<span class="sd">        force_overwrite (bool): if True overwrite the wikiuser info</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">wikiUsers</span> <span class="o">=</span> <span class="n">WikiUser</span><span class="o">.</span><span class="n">getWikiUsers</span><span class="p">(</span><span class="n">lenient</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">wikiId</span> <span class="ow">in</span> <span class="n">wikiUsers</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">force_overwrite</span><span class="p">:</span>
@@ -7285,8 +7291,9 @@ use the config_path for the current configuration</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>store(bool)</code></td>
+            <td><code>store</code></td>
             <td>
+                  <code>bool</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -7294,7 +7301,7 @@ use the config_path for the current configuration</p>
               </div>
             </td>
             <td>
-                <em>required</em>
+                  <code>False</code>
             </td>
           </tr>
       </tbody>
@@ -7328,7 +7335,7 @@ use the config_path for the current configuration</p>
 <span class="sd">    create my wikiUser and optionally save it</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">       store(bool): if True save my user data to the relevant ini File</span>
+<span class="sd">       store (bool): if True save my user data to the relevant ini File</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">wikiId</span><span class="p">:</span>
         <span class="n">wikiId</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">container_base_name</span><span class="si">}</span><span class="s2">&quot;</span>
@@ -7409,8 +7416,9 @@ use the config_path for the current configuration</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>timeout(int)</code></td>
+            <td><code>timeout</code></td>
             <td>
+                  <code>int</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -7418,7 +7426,7 @@ use the config_path for the current configuration</p>
               </div>
             </td>
             <td>
-                <em>required</em>
+                  <code>10</code>
             </td>
           </tr>
       </tbody>
@@ -7481,7 +7489,7 @@ use the config_path for the current configuration</p>
 <span class="sd">    connect to the database and return the connection</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        timeout(int): number of seconds for timeout</span>
+<span class="sd">        timeout (int): number of seconds for timeout</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        the connection</span>
@@ -7537,8 +7545,9 @@ use the config_path for the current configuration</p>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>timeout(int)</code></td>
+            <td><code>timeout</code></td>
             <td>
+                  <code>int</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -7546,7 +7555,7 @@ use the config_path for the current configuration</p>
               </div>
             </td>
             <td>
-                <em>required</em>
+                  <code>10</code>
             </td>
           </tr>
       </tbody>
@@ -7597,7 +7606,7 @@ use the config_path for the current configuration</p>
 <span class="sd">    check the database connection of this application</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        timeout(int): how many seconds to wait</span>
+<span class="sd">        timeout (int): how many seconds to wait</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        DBStatus</span>
@@ -7788,8 +7797,9 @@ and https://gabrieldemarmiesse.github.io/python-on-whales/sub-commands/compose/#
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>composerFilePath(str)</code></td>
+            <td><code>composerFilePath</code></td>
             <td>
+                  <code>str</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -7818,7 +7828,7 @@ and https://gabrieldemarmiesse.github.io/python-on-whales/sub-commands/compose/#
 <span class="sd">    gen the composer.local.json require file</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        composerFilePath(str): the name of the file to generate</span>
+<span class="sd">        composerFilePath (str): the name of the file to generate</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">requireJson</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getComposerRequire</span><span class="p">()</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">optionalWrite</span><span class="p">(</span><span class="n">composerFilePath</span><span class="p">,</span> <span class="n">requireJson</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">)</span>
@@ -7854,8 +7864,9 @@ and https://gabrieldemarmiesse.github.io/python-on-whales/sub-commands/compose/#
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>templateName(str)</code></td>
+            <td><code>templateName</code></td>
             <td>
+                  <code>str</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -7867,8 +7878,9 @@ and https://gabrieldemarmiesse.github.io/python-on-whales/sub-commands/compose/#
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>targetPath(str)</code></td>
+            <td><code>targetPath</code></td>
             <td>
+                  <code>str</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -7880,8 +7892,9 @@ and https://gabrieldemarmiesse.github.io/python-on-whales/sub-commands/compose/#
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>overwrite(bool)</code></td>
+            <td><code>overwrite</code></td>
             <td>
+                  <code>bool</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -7889,7 +7902,7 @@ and https://gabrieldemarmiesse.github.io/python-on-whales/sub-commands/compose/#
               </div>
             </td>
             <td>
-                <em>required</em>
+                  <code>False</code>
             </td>
           </tr>
           <tr class="doc-section-item">
@@ -7946,9 +7959,9 @@ and https://gabrieldemarmiesse.github.io/python-on-whales/sub-commands/compose/#
 <span class="sd">    generate file at targetPath using the given templateName</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        templateName(str): the Jinja2 template to use</span>
-<span class="sd">        targetPath(str): the path to the target file</span>
-<span class="sd">        overwrite(bool): if True overwrite existing files</span>
+<span class="sd">        templateName (str): the Jinja2 template to use</span>
+<span class="sd">        targetPath (str): the path to the target file</span>
+<span class="sd">        overwrite (bool): if True overwrite existing files</span>
 <span class="sd">        kwArgs(): generic keyword arguments to pass on to template rendering</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
@@ -8001,8 +8014,9 @@ and https://gabrieldemarmiesse.github.io/python-on-whales/sub-commands/compose/#
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>overwrite(bool)</code></td>
+            <td><code>overwrite</code></td>
             <td>
+                  <code>bool</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -8010,7 +8024,7 @@ and https://gabrieldemarmiesse.github.io/python-on-whales/sub-commands/compose/#
               </div>
             </td>
             <td>
-                <em>required</em>
+                  <code>False</code>
             </td>
           </tr>
       </tbody>
@@ -8105,7 +8119,7 @@ and https://gabrieldemarmiesse.github.io/python-on-whales/sub-commands/compose/#
 <span class="sd">    generate all files needed for the docker handling</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        overwrite(bool): if True overwrite the existing files</span>
+<span class="sd">        overwrite (bool): if True overwrite the existing files</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># then generate</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span>
@@ -8243,10 +8257,10 @@ and https://gabrieldemarmiesse.github.io/python-on-whales/sub-commands/compose/#
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">require</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">requires</span><span class="p">):</span>
             <span class="n">delim</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">requires</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="k">else</span> <span class="s2">&quot;,</span><span class="se">\n</span><span class="s2">&quot;</span>
             <span class="n">requireList</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">indent</span><span class="si">}{</span><span class="n">require</span><span class="si">}{</span><span class="n">delim</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="n">requireJson</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span><span class="se">{{</span><span class="s2">   </span>
+        <span class="n">requireJson</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span><span class="se">{{</span>
 <span class="s2">  &quot;require&quot;: </span><span class="se">{{</span>
-<span class="si">{</span><span class="n">requireList</span><span class="si">}</span><span class="s2"> </span>
-<span class="s2">  </span><span class="se">}}</span><span class="s2"> </span>
+<span class="si">{</span><span class="n">requireList</span><span class="si">}</span>
+<span class="s2">  </span><span class="se">}}</span>
 <span class="se">}}</span><span class="s2">&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">requireJson</span>
 </code></pre></div></td></tr></table></div>
@@ -8511,8 +8525,9 @@ and https://gabrieldemarmiesse.github.io/python-on-whales/sub-commands/compose/#
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>targetPath(str)</code></td>
+            <td><code>targetPath</code></td>
             <td>
+                  <code>str</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -8524,8 +8539,9 @@ and https://gabrieldemarmiesse.github.io/python-on-whales/sub-commands/compose/#
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>content(str)</code></td>
+            <td><code>content</code></td>
             <td>
+                  <code>str</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -8537,8 +8553,9 @@ and https://gabrieldemarmiesse.github.io/python-on-whales/sub-commands/compose/#
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>overwrite(bool)</code></td>
+            <td><code>overwrite</code></td>
             <td>
+                  <code>bool</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -8546,7 +8563,7 @@ and https://gabrieldemarmiesse.github.io/python-on-whales/sub-commands/compose/#
               </div>
             </td>
             <td>
-                <em>required</em>
+                  <code>False</code>
             </td>
           </tr>
       </tbody>
@@ -8573,15 +8590,15 @@ and https://gabrieldemarmiesse.github.io/python-on-whales/sub-commands/compose/#
 <span class="sd">    optionally Write the modified content to the given targetPath</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        targetPath(str): the path to write the content to</span>
-<span class="sd">        content(str): the content to write</span>
-<span class="sd">        overwrite(bool): if True overwrite the existing content</span>
+<span class="sd">        targetPath (str): the path to write the content to</span>
+<span class="sd">        content (str): the content to write</span>
+<span class="sd">        overwrite (bool): if True overwrite the existing content</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">overwrite</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">targetPath</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">targetPath</span><span class="si">}</span><span class="s2"> already exists!&quot;</span><span class="p">)</span>
         <span class="k">return</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">targetPath</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">targetFile</span><span class="p">:</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">targetPath</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span><span class="n">newline</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">targetFile</span><span class="p">:</span>
         <span class="n">targetFile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -8667,8 +8684,9 @@ and https://gabrieldemarmiesse.github.io/python-on-whales/sub-commands/compose/#
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>forceRebuild(bool)</code></td>
+            <td><code>forceRebuild</code></td>
             <td>
+                  <code>bool</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -8676,12 +8694,13 @@ and https://gabrieldemarmiesse.github.io/python-on-whales/sub-commands/compose/#
               </div>
             </td>
             <td>
-                <em>required</em>
+                  <code>False</code>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>withInitDB(bool)</code></td>
+            <td><code>withInitDB</code></td>
             <td>
+                  <code>bool</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -8689,7 +8708,7 @@ and https://gabrieldemarmiesse.github.io/python-on-whales/sub-commands/compose/#
               </div>
             </td>
             <td>
-                <em>required</em>
+                  <code>True</code>
             </td>
           </tr>
       </tbody>
@@ -8725,8 +8744,8 @@ and https://gabrieldemarmiesse.github.io/python-on-whales/sub-commands/compose/#
 <span class="sd">    start my containers</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        forceRebuild(bool): if True force rebuilding</span>
-<span class="sd">        withInitDB(bool): if True intialize my database</span>
+<span class="sd">        forceRebuild (bool): if True force rebuilding</span>
+<span class="sd">        withInitDB (bool): if True intialize my database</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">up</span><span class="p">(</span><span class="n">forceRebuild</span><span class="o">=</span><span class="n">forceRebuild</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">withInitDB</span><span class="p">:</span>
@@ -8816,8 +8835,9 @@ and https://gabrieldemarmiesse.github.io/python-on-whales/sub-commands/compose/#
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>forceRebuild(bool)</code></td>
+            <td><code>forceRebuild</code></td>
             <td>
+                  <code>bool</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -8825,7 +8845,7 @@ and https://gabrieldemarmiesse.github.io/python-on-whales/sub-commands/compose/#
               </div>
             </td>
             <td>
-                <em>required</em>
+                  <code>False</code>
             </td>
           </tr>
       </tbody>
@@ -8895,7 +8915,7 @@ and https://gabrieldemarmiesse.github.io/python-on-whales/sub-commands/compose/#
 <span class="sd">    start this docker application</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        forceRebuild(bool): if true stop and remove the existing containers</span>
+<span class="sd">        forceRebuild (bool): if true stop and remove the existing containers</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">DockerApplication</span><span class="o">.</span><span class="n">checkDockerEnvironment</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">debug</span><span class="p">)</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
@@ -9059,7 +9079,7 @@ and https://gabrieldemarmiesse.github.io/python-on-whales/sub-commands/compose/#
 <span class="sd">        get the host port for the given local port</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            local_port(int): the local port to get the mapping for</span>
+<span class="sd">            local_port (int): the local port to get the mapping for</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            int: the  host port or None</span>
@@ -9247,8 +9267,9 @@ and https://gabrieldemarmiesse.github.io/python-on-whales/sub-commands/compose/#
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>local_port(int)</code></td>
+            <td><code>local_port</code></td>
             <td>
+                  <code>int</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -9256,7 +9277,7 @@ and https://gabrieldemarmiesse.github.io/python-on-whales/sub-commands/compose/#
               </div>
             </td>
             <td>
-                <em>required</em>
+                  <code>80</code>
             </td>
           </tr>
       </tbody>
@@ -9308,7 +9329,7 @@ and https://gabrieldemarmiesse.github.io/python-on-whales/sub-commands/compose/#
 <span class="sd">    get the host port for the given local port</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        local_port(int): the local port to get the mapping for</span>
+<span class="sd">        local_port (int): the local port to get the mapping for</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        int: the  host port or None</span>
@@ -11668,7 +11689,8 @@ derived from Special:Version</p>
 <span class="normal">167</span>
 <span class="normal">168</span>
 <span class="normal">169</span>
-<span class="normal">170</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">MediaWikiCluster</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="normal">170</span>
+<span class="normal">171</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">MediaWikiCluster</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    a cluster of mediawiki docker Applications</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -11680,6 +11702,7 @@ derived from Special:Version</p>
     <span class="c1"># 2023-04-04 1.39.3 upgrade</span>
     <span class="c1"># 2023-10-04 1.39.5 upgrade</span>
     <span class="c1"># 2024-04-15 1.39.7 upgrade</span>
+    <span class="c1"># 2024-08-02 1.39.8 upgrade</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">MwClusterConfig</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -11880,15 +11903,15 @@ derived from Special:Version</p>
 
             <details class="quote">
               <summary>Source code in <code>mwdocker/mwcluster.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">30</span>
-<span class="normal">31</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">31</span>
 <span class="normal">32</span>
 <span class="normal">33</span>
 <span class="normal">34</span>
 <span class="normal">35</span>
 <span class="normal">36</span>
 <span class="normal">37</span>
-<span class="normal">38</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">MwClusterConfig</span><span class="p">):</span>
+<span class="normal">38</span>
+<span class="normal">39</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">MwClusterConfig</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constructor</span>
 
@@ -11941,8 +11964,7 @@ derived from Special:Version</p>
 
             <details class="quote">
               <summary>Source code in <code>mwdocker/mwcluster.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">120</span>
-<span class="normal">121</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">121</span>
 <span class="normal">122</span>
 <span class="normal">123</span>
 <span class="normal">124</span>
@@ -11957,7 +11979,8 @@ derived from Special:Version</p>
 <span class="normal">133</span>
 <span class="normal">134</span>
 <span class="normal">135</span>
-<span class="normal">136</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="normal">136</span>
+<span class="normal">137</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    check the composer applications</span>
 
@@ -12019,8 +12042,7 @@ derived from Special:Version</p>
 
             <details class="quote">
               <summary>Source code in <code>mwdocker/mwcluster.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">58</span>
-<span class="normal">59</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">59</span>
 <span class="normal">60</span>
 <span class="normal">61</span>
 <span class="normal">62</span>
@@ -12033,7 +12055,8 @@ derived from Special:Version</p>
 <span class="normal">69</span>
 <span class="normal">70</span>
 <span class="normal">71</span>
-<span class="normal">72</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">checkDocker</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="normal">72</span>
+<span class="normal">73</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">checkDocker</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    check the Docker environment</span>
 
@@ -12069,12 +12092,12 @@ derived from Special:Version</p>
 
             <details class="quote">
               <summary>Source code in <code>mwdocker/mwcluster.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">138</span>
-<span class="normal">139</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">139</span>
 <span class="normal">140</span>
 <span class="normal">141</span>
 <span class="normal">142</span>
-<span class="normal">143</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="normal">143</span>
+<span class="normal">144</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    close my apps</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -12152,8 +12175,7 @@ derived from Special:Version</p>
 
             <details class="quote">
               <summary>Source code in <code>mwdocker/mwcluster.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">40</span>
-<span class="normal">41</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">41</span>
 <span class="normal">42</span>
 <span class="normal">43</span>
 <span class="normal">44</span>
@@ -12168,7 +12190,8 @@ derived from Special:Version</p>
 <span class="normal">53</span>
 <span class="normal">54</span>
 <span class="normal">55</span>
-<span class="normal">56</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">createApps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">withGenerate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="normal">56</span>
+<span class="normal">57</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">createApps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">withGenerate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    create my apps</span>
 
@@ -12206,16 +12229,16 @@ derived from Special:Version</p>
 
             <details class="quote">
               <summary>Source code in <code>mwdocker/mwcluster.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">90</span>
-<span class="normal">91</span>
-<span class="normal">92</span>
-<span class="normal">93</span>
-<span class="normal">94</span>
-<span class="normal">95</span>
-<span class="normal">96</span>
-<span class="normal">97</span>
-<span class="normal">98</span>
-<span class="normal">99</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">down</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">forceRebuild</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">down</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">forceRebuild</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    run docker compose down</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -12322,8 +12345,7 @@ derived from Special:Version</p>
 
             <details class="quote">
               <summary>Source code in <code>mwdocker/mwcluster.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">145</span>
-<span class="normal">146</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">146</span>
 <span class="normal">147</span>
 <span class="normal">148</span>
 <span class="normal">149</span>
@@ -12347,7 +12369,8 @@ derived from Special:Version</p>
 <span class="normal">167</span>
 <span class="normal">168</span>
 <span class="normal">169</span>
-<span class="normal">170</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">getDockerApplication</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">count</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">version</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="normal">170</span>
+<span class="normal">171</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">getDockerApplication</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">count</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">version</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    get the docker application for the given version index and version</span>
 
@@ -12417,8 +12440,7 @@ derived from Special:Version</p>
 
             <details class="quote">
               <summary>Source code in <code>mwdocker/mwcluster.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">101</span>
-<span class="normal">102</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">102</span>
 <span class="normal">103</span>
 <span class="normal">104</span>
 <span class="normal">105</span>
@@ -12434,7 +12456,8 @@ derived from Special:Version</p>
 <span class="normal">115</span>
 <span class="normal">116</span>
 <span class="normal">117</span>
-<span class="normal">118</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">listWikis</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="normal">118</span>
+<span class="normal">119</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">listWikis</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    list my wikis</span>
 
@@ -12496,8 +12519,7 @@ derived from Special:Version</p>
 
             <details class="quote">
               <summary>Source code in <code>mwdocker/mwcluster.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">74</span>
-<span class="normal">75</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">75</span>
 <span class="normal">76</span>
 <span class="normal">77</span>
 <span class="normal">78</span>
@@ -12510,7 +12532,8 @@ derived from Special:Version</p>
 <span class="normal">85</span>
 <span class="normal">86</span>
 <span class="normal">87</span>
-<span class="normal">88</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">forceRebuild</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">withInitDB</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="normal">88</span>
+<span class="normal">89</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">forceRebuild</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">withInitDB</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    create and start the composer applications</span>
 
@@ -12555,8 +12578,7 @@ derived from Special:Version</p>
 
             <details class="quote">
               <summary>Source code in <code>mwdocker/mwcluster.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">176</span>
-<span class="normal">177</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">177</span>
 <span class="normal">178</span>
 <span class="normal">179</span>
 <span class="normal">180</span>
@@ -12642,7 +12664,8 @@ derived from Special:Version</p>
 <span class="normal">260</span>
 <span class="normal">261</span>
 <span class="normal">262</span>
-<span class="normal">263</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">argv</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>  <span class="c1"># IGNORE:C0111</span>
+<span class="normal">263</span>
+<span class="normal">264</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">argv</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>  <span class="c1"># IGNORE:C0111</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;main program.&quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="n">argv</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
