@@ -6,16 +6,19 @@ Created on 2021-06-23
 from mwdocker.config import MwClusterConfig
 from mwdocker.mw import Extension, ExtensionList
 from tests.basetest import Basetest
-
+import tempfile
+import json
+import os
+import io
+from contextlib import redirect_stdout
 
 class TestExtensions(Basetest):
     """
     test the extension handling
     """
 
-    def setUp(self):
-        Basetest.setUp(self)
-        pass
+    def setUp(self, debug=True, profile=True):
+        Basetest.setUp(self, debug=debug, profile=profile)
 
     def testReadExtensions(self):
         """
@@ -26,9 +29,14 @@ class TestExtensions(Basetest):
         pass
 
     def test_convert_to_yaml(self):
+        """
+        test extension list conversion to yaml
+        """
         extension_list = ExtensionList.restore()
         yaml_str = extension_list.to_yaml()
-        print(yaml_str)
+        if self.debug:
+            print(yaml_str)
+        self.assertTrue("- name: Page Forms" in yaml_str)
 
     def testExtensionDetailsFromUrl(self):
         """
@@ -115,3 +123,42 @@ class TestExtensions(Basetest):
                 for ext in extList.extensions:
                     print(ext.asWikiMarkup())
                 print(extList.toJSON())
+
+    def test_duplicate_extensions(self):
+        """
+        Test the handling of duplicate extensions when
+        loading from both default and custom JSON files
+        """
+        extension_dict={
+            "extensions": [
+                {
+                    "name": "Flex Diagrams",
+                    "extension": "FlexDiagrams",
+                    "giturl": "https://gerrit.wikimedia.org/r/mediawiki/extensions/FlexDiagrams.git",
+                    "url": "https://www.mediawiki.org/wiki/Extension:Flex_Diagrams"
+                },
+                {
+                    "name": "Page Forms",
+                    "extension": "PageForms",
+                    "url": "https://www.mediawiki.org/wiki/Extension:Page_Forms",
+                    "composer": "\"mediawiki/page-forms\": \"^5.8\""
+                }
+            ]
+        }
+        temp_json = tempfile.NamedTemporaryFile(mode='w+', delete=False, suffix='.json')
+        json.dump(extension_dict,temp_json)
+        temp_json.close()
+
+        config = MwClusterConfig()
+        stdout = io.StringIO()
+        with redirect_stdout(stdout):
+            ext_map=config.getExtensionMap(["Page Forms","Flex Diagrams"], temp_json.name)
+        log_msg=stdout.getvalue()
+        debug=True
+        if debug:
+            print(ext_map)
+        os.unlink(temp_json.name)
+        self.assertEqual(2,len(ext_map))
+        self.assertTrue("5.8" in ext_map["Page Forms"].composer)
+        self.assertTrue("overriding Page Forms" in log_msg)
+

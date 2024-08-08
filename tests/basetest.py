@@ -5,8 +5,9 @@ Created on 2021-08-19
 """
 import getpass
 import time
+import io
 from unittest import TestCase
-
+from contextlib import redirect_stdout
 
 class Basetest(TestCase):
     """
@@ -32,7 +33,6 @@ class Basetest(TestCase):
         are we running in a public Continuous Integration Environment?
         """
         return getpass.getuser() in ["travis", "runner"]
-
 
 class Profiler:
     """

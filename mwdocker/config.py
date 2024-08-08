@@ -251,26 +251,29 @@ class MwConfig:
         return wikiId
 
     def getExtensionMap(
-        self, extensionNameList: list = None, extensionJsonFile: str = None
+        self, extensionNameList: list = None,
+         extensionJsonFile: str = None
     ):
         """
         get map of extensions to handle
 
         Args:
-            extensionNameList(list): a list of extension names
-            extensionJsonFile(str): the name of an extra extensionJsonFile (if any)
+            extensionNameList (list): a list of extension names
+            extensionJsonFile (str): the name of an extra extensionJsonFile (if any)
         """
         self.extensionMap = {}
         extensionList = ExtensionList.restore()
-        if extensionJsonFile is not None:
-            extraExtensionList = ExtensionList.load_from_json_file(extensionJsonFile)
-            for ext in extraExtensionList.extensions:
-                extensionList.extensions.append(ext)
         self.extByName, duplicates = LOD.getLookup(extensionList.extensions, "name")
         if len(duplicates) > 0:
             print(f"{len(duplicates)} duplicate extensions: ")
             for duplicate in duplicates:
                 print(duplicate.name)
+        if extensionJsonFile is not None:
+            extraExtensionList = ExtensionList.load_from_json_file(extensionJsonFile)
+            for ext in extraExtensionList.extensions:
+                if ext.name in self.extByName:
+                    print(f"overriding {ext.name} extension definition")
+                self.extByName[ext.name]=ext
         if extensionNameList is not None:
             self.addExtensions(extensionNameList)
         return self.extensionMap

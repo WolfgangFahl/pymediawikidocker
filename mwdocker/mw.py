@@ -78,10 +78,10 @@ a link to the page also shows up in their "Personal URLs", between "Talk" and "P
     def __str__(self):
         text = ""
         delim = ""
-        samples = self.getJsonTypeSamples()
+        samples = self.getSamples()
         for attr in LOD.getFields(samples):
-            if hasattr(self, attr) and self.attr:
-                text += f"{delim}{attr}={self.attr}"
+            if hasattr(self, attr) and getattr(self,attr):
+                text += f"{delim}{attr}={getattr(self,attr)}"
                 delim = "\n"
         return text
 
@@ -106,8 +106,8 @@ a link to the page also shows up in their "Personal URLs", between "Talk" and "P
         samples = self.getJsonTypeSamples()
         nameValues = ""
         for attr in LOD.getFields(samples):
-            if hasattr(self, attr) and self.attr:
-                nameValues += f"|{attr}={self.attr}\n"
+            if hasattr(self, attr) and getattr(self,attr):
+                nameValues += f"|{attr}={getattr(self,attr)}\n"
         wikison = f"""{{{{Extension
 {nameValues}
 }}}}"""
