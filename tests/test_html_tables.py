@@ -21,12 +21,8 @@ class TestHtmlTables(Basetest):
         tables = html_table.get_tables("h2")
         pp = pprint.PrettyPrinter(indent=2)
         debug = self.debug
-        # debug=True
+        #debug=True
         if debug:
             pp.pprint(tables)
+        self.assertTrue("Installed extensions" in tables)
         pass
-
-
-if __name__ == "__main__":
-    # import sys;sys.argv = ['', 'Test.testName']
-    unittest.main()

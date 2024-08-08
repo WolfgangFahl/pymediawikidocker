@@ -165,7 +165,7 @@ class TestInstall(Basetest):
         """
         mwCluster, apps = self.newClusterApps()
         debug = self.debug
-        debug = True
+        #debug = True
         for mwApp in apps:
             config_json = mwApp.config.as_json()
             if debug:
