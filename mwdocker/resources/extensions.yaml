@@ -1,7 +1,7 @@
 #
 # Default extension list for pymediawiki docker
 # https://github.com/WolfgangFahl/pymediawikidocker
-# WF 2024-04-19 
+# WF 2024-04-19
 #
 extensions:
 - name: Admin Links
@@ -30,6 +30,16 @@ extensions:
   purpose: Storage and querying of template data
   giturl: https://github.com/wikimedia/mediawiki-extensions-Cargo
   wikidata_id: Q21676223
+- name: Cite
+  url: https://www.mediawiki.org/wiki/Extension:Cite
+  extension: Cite
+  purpose: Allows footnotes for citing sources and helps for correctly citing content in offline media
+  giturl: https://github.com/wikimedia/mediawiki-extensions-Cite
+  wikidata_id: Q21676449
+  localSettings: |
+    $wgCiteBookReferencing = false;
+    $wgCiteResponsiveReferences = true;
+    $wgCiteVisualEditorOtherGroup = false;
 - name: CategoryTree
   url: https://www.mediawiki.org/wiki/Extension:CategoryTree
   extension: CategoryTree
@@ -303,14 +313,14 @@ extensions:
   localSettings: |
     // see https://phabricator.wikimedia.org/T250963
     global $wgVersion; // Make sure to declare it global if you are inside a function or method
-    
+
     if (version_compare($wgVersion, '1.35', '>=')) {
         class CustomMWDebug extends MWDebug {
             public static function addDeprecationFilter($pattern, $callback = null) {
                 self::$deprecationFilters[$pattern] = $callback;
             }
         }
-    
+
         // Call to add a deprecation filter
         CustomMWDebug::addDeprecationFilter('/Use of InternalParseBeforeSanitize hook/');
     }
