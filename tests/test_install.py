@@ -299,7 +299,9 @@ class TestInstall(Basetest):
         mwCluster = self.getMwCluster()
         for mwApp in mwCluster.apps.values():
             wikiUser = mwApp.createWikiUser(store=False)
-            if self.debug:
+            debug=self.debug
+            debug=True
+            if debug:
                 print(wikiUser)
             self.assertEqual(wikiUser.wikiId, mwApp.config.container_base_name)
             pass
