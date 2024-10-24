@@ -25,26 +25,7 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 $wgSitename = "wiki";
 $wgMetaNamespace = "Wiki";
 
-## The URL base path to the directory containing the wiki;
-## defaults for all runtime URL paths are based off of this.
-## For more information on customizing the URLs
-## (like /w/index.php/Page_title to /wiki/Page_title) please see:
-## https://www.mediawiki.org/wiki/Manual:Short_URL
-$wgScriptPath = "{{ config.script_path }}";
-
-{% if config.article_path %}
-## Set wgArticlePath if config.article_path is provided
-$wgArticlePath = "{{ config.article_path }}";
-
-## The protocol and server name to use in fully-qualified URLs (without port)
-$wgServer = "http://{{hostname}}";
-{% else %}
-## The protocol and server name to use in fully-qualified URLs (with port)
-$wgServer = "http://{{hostname}}:{{port}}";
-{% endif %}
-
-## The URL path to static resources (images, scripts, etc.)
-$wgResourceBasePath = $wgScriptPath;
+{% include 'mwLocalSettings_path.php' %}
 
 ## The URL path to the logo.  Make sure you change this from the default,
 ## or else you'll overwrite your logo when you upgrade!
