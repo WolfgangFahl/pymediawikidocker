@@ -128,7 +128,10 @@ class MwConfig:
             self.full_url = url
         else:
             self.base_url = f"{self.prot}://{self.host}"
-            self.full_url = f"{self.base_url}{self.script_path}:{self.port}"
+
+            self.full_url = f"{self.base_url}{self.script_path}"
+            if self.article_path is None:
+                self.full_url+=f":{self.port}"
 
     def reset_container_base_name(self, container_base_name: str = None):
         """
