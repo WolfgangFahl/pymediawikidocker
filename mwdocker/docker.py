@@ -533,6 +533,7 @@ class DockerApplication(object):
                 sql_port=self.config.sql_port,
                 smw_version=self.config.smw_version,
                 timestamp=timestamp,
+                config=self.config,
                 **kwArgs,
             )
             self.optionalWrite(targetPath, content, overwrite)

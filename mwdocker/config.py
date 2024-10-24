@@ -77,6 +77,7 @@ class MwConfig:
     full_url = None
     prot: str = "http"
     host: str = Host.get_default_host()
+    article_path: str = None
     script_path: str = ""
     container_base_name: str = None
     networkName: str = "mwNetwork"
@@ -296,6 +297,7 @@ class MwConfig:
             args(Namespace): the command line arguments
         """
         self.prefix = args.prefix
+        self.article_path = args.article_path
         self.container_base_name = args.container_name
         self.docker_path = args.docker_path
         self.extensionNameList = args.extensionNameList
@@ -329,6 +331,11 @@ class MwConfig:
         """
         add Arguments to the given parser
         """
+        parser.add_argument(
+            "--article_path",
+            default=self.article_path,
+            help="change to any article_path you might need to set [default: %(default)s]",
+        )
         parser.add_argument(
             "-cn",
             "--container_name",
