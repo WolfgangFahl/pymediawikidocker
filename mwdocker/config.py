@@ -77,7 +77,7 @@ class MwConfig:
     full_url = None
     prot: str = "http"
     host: str = Host.get_default_host()
-    article_path: str = None
+    article_path: Optional[str] = None
     script_path: str = ""
     container_base_name: str = None
     networkName: str = "mwNetwork"
