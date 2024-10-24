@@ -219,7 +219,7 @@ class MwConfig:
         Returns:
             str: the short version string
         """
-        versionMatch = re.match("(?P<major>[0-9]+)\.(?P<minor>[0-9]+)", self.version)
+        versionMatch = re.match(r"(?P<major>[0-9]+)\.(?P<minor>[0-9]+)", self.version)
         shortVersion = (
             f"{versionMatch.group('major')}{separator}{versionMatch.group('minor')}"
         )

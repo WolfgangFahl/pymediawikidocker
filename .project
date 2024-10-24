@@ -3,6 +3,7 @@
 	<name>pymediawikidocker</name>
 	<comment></comment>
 	<projects>
+		<project>py-3rdparty-mediawiki</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
