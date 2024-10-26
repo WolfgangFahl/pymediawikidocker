@@ -190,7 +190,7 @@ class DockerApplication(object):
                 # fix url to local port
                 # @TODO isn't this superfluous / has no effect ...?
                 url = url.replace(str(self.config.port), host_port)
-                version_url = f"{url}/index.php/Special:Version"
+                version_url = f"{url}/index.php?title=Special:Version"
 
                 ok = self.checkWiki(version_url)
                 if not ok:
