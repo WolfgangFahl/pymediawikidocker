@@ -167,7 +167,14 @@ extensions:
   extension: Maps
   purpose: Enables embedding of dynamic maps into wiki pages, geocoding of addresses
     and other geographical operations
-  composer: '"mediawiki/maps": "~9.0.5"'
+  composer: '"mediawiki/maps": "~9.0.7"'
+  wikidata_id: Q21677553
+- name: Maps10
+  url: https://github.com/JeroenDeDauw/Maps/blob/master/README.md#maps
+  extension: Maps
+  purpose: Enables embedding of dynamic maps into wiki pages, geocoding of addresses
+    and other geographical operations
+  composer: '"mediawiki/maps": "~10.2.0"'
   wikidata_id: Q21677553
 - name: Mermaid
   url: https://github.com/SemanticMediaWiki/Mermaid
