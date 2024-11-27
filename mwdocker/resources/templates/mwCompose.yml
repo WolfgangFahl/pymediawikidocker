@@ -21,6 +21,12 @@ services:
     restart: always
     
     environment:
+      # collation handling
+      # beware this is ugly!!!
+      # MYSQL_COLLATION: utf8mb4_unicode_ci
+      # MARIADB_COLLATION_SERVER: utf8mb4_unicode_ci
+      # MARIADB_CHARACTER_SET_SERVER: utf8mb4
+      
       MYSQL_DATABASE: wiki
       MYSQL_USER: wikiuser
       MYSQL_PASSWORD: "{{mySQLPassword}}"

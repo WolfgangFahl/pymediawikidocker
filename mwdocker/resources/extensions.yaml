@@ -229,6 +229,13 @@ extensions:
   purpose: Provides a special page to allow administrators to do a global string find-and-replace
     on all the content pages of a wiki
   wikidata_id: Q21678303
+- name: Scribunto
+  extension: Scribunto
+  wikidata_id: Q66562448
+  url: https://www.mediawiki.org/wiki/Extension:Scribunto/de
+  purpose: |
+      localSettings: |
+        $wgScribuntoDefaultEngine = 'luastandalone';
 - name: Semantic Cite
   url: https://github.com/SemanticMediaWiki/SemanticCite/
   extension: SemanticCite
@@ -324,6 +331,13 @@ extensions:
         // Call to add a deprecation filter
         CustomMWDebug::addDeprecationFilter('/Use of InternalParseBeforeSanitize hook/');
     }
+- name: VisualData
+  wikidata_id: Q124334208
+  url: https://www.mediawiki.org/wiki/Extension:VisualData
+  extension: VisualData
+  purpose: |
+    VisualData is a full-fledged metadata management framework based on
+    json-schema able to easily record, organize and query collection of data on your wiki.'
 - name: YouTube
   url: https://www.mediawiki.org/wiki/Extension:YouTube
   extension: YouTube
