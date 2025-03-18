@@ -14,7 +14,7 @@ class Version(object):
     name = "pymediawikidocker"
     version = mwdocker.__version__
     date = "2021-06-21"
-    updated = "2024-11-27"
+    updated = "2025-03-18"
 
     authors = "Wolfgang Fahl, Tim Holzheim"
 
@@ -26,7 +26,7 @@ class Version(object):
     chat_url = "https://github.com/WolfgangFahl/pymediawikidocker/discussions"
     doc_url = "https://wiki.bitplan.com/index.php/Pymediawikidocker"
 
-    license = f"""Copyright 2020-2024 contributors. All rights reserved.
+    license = f"""Copyright 2020-2025 contributors. All rights reserved.
   Licensed under the Apache License 2.0
   http://www.apache.org/licenses/LICENSE-2.0
   Distributed on an "AS IS" basis without warranties

@@ -52,6 +52,11 @@ services:
        
     restart: always
     
+    # avoid maria db docker quirks with inconsistent 
+    # and inexplainable auth behavior - just stick to proven
+    # simple ways of doing auth via username password
+    command: --default-authentication-plugin=mysql_native_password
+    
     ports:
       - {{port}}:80
     

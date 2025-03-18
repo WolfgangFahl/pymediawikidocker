@@ -28,6 +28,7 @@ class MediaWikiCluster(object):
     # 2024-04-15 1.39.7 upgrade
     # 2024-08-02 1.39.8 upgrade
     # 2024-10-11 1.39.10 upgrade
+    # 2025-03-18 1.39.11 upgrade 1.43.0 addition
 
     def __init__(self, config: MwClusterConfig):
         """

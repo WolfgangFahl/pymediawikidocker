@@ -540,7 +540,7 @@ class DockerApplication(object):
 
         except TemplateNotFound:
             print(
-                f"no template {templateName} for {self.config.name} {self.config.version}"
+                f"no template {templateName} for {self.config.version}"
             )
 
     def getComposerRequire(self):

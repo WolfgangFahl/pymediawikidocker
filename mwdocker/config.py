@@ -50,7 +50,7 @@ class MwConfig:
     MediaWiki configuration for a Single Wiki
     """
 
-    version: str = "1.39.10"
+    version: str = "1.39.11"
     smw_version: Optional[str] = None
     extensionNameList: Optional[List[str]] = field(
         default_factory=lambda: [
@@ -486,7 +486,13 @@ class MwClusterConfig(MwConfig):
     """
 
     versions: Optional[List[str]] = field(
-        default_factory=lambda: ["1.35.13", "1.38.6", "1.39.10", "1.40.4", "1.41.4","1.42.3"]
+        default_factory=lambda: [
+            "1.35.13",
+            "1.38.6",
+            "1.39.11",
+            "1.42.5",
+            "1.43.0"
+        ]
     )
     base_port: int = 9080
 
