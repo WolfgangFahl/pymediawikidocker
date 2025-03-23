@@ -160,7 +160,7 @@ extensions:
   extension: Maps
   purpose: Enables embedding of dynamic maps into wiki pages, geocoding of addresses
     and other geographical operations
-  composer: '"mediawiki/maps": "~7.0"'
+  composer: '"mediawiki/maps": "~7.20.1"'
   wikidata_id: Q21677553
 - name: Maps9
   url: https://github.com/JeroenDeDauw/Maps/blob/master/README.md#maps
@@ -174,14 +174,21 @@ extensions:
   extension: Maps
   purpose: Enables embedding of dynamic maps into wiki pages, geocoding of addresses
     and other geographical operations
-  composer: '"mediawiki/maps": "~10.2.0"'
+  composer: '"mediawiki/maps": "~10.3.0"'
+  wikidata_id: Q21677553
+- name: Maps12
+  url: https://github.com/JeroenDeDauw/Maps/blob/master/README.md#maps
+  extension: Maps
+  purpose: Enables embedding of dynamic maps into wiki pages, geocoding of addresses
+    and other geographical operations
+  composer: '"mediawiki/maps": "~12.0.0"'
   wikidata_id: Q21677553
 - name: Mermaid
   url: https://github.com/SemanticMediaWiki/Mermaid
   extension: Mermaid
   purpose: 'This extension provides the #mermaid parser function to support the generation
     of diagrams and flowcharts with the help of the mermaid script language.'
-  composer: '"mediawiki/mermaid": "~3.0"'
+  composer: '"mediawiki/mermaid": "~3.1.0"'
   wikidata_id: Q47005306
   since: '2017-12-30T00:00:00'
 - name: MsUpload
@@ -254,7 +261,7 @@ extensions:
   url: https://www.semantic-mediawiki.org/wiki/Extension:Semantic_Result_Formats
   extension: SemanticResultFormats
   purpose: Additional result formats for Semantic MediaWiki queries
-  composer: '"mediawiki/semantic-result-formats": "~4.0.1"'
+  composer: '"mediawiki/semantic-result-formats": "~4.2.1"'
   wikidata_id: Q21678508
 - name: SimpleMathJax
   url: https://www.mediawiki.org/wiki/Extension:SimpleMathJax
