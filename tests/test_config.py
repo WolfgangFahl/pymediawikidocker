@@ -21,7 +21,7 @@ class TestConfig(Basetest):
         """
         mwClusterConfig = MwClusterConfig()
         expected = {
-            "version": "1.39.11",
+            "version": "1.39.12",
             "smw_version": None,
             "extensionNameList": [
                 "Admin Links",
@@ -53,7 +53,7 @@ class TestConfig(Basetest):
             "debug": False,
             "verbose": True,
             "wikiId": None,
-            "versions": ["1.35.13", "1.38.6", "1.39.11", "1.42.5","1.43.0"],
+            "versions": ["1.35.13", "1.38.6", "1.39.12", "1.42.6","1.43.1"],
             "base_port": 9080,
             "docker_path": mwClusterConfig.docker_path,
         }
