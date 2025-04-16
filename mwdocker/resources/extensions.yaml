@@ -372,3 +372,61 @@ extensions:
     video, and Tangler forum
   giturl: https://github.com/wikimedia/mediawiki-extensions-YouTube
   wikidata_id: Q21679376
+- name: CiteThisPage
+  url: https://www.mediawiki.org/wiki/Extension:CiteThisPage
+  extension: CiteThisPage
+  purpose: |
+    Provides a special page for citing wiki pages in different formats
+  giturl: https://github.com/wikimedia/mediawiki-extensions-CiteThisPage
+  wikidata_id: Q21676453
+- name: Interwiki
+  url: https://www.mediawiki.org/wiki/Extension:Interwiki
+  extension: Interwiki
+  purpose: |
+    Adds a special page to view and edit the interwiki table
+  giturl: https://github.com/wikimedia/mediawiki-extensions-Interwiki
+  wikidata_id: Q21677398
+- name: VisualEditor
+  url: https://www.mediawiki.org/wiki/Extension:VisualEditor
+  extension: VisualEditor
+  purpose: |
+    Provides a WYSIWYG visual editor for MediaWiki pages
+  giturl: https://github.com/wikimedia/mediawiki-extensions-VisualEditor
+  wikidata_id: Q21679100
+- name: CSS
+  url: https://www.mediawiki.org/wiki/Extension:CSS
+  extension: CSS
+  purpose: |
+    Adds the CSS parser function to include CSS in specific pages
+  giturl: https://github.com/wikimedia/mediawiki-extensions-CSS
+  wikidata_id: Q21676145
+- name: Lockdown
+  url: https://www.mediawiki.org/wiki/Extension:Lockdown
+  extension: Lockdown
+  purpose: |
+    Restricts access rights on a per-namespace basis
+  giturl: https://github.com/wikimedia/mediawiki-extensions-Lockdown
+  wikidata_id: Q21677332
+- name: Loops
+  url: https://www.mediawiki.org/wiki/Extension:Loops
+  extension: Loops
+  purpose: |
+    Provides parser functions for performing loops
+  giturl: https://github.com/wikimedia/mediawiki-extensions-Loops
+  wikidata_id: Q21677430
+- name: SimpleTable
+  url: https://www.mediawiki.org/wiki/Extension:SimpleTable
+  extension: SimpleTable
+  purpose: |
+    Convert tab-separated or similar data into a Wiki table
+  giturl: https://github.com/DannyS712/mediawiki-extensions-SimpleTable
+
+- name: UseResource
+  url: https://www.mediawiki.org/wiki/Extension:UseResource
+  extension: UseResource
+  purpose: |
+    Adds the usescript and usestyle tags to load JavaScript and CSS on a per-page basis
+  giturl: https://github.com/wikimedia/mediawiki-extensions-UseResource
+
+
+
