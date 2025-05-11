@@ -239,7 +239,8 @@ class MwConfig:
         Returns:
             str:a random password with the given length
         """
-        return secrets.token_urlsafe(length)
+        random_password=secrets.token_urlsafe(length)
+        return random_password
 
     def getWikiId(self):
         """
