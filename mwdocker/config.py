@@ -67,6 +67,7 @@ class MwConfig:
     password_length: int = 15
     random_password: bool = False
     force_user: bool = False
+    lenient: bool=True
     password: str = "sysop-1234!"
     mySQLRootPassword: Optional[str] = None
     mySQLPassword: Optional[str] = None
@@ -321,6 +322,7 @@ class MwConfig:
         self.user = args.user
         self.random_password = args.random_password
         self.force_user = args.force_user
+        self.lenient=args.lenient
         self.password = args.password
         self.password_length = args.password_length
         self.base_port = args.base_port
@@ -393,6 +395,11 @@ class MwConfig:
             "--docker_path",
             default=self.default_docker_path(),
             help="the base directory to store docker and jinja template files [default: %(default)s]",
+        )
+        parser.add_argument(
+            "--lenient",
+            action="store_true",
+            help="do not throw error on wikiuser difference",
         )
         parser.add_argument(
             "--logo", default=self.logo, help="set Logo [default: %(default)s]"

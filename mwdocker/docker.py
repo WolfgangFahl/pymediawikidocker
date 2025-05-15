@@ -7,6 +7,7 @@ import datetime
 import os
 import platform
 import pprint
+import sys
 import time
 import traceback
 import typing
@@ -329,21 +330,24 @@ class DockerApplication(object):
             wikiUser.save()
         return wikiUser
 
-    def createOrModifyWikiUser(self, wikiId, force_overwrite: bool = False) -> WikiUser:
+    def createOrModifyWikiUser(self, wikiId, force_overwrite: bool = False,  lenient:bool=False) -> WikiUser:
         """
         create or modify the WikiUser for this DockerApplication
 
         Args:
             wikiId (str): the wikiId to create or modify a wiki user for
             force_overwrite (bool): if True overwrite the wikiuser info
+            lenient(bool): do not throw Exception if wikiuser exists
         """
         wikiUsers = WikiUser.getWikiUsers(lenient=True)
         if wikiId in wikiUsers and not force_overwrite:
             wikiUser = wikiUsers[wikiId]
             if self.config.password != wikiUser.getPassword():
-                raise Exception(
-                    f"wikiUser for wiki {wikiId} already exists but with different password"
-                )
+                msg= f"wikiUser for wiki {wikiId} already exists but with different password"
+                if lenient:
+                    print(msg,file=sys.stderr)
+                else:
+                    raise Exception(msg)
             pass
         else:
             wikiUser = self.createWikiUser(wikiId, store=True)
