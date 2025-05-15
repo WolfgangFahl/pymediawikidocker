@@ -624,7 +624,9 @@ class DockerApplication(object):
             )
             if self.config.wikiId:
                 self.createOrModifyWikiUser(
-                    self.config.wikiId, force_overwrite=self.config.force_user
+                    self.config.wikiId,
+                    force_overwrite=self.config.force_user,
+                    lenient=self.config.lenient
                 )
         self.generate(
             f"addSysopUser.sh",
