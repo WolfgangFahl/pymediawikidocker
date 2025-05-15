@@ -1,4 +1,5 @@
 # general LocalSettings
+$wgEnableAPI = true;
 {% if smw_version %}
 # enable Support for Semantic MediaWiki
 # see https://www.semantic-mediawiki.org/wiki/Help:EnableSemantics
