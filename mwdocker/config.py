@@ -13,8 +13,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import List, Optional
 from urllib.parse import urlparse
-
-import dacite
+from basemkit.yamlable import lod_storable
 from lodstorage.lod import LOD
 
 from mwdocker.mw import ExtensionList
@@ -44,7 +43,7 @@ class Host:
         return host
 
 
-@dataclass
+@lod_storable
 class MwConfig:
     """
     MediaWiki configuration for a Single Wiki
@@ -80,7 +79,7 @@ class MwConfig:
     host: str = Host.get_default_host()
     article_path: Optional[str] = None # "/index.php/$1"
     script_path: str = ""
-    container_base_name: str = None
+    container_base_name: Optional[str] = None
     networkName: str = "mwNetwork"
     mariaDBVersion: str = "10.11"
     forceRebuild: bool = False
@@ -111,6 +110,8 @@ class MwConfig:
             self.docker_path = self.default_docker_path()
         if not self.container_base_name:
             self.container_base_name = f"{self.prefix}-{self.shortVersion}"
+        if not self.article_path:
+            self.article_path=""
         self.reset_url(self.url)
 
     def reset_url(self, url: str):
@@ -211,8 +212,7 @@ class MwConfig:
             path = self.get_config_path()
         with open(path, "r") as json_file:
             json_str = json_file.read()
-            config_dict = json.loads(json_str)
-            config = dacite.from_dict(data_class=self.__class__, data=config_dict)
+            config = self.__class__.from_json(json_str)
             # restore extension map
             config.getExtensionMap(config.extensionNameList, config.extensionJsonFile)
             return config

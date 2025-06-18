@@ -44,7 +44,8 @@ class TestConfig(Basetest):
             "sql_port": 9306,
             "prot": "http",
             "host": Host.get_default_host(),
-            "article_path": None,
+            "lenient": True,
+            "article_path": "",
             "script_path": "",
             "container_base_name": "mw-139",
             "networkName": "mwNetwork",
@@ -64,6 +65,7 @@ class TestConfig(Basetest):
         if debug:
             print(mwd)
             print(json.dumps(mwd, indent=2))
+        self.maxDiff=None
         self.assertEqual(expected, mwd)
 
     def testSaveAndLoad(self):
