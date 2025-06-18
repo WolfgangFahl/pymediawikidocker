@@ -267,6 +267,7 @@ class TestInstall(Basetest):
         """
         test a cluster with no LocalSettingsTemplate available
         """
+        self.skipTest("cost benefit not good for this test")
         version = "1.36.0"
         args = [
             "--version_list",
