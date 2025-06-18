@@ -278,9 +278,9 @@ class TestInstall(Basetest):
             "-f",
         ]
         debug = self.debug
-        # debug=True
+        debug=True
         try:
-            mwCluster = self.getMwCluster(args, createApps=True)
+            mwCluster = self.getMwCluster(args, createApps=True,withGenerate=True)
             mwCluster.start()
             exitCode = mwCluster.check()
             self.assertEqual(0, exitCode)
