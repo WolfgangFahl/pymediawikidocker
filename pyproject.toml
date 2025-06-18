@@ -14,20 +14,23 @@ maintainers = [
 readme = "README.md"
 license = {text = "Apache-2.0"}
 dependencies = [
+	# https://pypi.org/project/pybasemkit/
+	# https://github.com/WolfgangFahl/pybasemkit
+	# Python base module kit: YAML/JSON I/O, structured logging, CLI tooling, shell execution, and remote pydevd debug support.
+	"pybasemkit>=0.0.3",
 	#python-on-whales
-	'python-on-whales>=0.72.0',
+	'python-on-whales>=0.77.0',
 	# https://pypi.org/project/Jinja2/
 	'Jinja2',
-	#
 	# avoid ModuleNotFoundError: No module named 'six'
 	'six',
 	# Access to SQL database
 	# https://pypi.org/project/mysql-connector-python/
 	'mysql-connector-python',
 	# https://pypi.org/project/py-3rdparty-mediawiki/
-    'py-3rdparty-mediawiki>=0.13.4',
+	'py-3rdparty-mediawiki>=0.15.4',
 	# https://pypi.org/project/pylodstorage/
-	'pylodstorage>=0.12.2',
+	'pylodstorage>=0.16.4',
 	# Beautiful Soup HTML parser
 	# https://pypi.org/project/beautifulsoup4/
 	'beautifulsoup4',

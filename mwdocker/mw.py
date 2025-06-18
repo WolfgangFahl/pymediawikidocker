@@ -10,7 +10,7 @@ from datetime import datetime
 from typing import List, Optional
 
 from lodstorage.lod import LOD
-from lodstorage.yamlable import lod_storable
+from basemkit.yamlable import lod_storable
 
 from mwdocker.webscrape import WebScrape
 
