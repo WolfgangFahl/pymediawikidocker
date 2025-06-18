@@ -72,6 +72,7 @@ class MwConfig:
     mySQLPassword: Optional[str] = None
     logo: str = "$wgResourceBasePath/resources/assets/wiki.png"
     port: int = 9080
+    base_port: Optional[int]=None
     sql_port: int = 9306
     url = None
     full_url = None
@@ -112,6 +113,8 @@ class MwConfig:
             self.container_base_name = f"{self.prefix}-{self.shortVersion}"
         if not self.article_path:
             self.article_path=""
+        if not self.base_port:
+            self.base_port=self.port
         self.reset_url(self.url)
 
     def reset_url(self, url: str):

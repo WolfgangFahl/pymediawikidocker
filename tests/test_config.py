@@ -14,6 +14,8 @@ class TestConfig(Basetest):
     """
     test the Mediawiki Cluster configuration
     """
+    def setUp(self, debug=False, profile=True):
+        Basetest.setUp(self, debug=debug, profile=profile)
 
     def testDefaults(self):
         """
@@ -111,7 +113,7 @@ class TestConfig(Basetest):
             mwClusterConfig.fromArgs(args)
             json_str = mwClusterConfig.as_json()
             debug = self.debug
-            debug = True
+            #debug = True
             if debug:
                 print(json_str)
                 for key, value in expected.items():
