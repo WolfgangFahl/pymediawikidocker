@@ -151,8 +151,6 @@ class DockerApplication(object):
             str: an error message or None
         """
         errMsg = None
-        if not docker.compose.is_installed():
-            errMsg = """docker compose up needs to be working"""
         os_path = os.environ["PATH"]
         paths = ["/usr/local/bin"]
         for path in paths:
@@ -163,7 +161,21 @@ class DockerApplication(object):
                         print(
                             f"""modified PATH from {os_path} to \n{os.environ["PATH"]}"""
                         )
+        if not docker.compose.is_installed():
+            errMsg = """docker compose up needs to be working"""
+
         return errMsg
+
+    def get_version_url(self,host_port:str)->str:
+        """
+        get the Special:Version url
+        """
+        url = self.config.full_url
+        # fix url to local port
+        # @TODO isn't this superfluous / has no effect ...?
+        url = url.replace(str(self.config.port), host_port)
+        version_url = f"{url}/index.php?title=Special:Version"
+        return version_url
 
     def check(self) -> int:
         """
@@ -187,12 +199,7 @@ class DockerApplication(object):
                 Logger.check_and_log_equal(
                     f"port binding", host_port, "expected  port", str(self.config.port)
                 )
-                url = self.config.full_url
-                # fix url to local port
-                # @TODO isn't this superfluous / has no effect ...?
-                url = url.replace(str(self.config.port), host_port)
-                version_url = f"{url}/index.php?title=Special:Version"
-
+                version_url=self.get_version_url(host_port)
                 ok = self.checkWiki(version_url)
                 if not ok:
                     exitCode = 1
