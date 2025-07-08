@@ -23,7 +23,7 @@ class TestConfig(Basetest):
         """
         mwClusterConfig = MwClusterConfig()
         expected = {
-            "version": "1.39.12",
+            "version": "1.39.13",
             "smw_version": None,
             "extensionNameList": [
                 "Admin Links",
@@ -51,12 +51,12 @@ class TestConfig(Basetest):
             "script_path": "",
             "container_base_name": "mw-139",
             "networkName": "mwNetwork",
-            "mariaDBVersion": "10.11",
+            "mariaDBVersion": "11.4",
             "forceRebuild": False,
             "debug": False,
             "verbose": True,
             "wikiId": None,
-            "versions": ["1.35.13", "1.38.6", "1.39.12", "1.42.6","1.43.1"],
+            "versions": ["1.35.13", "1.39.13","1.43.3","1.44.0"],
             "base_port": 9080,
             "docker_path": mwClusterConfig.docker_path,
         }

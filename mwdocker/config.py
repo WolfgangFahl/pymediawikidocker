@@ -82,7 +82,7 @@ class MwConfig:
     script_path: str = ""
     container_base_name: Optional[str] = None
     networkName: str = "mwNetwork"
-    mariaDBVersion: str = "10.11"
+    mariaDBVersion: str = "11.4"
     forceRebuild: bool = False
     debug: bool = False
     verbose: bool = True
@@ -497,9 +497,8 @@ class MwClusterConfig(MwConfig):
     versions: Optional[List[str]] = field(
         default_factory=lambda: [
             "1.35.13",
-            "1.38.6",
             "1.39.13",
-            "1.43.2",
+            "1.43.3",
             "1.44.0"
         ]
     )

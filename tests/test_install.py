@@ -314,7 +314,7 @@ class TestInstall(Basetest):
         for argv, expected in [
             (["-h"], "--user"),
             (["-V"], Version.updated),
-            (["--list"], "1.39.12"),
+            (["--list"], "1.39.13"),
         ]:
             try:
                 stdout = io.StringIO()

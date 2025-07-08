@@ -30,7 +30,7 @@ class MediaWikiCluster(object):
     # 2024-10-11 1.39.10 upgrade
     # 2025-03-18 1.39.11 upgrade 1.43.0 addition
     # 2025-04-13 Security and maintenance release: 1.39.12 / 1.42.6 / 1.43.1
-    # 2025-06-30 Security and maintenance release: 1.39.13 / 1.42.7 / 1.43.2
+    # 2025-06-30 Security and maintenance release: 1.39.13 / 1.42.7 / 1.43.3
 
     def __init__(self, config: MwClusterConfig):
         """
