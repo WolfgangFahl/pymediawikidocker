@@ -165,6 +165,7 @@ class MediaWikiCluster(object):
         appConfig = dataclasses.replace(self.config)
         appConfig.extensionMap = self.config.extensionMap.copy()
         appConfig.version = version
+        appConfig.base_port = self.config.base_port +i
         appConfig.port = self.config.base_port + i
         appConfig.sql_port = self.config.sql_port + i
         # let post_init create a new container_base_name
