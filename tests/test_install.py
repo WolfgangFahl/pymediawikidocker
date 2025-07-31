@@ -142,6 +142,9 @@ class TestInstall(Basetest):
                 self.assertTrue(os.path.isfile(fpath))
 
     def newClusterApps(self):
+        """
+        get new cluster applications
+        """
         self.removeFolderContent(self.docker_path)
         mwCluster = self.getMwCluster(withGenerate=True)
         mwCluster.down(forceRebuild=True)

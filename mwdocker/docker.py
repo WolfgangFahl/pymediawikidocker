@@ -75,6 +75,22 @@ class DockerContainer:
         msg = f"mediawiki {self.kind} container {self.name}"
         return Logger.check_and_log(msg, ok)
 
+    def detect_crash(self)->str:
+        """
+        check that we are still running and get crash details if not
+
+        Returns:
+            str: None if running, log if crashed
+        """
+        logs=None
+        try:
+            if not self.container.state.running:
+                logs = docker.container.logs(self.name)
+        except Exception as ex:
+            logs=str(ex)
+        return logs
+
+
     def wait_for_state(
         self, running: bool, interval: float = 0.2, timeout: float = 60.0
     ) -> float:
@@ -404,6 +420,9 @@ class DockerApplication(object):
                 command_line = " ".join(command_list)
                 print(f"Executing docker command {command_line}")
             docker.execute(container=self.mwContainer.container, command=command_list)
+            logs=self.mwContainer.detect_crash()
+            if logs is not None:
+                print(f"{self.mwContainer.name} crashed with log: {logs}")
         else:
             mwContainerNameDash = self.getContainerName("mw", "-")
             mwContainerNameUnderscore = self.getContainerName("mw", "_")

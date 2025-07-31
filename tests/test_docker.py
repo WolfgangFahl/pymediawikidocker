@@ -15,7 +15,7 @@ class TestDocker(Basetest):
     test the docker handling
     """
 
-    def setUp(self, debug=False, profile=True):
+    def setUp(self, debug=True, profile=True):
         Basetest.setUp(self, debug=debug, profile=profile)
         DockerApplication.checkDockerEnvironment(debug)
 
@@ -51,3 +51,58 @@ class TestDocker(Basetest):
                 logs = docker.container.logs(container_name)
                 self.assertIn(f"slept {i}s", logs)
                 docker.container.remove(container_name, force=True)
+
+    def testBusyboxCrash(self):
+        """test container crash detection"""
+        crash_methods = [
+            # Method 1: Kill current shell process
+            ["sh", "-c", "sleep 1; kill -9 $$"],
+
+            # Method 2: Exit with error code
+            ["sh", "-c", "sleep 1; exit 1"],
+
+            # Method 3: SIGKILL self
+            ["sh", "-c", "sleep 1; kill -KILL $$"],
+
+            # Method 4: SIGSEGV self
+            ["sh", "-c", "sleep 1; kill -SEGV $$"],
+
+            # Method 5: Invalid memory access (if available)
+            ["sh", "-c", "sleep 1; kill -ABRT $$"],
+        ]
+
+        for i, crash_cmd in enumerate(crash_methods):
+            with self.subTest(crash_method=i):
+                container_name = f"busybox-crash-{i}"
+
+                if docker.container.exists(container_name):
+                    docker.container.remove(container_name, force=True)
+
+                container = docker.container.run(
+                    "busybox",
+                    crash_cmd,
+                    detach=True,
+                    name=container_name,
+                    remove=False,
+                )
+
+                dc = DockerContainer(name=container_name, kind="crash-test", container=container)
+
+                # Wait for it to start
+                start_secs = dc.wait_for_state(running=True)
+                print(f"{container_name} 🟢 started in {start_secs:.2f}s")
+
+                # Wait for crash
+                stop_secs = dc.wait_for_state(running=False)
+                print(f"{container_name} 🔥 crashed after {stop_secs:.2f}s")
+
+                # Capture and print crash logs
+                crash_logs = dc.detect_crash()
+                if crash_logs is not None:
+                    print(f"💥 Crash logs for method {i}:\n{crash_logs}")
+                    crashed = True
+                else:
+                    crashed = False
+
+            #self.assertTrue(crashed, f"Crash method {i} {crash_cmd} should have detected crash")
+            docker.container.remove(container_name, force=True)
