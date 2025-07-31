@@ -419,10 +419,17 @@ class DockerApplication(object):
             if self.config.verbose:
                 command_line = " ".join(command_list)
                 print(f"Executing docker command {command_line}")
-            docker.execute(container=self.mwContainer.container, command=command_list)
-            logs=self.mwContainer.detect_crash()
-            if logs is not None:
-                print(f"{self.mwContainer.name} crashed with log: {logs}")
+            try:
+                docker.execute(container=self.mwContainer.container, command=command_list)
+            except Exception as ex:
+                # Check if container crashed
+                logs = self.mwContainer.detect_crash()
+                if logs is not None:
+                    print(f"{self.mwContainer.name} crashed with log: {logs}")
+                    raise Exception(f"Container {self.mwContainer.name} crashed during execute: {ex}")
+                else:
+                    # Re-raise original exception if not a crash
+                    raise ex
         else:
             mwContainerNameDash = self.getContainerName("mw", "-")
             mwContainerNameUnderscore = self.getContainerName("mw", "_")
