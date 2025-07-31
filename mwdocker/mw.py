@@ -3,14 +3,15 @@ Created on 2021-06-23
 
 @author: wf
 """
+
 import os
 import urllib
 from dataclasses import field
 from datetime import datetime
 from typing import List, Optional
 
-from lodstorage.lod import LOD
 from basemkit.yamlable import lod_storable
+from lodstorage.lod import LOD
 
 from mwdocker.webscrape import WebScrape
 
@@ -80,7 +81,7 @@ a link to the page also shows up in their "Personal URLs", between "Talk" and "P
         delim = ""
         samples = self.getSamples()
         for attr in LOD.getFields(samples):
-            if hasattr(self, attr) and getattr(self,attr):
+            if hasattr(self, attr) and getattr(self, attr):
                 text += f"{delim}{attr}={getattr(self,attr)}"
                 delim = "\n"
         return text
@@ -106,7 +107,7 @@ a link to the page also shows up in their "Personal URLs", between "Talk" and "P
         samples = self.getJsonTypeSamples()
         nameValues = ""
         for attr in LOD.getFields(samples):
-            if hasattr(self, attr) and getattr(self,attr):
+            if hasattr(self, attr) and getattr(self, attr):
                 nameValues += f"|{attr}={getattr(self,attr)}\n"
         wikison = f"""{{{{Extension
 {nameValues}
@@ -123,7 +124,7 @@ a link to the page also shows up in their "Personal URLs", between "Talk" and "P
         Returns:
             entry for LocalSettings
         """
-        localSettingsLine=""
+        localSettingsLine = ""
         if self.extension:
             localSettingsLine = f"wfLoadExtension( '{self.extension}' );"
         if self.require_once_until:

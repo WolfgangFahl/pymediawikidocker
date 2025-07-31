@@ -3,17 +3,20 @@ Created on 2023-04-06
 
 @author: wf
 """
+
 import json
 from argparse import ArgumentParser
 
+from basemkit.basetest import Basetest
+
 from mwdocker.config import Host, MwClusterConfig, MwConfig
-from tests.basetest import Basetest
 
 
 class TestConfig(Basetest):
     """
     test the Mediawiki Cluster configuration
     """
+
     def setUp(self, debug=False, profile=True):
         Basetest.setUp(self, debug=debug, profile=profile)
 
@@ -56,7 +59,7 @@ class TestConfig(Basetest):
             "debug": False,
             "verbose": True,
             "wikiId": None,
-            "versions": ["1.35.13", "1.39.13","1.43.3","1.44.0"],
+            "versions": ["1.35.13", "1.39.13", "1.43.3", "1.44.0"],
             "base_port": 9080,
             "bind_mount": False,
             "docker_path": mwClusterConfig.docker_path,
@@ -64,11 +67,11 @@ class TestConfig(Basetest):
 
         mwd = mwClusterConfig.as_dict()
         debug = self.debug
-        #debug=True
+        # debug=True
         if debug:
             print(mwd)
             print(json.dumps(mwd, indent=2))
-        self.maxDiff=None
+        self.maxDiff = None
         self.assertEqual(expected, mwd)
 
     def testSaveAndLoad(self):
@@ -114,7 +117,7 @@ class TestConfig(Basetest):
             mwClusterConfig.fromArgs(args)
             json_str = mwClusterConfig.as_json()
             debug = self.debug
-            #debug = True
+            # debug = True
             if debug:
                 print(json_str)
                 for key, value in expected.items():

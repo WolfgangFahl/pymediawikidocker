@@ -3,6 +3,7 @@ Created on 2023-04-06
 
 @author: wf
 """
+
 import dataclasses
 import json
 import os
@@ -13,6 +14,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import List, Optional
 from urllib.parse import urlparse
+
 from basemkit.yamlable import lod_storable
 from lodstorage.lod import LOD
 
@@ -66,25 +68,25 @@ class MwConfig:
     password_length: int = 15
     random_password: bool = False
     force_user: bool = False
-    lenient: bool=True
+    lenient: bool = True
     password: str = "sysop-1234!"
     mySQLRootPassword: Optional[str] = None
     mySQLPassword: Optional[str] = None
     logo: str = "$wgResourceBasePath/resources/assets/wiki.png"
     port: int = 9080
-    base_port: Optional[int]=None
+    base_port: Optional[int] = None
     sql_port: int = 9306
     url = None
     full_url = None
     prot: str = "http"
     host: str = Host.get_default_host()
-    article_path: Optional[str] = None # "/index.php/$1"
+    article_path: Optional[str] = None  # "/index.php/$1"
     script_path: str = ""
     container_base_name: Optional[str] = None
     networkName: str = "mwNetwork"
     mariaDBVersion: str = "11.4"
     forceRebuild: bool = False
-    bind_mount:bool=False
+    bind_mount: bool = False
     debug: bool = False
     verbose: bool = True
     wikiId: Optional[str] = None
@@ -113,9 +115,9 @@ class MwConfig:
         if not self.container_base_name:
             self.container_base_name = f"{self.prefix}-{self.shortVersion}"
         if not self.article_path:
-            self.article_path=""
+            self.article_path = ""
         if not self.base_port:
-            self.base_port=self.port
+            self.base_port = self.port
         self.reset_url(self.url)
 
     def reset_url(self, url: str):
@@ -242,7 +244,7 @@ class MwConfig:
         Returns:
             str:a random password with the given length
         """
-        random_password=secrets.token_urlsafe(length)
+        random_password = secrets.token_urlsafe(length)
         return random_password
 
     def getWikiId(self):
@@ -259,8 +261,7 @@ class MwConfig:
         return wikiId
 
     def getExtensionMap(
-        self, extensionNameList: list = None,
-         extensionJsonFile: str = None
+        self, extensionNameList: list = None, extensionJsonFile: str = None
     ):
         """
         get map of extensions to handle
@@ -277,11 +278,13 @@ class MwConfig:
             for duplicate in duplicates:
                 print(duplicate.name)
         if extensionJsonFile is not None:
-            extraExtensionList = ExtensionList.load_from_json_file(extensionJsonFile) # @UndefinedVariable
+            extraExtensionList = ExtensionList.load_from_json_file(
+                extensionJsonFile
+            )  # @UndefinedVariable
             for ext in extraExtensionList.extensions:
                 if ext.name in self.extByName:
                     print(f"overriding {ext.name} extension definition")
-                self.extByName[ext.name]=ext
+                self.extByName[ext.name] = ext
         if extensionNameList is not None:
             self.addExtensions(extensionNameList)
         return self.extensionMap
@@ -309,7 +312,7 @@ class MwConfig:
         self.docker_path = args.docker_path
         self.extensionNameList = args.extensionNameList
         self.extensionJsonFile = args.extensionJsonFile
-        self.bind_mount=args.bind_mount
+        self.bind_mount = args.bind_mount
         self.forceRebuild = args.forceRebuild
         self.host = args.host
         self.logo = args.logo
@@ -325,7 +328,7 @@ class MwConfig:
         self.user = args.user
         self.random_password = args.random_password
         self.force_user = args.force_user
-        self.lenient=args.lenient
+        self.lenient = args.lenient
         self.password = args.password
         self.password_length = args.password_length
         self.base_port = args.base_port
@@ -503,12 +506,7 @@ class MwClusterConfig(MwConfig):
     """
 
     versions: Optional[List[str]] = field(
-        default_factory=lambda: [
-            "1.35.13",
-            "1.39.13",
-            "1.43.3",
-            "1.44.0"
-        ]
+        default_factory=lambda: ["1.35.13", "1.39.13", "1.43.3", "1.44.0"]
     )
     base_port: int = 9080
 

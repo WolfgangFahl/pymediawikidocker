@@ -3,6 +3,7 @@ Created on 2020-08-20
 
 @author: wf
 """
+
 from urllib.request import Request, urlopen
 
 from bs4 import BeautifulSoup

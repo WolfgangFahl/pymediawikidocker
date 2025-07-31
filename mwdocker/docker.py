@@ -3,6 +3,7 @@ Created on 2021-08-06
 
 @author: wf
 """
+
 import datetime
 import os
 import platform
@@ -73,6 +74,34 @@ class DockerContainer:
         ok = self.container.state.running
         msg = f"mediawiki {self.kind} container {self.name}"
         return Logger.check_and_log(msg, ok)
+
+    def wait_for_state(
+        self, running: bool, interval: float = 0.2, timeout: float = 60.0
+    ) -> float:
+        """
+        Wait until the container reaches the desired running state
+
+        Args:
+            running: desired running state (True = wait until started, False = wait until stopped)
+            interval: polling interval in seconds
+            timeout: max time to wait
+
+        Returns:
+            float: Time in seconds it took to reach the desired state
+
+        Raises:
+            TimeoutError: if the desired state is not reached within timeout
+        """
+        start_time = time.time()
+        deadline = start_time + timeout
+        while time.time() < deadline:
+            if self.container.state.running == running:
+                return time.time() - start_time
+            time.sleep(interval)
+        state = "running" if running else "stopped"
+        raise TimeoutError(
+            f"Container '{self.name}' did not reach state '{state}' within {timeout} seconds"
+        )
 
     def getHostPort(self, local_port: int = 80) -> int:
         """
@@ -166,7 +195,7 @@ class DockerApplication(object):
 
         return errMsg
 
-    def get_version_url(self,host_port:str)->str:
+    def get_version_url(self, host_port: str) -> str:
         """
         get the Special:Version url
         """
@@ -199,7 +228,7 @@ class DockerApplication(object):
                 Logger.check_and_log_equal(
                     f"port binding", host_port, "expected  port", str(self.config.port)
                 )
-                version_url=self.get_version_url(host_port)
+                version_url = self.get_version_url(host_port)
                 ok = self.checkWiki(version_url)
                 if not ok:
                     exitCode = 1
@@ -337,7 +366,9 @@ class DockerApplication(object):
             wikiUser.save()
         return wikiUser
 
-    def createOrModifyWikiUser(self, wikiId, force_overwrite: bool = False,  lenient:bool=False) -> WikiUser:
+    def createOrModifyWikiUser(
+        self, wikiId, force_overwrite: bool = False, lenient: bool = False
+    ) -> WikiUser:
         """
         create or modify the WikiUser for this DockerApplication
 
@@ -350,9 +381,9 @@ class DockerApplication(object):
         if wikiId in wikiUsers and not force_overwrite:
             wikiUser = wikiUsers[wikiId]
             if self.config.password != wikiUser.getPassword():
-                msg= f"wikiUser for wiki {wikiId} already exists but with different password"
+                msg = f"wikiUser for wiki {wikiId} already exists but with different password"
                 if lenient:
-                    print(msg,file=sys.stderr)
+                    print(msg, file=sys.stderr)
                 else:
                     raise Exception(msg)
             pass
@@ -519,7 +550,7 @@ class DockerApplication(object):
             if self.config.verbose:
                 print(f"{targetPath} already exists!")
             return
-        with open(targetPath, "w",newline="") as targetFile:
+        with open(targetPath, "w", newline="") as targetFile:
             targetFile.write(content)
 
     def generate(
@@ -550,9 +581,7 @@ class DockerApplication(object):
             self.optionalWrite(targetPath, content, overwrite)
 
         except TemplateNotFound:
-            print(
-                f"no template {templateName} for {self.config.version}"
-            )
+            print(f"no template {templateName} for {self.config.version}")
 
     def getComposerRequire(self):
         """
@@ -646,7 +675,7 @@ class DockerApplication(object):
                 self.createOrModifyWikiUser(
                     self.config.wikiId,
                     force_overwrite=self.config.force_user,
-                    lenient=self.config.lenient
+                    lenient=self.config.lenient,
                 )
         self.generate(
             f"addSysopUser.sh",
@@ -765,7 +794,15 @@ class DockerApplication(object):
         # switch back to previous current directory
         os.chdir(cwd)
 
-        return self.getContainers()
+        # check the startup of both containers
+        mw, db = self.getContainers()
+        for dc in [mw, db]:
+            if dc:
+                start_secs = dc.wait_for_state(running=True)
+                if self.config.verbose:
+                    print(f"{dc.name} 🟢 started in {start_secs:.2f}s")
+        return mw, db
+
 
     def start(self, forceRebuild: bool = False, withInitDB=True):
         """

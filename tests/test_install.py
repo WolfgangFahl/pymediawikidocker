@@ -3,9 +3,10 @@ Created on 2021-06-14
 
 @author: wf
 """
-import logging
+
 import datetime
 import io
+import logging
 import os
 import shutil
 import socket
@@ -13,6 +14,7 @@ import unittest
 from argparse import ArgumentParser
 from contextlib import redirect_stdout
 
+from basemkit.basetest import Basetest
 from python_on_whales import docker
 
 import mwdocker
@@ -20,7 +22,6 @@ from mwdocker.config import MwClusterConfig
 from mwdocker.mariadb import MariaDB
 from mwdocker.mwcluster import MediaWikiCluster
 from mwdocker.version import Version
-from tests.basetest import Basetest
 
 
 class TestInstall(Basetest):
@@ -110,7 +111,6 @@ class TestInstall(Basetest):
                 except Exception as ex:
                     logging.warning(f"Failed to remove directory {dir_path}: {ex}")
 
-
     def testGenerateDockerFiles(self):
         """
         test generating the docker files
@@ -174,7 +174,7 @@ class TestInstall(Basetest):
         """
         mwCluster, apps = self.newClusterApps()
         debug = self.debug
-        #debug = True
+        # debug = True
         for mwApp in apps:
             config_json = mwApp.config.as_json()
             if debug:
@@ -288,9 +288,9 @@ class TestInstall(Basetest):
             "-f",
         ]
         debug = self.debug
-        debug=True
+        debug = True
         try:
-            mwCluster = self.getMwCluster(args, createApps=True,withGenerate=True)
+            mwCluster = self.getMwCluster(args, createApps=True, withGenerate=True)
             mwCluster.start()
             exitCode = mwCluster.check()
             self.assertEqual(0, exitCode)
@@ -309,8 +309,8 @@ class TestInstall(Basetest):
         mwCluster = self.getMwCluster()
         for mwApp in mwCluster.apps.values():
             wikiUser = mwApp.createWikiUser(store=False)
-            debug=self.debug
-            debug=True
+            debug = self.debug
+            debug = True
             if debug:
                 print(wikiUser)
             self.assertEqual(wikiUser.wikiId, mwApp.config.container_base_name)

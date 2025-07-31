@@ -3,14 +3,18 @@ Created on 2021-06-23
 
 @author: wf
 """
-from mwdocker.config import MwClusterConfig
-from mwdocker.mw import Extension, ExtensionList
-from tests.basetest import Basetest
-import tempfile
+
+import io
 import json
 import os
-import io
+import tempfile
 from contextlib import redirect_stdout
+
+from basemkit.basetest import Basetest
+
+from mwdocker.config import MwClusterConfig
+from mwdocker.mw import Extension, ExtensionList
+
 
 class TestExtensions(Basetest):
     """
@@ -129,36 +133,37 @@ class TestExtensions(Basetest):
         Test the handling of duplicate extensions when
         loading from both default and custom JSON files
         """
-        extension_dict={
+        extension_dict = {
             "extensions": [
                 {
                     "name": "Flex Diagrams",
                     "extension": "FlexDiagrams",
                     "giturl": "https://gerrit.wikimedia.org/r/mediawiki/extensions/FlexDiagrams.git",
-                    "url": "https://www.mediawiki.org/wiki/Extension:Flex_Diagrams"
+                    "url": "https://www.mediawiki.org/wiki/Extension:Flex_Diagrams",
                 },
                 {
                     "name": "Page Forms",
                     "extension": "PageForms",
                     "url": "https://www.mediawiki.org/wiki/Extension:Page_Forms",
-                    "composer": "\"mediawiki/page-forms\": \"^5.8\""
-                }
+                    "composer": '"mediawiki/page-forms": "^5.8"',
+                },
             ]
         }
-        temp_json = tempfile.NamedTemporaryFile(mode='w+', delete=False, suffix='.json')
-        json.dump(extension_dict,temp_json)
+        temp_json = tempfile.NamedTemporaryFile(mode="w+", delete=False, suffix=".json")
+        json.dump(extension_dict, temp_json)
         temp_json.close()
 
         config = MwClusterConfig()
         stdout = io.StringIO()
         with redirect_stdout(stdout):
-            ext_map=config.getExtensionMap(["Page Forms","Flex Diagrams"], temp_json.name)
-        log_msg=stdout.getvalue()
-        debug=True
+            ext_map = config.getExtensionMap(
+                ["Page Forms", "Flex Diagrams"], temp_json.name
+            )
+        log_msg = stdout.getvalue()
+        debug = True
         if debug:
             print(ext_map)
         os.unlink(temp_json.name)
-        self.assertEqual(2,len(ext_map))
+        self.assertEqual(2, len(ext_map))
         self.assertTrue("5.8" in ext_map["Page Forms"].composer)
         self.assertTrue("overriding Page Forms" in log_msg)
-
