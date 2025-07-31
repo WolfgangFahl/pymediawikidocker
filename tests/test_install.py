@@ -3,6 +3,7 @@ Created on 2021-06-14
 
 @author: wf
 """
+import logging
 import datetime
 import io
 import os
@@ -87,7 +88,6 @@ class TestInstall(Basetest):
 
     def removeFolderContent(self, folder_path: str):
         """
-
         remove the folder content in the given folder_path
 
         Args:
@@ -95,12 +95,21 @@ class TestInstall(Basetest):
 
         see https://stackoverflow.com/a/1073382/1497139
         """
-
         for root, dirs, files in os.walk(folder_path):
             for f in files:
-                os.unlink(os.path.join(root, f))
+                try:
+                    file_path = os.path.join(root, f)
+                    os.unlink(file_path)
+                except Exception as ex:
+                    logging.warning(f"Failed to remove file {file_path}: {ex}")
+
             for d in dirs:
-                shutil.rmtree(os.path.join(root, d))
+                try:
+                    dir_path = os.path.join(root, d)
+                    shutil.rmtree(dir_path)
+                except Exception as ex:
+                    logging.warning(f"Failed to remove directory {dir_path}: {ex}")
+
 
     def testGenerateDockerFiles(self):
         """
