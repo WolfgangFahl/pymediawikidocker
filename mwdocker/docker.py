@@ -595,19 +595,32 @@ class DockerApplication(object):
         Args:
             overwrite (bool): if True overwrite the existing files
         """
-        # then generate
+        # then generate Dockerfile
         self.generate(
             "mwDockerfile",
             f"{self.docker_path}/Dockerfile",
             composerVersion=self.composerVersion,
             overwrite=overwrite,
         )
+        # Docker compose - we have to configure whether
+        # bind mounts or volumes are to be used
+        if self.config.bind_mount:
+            volume_type = "bind"
+            mysql_data = f"/var/lib/mysql"
+            wiki_www = f"/var/www/mediawiki/sites"
+        else:
+            volume_type = "volume"
+            mysql_data = "mysql-data"
+            wiki_www = "wiki-www"
         self.generate(
             "mwCompose.yml",
             f"{self.docker_path}/docker-compose.yml",
             mySQLRootPassword=self.config.mySQLRootPassword,
             mySQLPassword=self.config.mySQLPassword,
             container_base_name=self.config.container_base_name,
+            volume_type=volume_type,
+            mysql_data=mysql_data,
+            wiki_www=wiki_www,
             overwrite=overwrite,
         )
         self.generate(

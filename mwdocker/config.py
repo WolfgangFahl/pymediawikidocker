@@ -84,6 +84,7 @@ class MwConfig:
     networkName: str = "mwNetwork"
     mariaDBVersion: str = "11.4"
     forceRebuild: bool = False
+    bind_mount:bool=False
     debug: bool = False
     verbose: bool = True
     wikiId: Optional[str] = None
@@ -308,6 +309,7 @@ class MwConfig:
         self.docker_path = args.docker_path
         self.extensionNameList = args.extensionNameList
         self.extensionJsonFile = args.extensionJsonFile
+        self.bind_mount=args.bind_mount
         self.forceRebuild = args.forceRebuild
         self.host = args.host
         self.logo = args.logo
@@ -342,6 +344,12 @@ class MwConfig:
             "--article_path",
             default=self.article_path,
             help="change to any article_path you might need to set [default: %(default)s]",
+        )
+        parser.add_argument(
+            "-bm",
+            "--bind-mount",
+            action="store_true",
+            help="use bind mounts instead of volumes",
         )
         parser.add_argument(
             "-cn",
