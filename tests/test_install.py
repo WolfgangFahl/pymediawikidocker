@@ -22,7 +22,7 @@ from mwdocker.config import MwClusterConfig
 from mwdocker.mariadb import MariaDB
 from mwdocker.mwcluster import MediaWikiCluster
 from mwdocker.version import Version
-
+from mwdocker.mwdocker_cmd import MediaWikiDockerCmd
 
 class TestInstall(Basetest):
     """
@@ -43,11 +43,13 @@ class TestInstall(Basetest):
         """
         if not argv:
             argv = self.argv
+        mwdocker_cmd=MediaWikiDockerCmd(version=Version)
         parser = ArgumentParser()
         if version is None:
             version = self.default_config.version
         mwClusterConfig = MwClusterConfig(version=version)
-        mwClusterConfig.addArgs(parser)
+        mwdocker_cmd.config=mwClusterConfig
+        mwdocker_cmd.add_arguments(parser)
         args = parser.parse_args(argv)
         mwClusterConfig.fromArgs(args)
         return mwClusterConfig
