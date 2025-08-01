@@ -75,15 +75,11 @@ lang_images () {
 # run the update script
 #
 run_update() {
-	php maintenance/update.php --skip-config-validation --quick
-	# work around possible version problem - older MediaWiki versions do no thave
-	# --skip-config-validation and will signal an error
-	if [ $? -ne 0 ]
-	then
-	  # if an error occured simply retry - no matter whether the syntax error above was
-	  # the cause or any other error - no harm done except some extra time ...
-	  php maintenance/update.php --quick
-	fi
+  local options="--quick"
+  if php maintenance/update.php --help | grep -q -- --skip-config-validation; then
+    options="--skip-config-validation $options"
+  fi
+  php maintenance/update.php $options
 }
 
 
