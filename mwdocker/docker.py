@@ -378,13 +378,12 @@ class DockerApplication(object):
             wikiUser = self.createWikiUser(wikiId, store=True)
         return wikiUser
 
-    def execute(self, *commands: str, stream: bool = True):
+    def execute(self, *commands: str):
         """
         Execute the given variable list of command strings inside the MediaWiki container.
 
         Args:
             commands: str - command strings to be executed
-            stream: bool - whether to stream output live (default: True)
         """
         command_list = list(commands)
         if not self.mwContainer:
@@ -401,14 +400,13 @@ class DockerApplication(object):
             print(f"Executing docker command: {command_line}")
 
         try:
-            result = docker.execute(
+            for line in docker.execute(
                 container=self.mwContainer.container,
                 command=command_list,
-                stream=stream
-            )
-            if stream:
-                for line in result:
-                    print(line, end="")
+                stream=True):
+                    decoded_line = line.decode("utf-8", errors="replace")
+                    print(decoded_line, end="")
+
         except Exception as ex:
             logs = self.mwContainer.detect_crash()
             if logs is not None:
