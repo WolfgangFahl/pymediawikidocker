@@ -154,23 +154,30 @@ done
 # fix permissions before starting
 fix_permissions
 
-# install extensions which are not installed via compose
-${SCRIPT_DIR}/installExtensions.sh
-
-# fix permissions again
-fix_permissions
-
 # call initialize database function
 initdb
-
-${SCRIPT_DIR}/addSysopUser.sh
 
 # run the update script
 run_update
 
+# install extensions which are not installed via compose
+${SCRIPT_DIR}/installExtensions.sh
+
+# fix permissions again
+# mostly to avoid the never ending story of
+# https://github.com/SemanticMediaWiki/SemanticMediaWiki/issues/4785
+# Semantic MediaWiki was installed and enabled but is missing an appropriate upgrade key.
+fix_permissions
+
+# run the update script again
+run_update
+
+${SCRIPT_DIR}/addSysopUser.sh
+
 # install language images
 lang_images ${WEB_DIR}/images
-# fix permissions before finishing
+
+# fix permissions again before finishing
 fix_permissions
 
 # make sure we start runjobs every minute for updates
