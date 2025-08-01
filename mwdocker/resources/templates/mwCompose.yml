@@ -44,9 +44,9 @@ services:
       - type: volume 
         source: wiki-etc                # volume name 
         target: /etc                    # container path
-      # - type: bind
-      #   source: ./LocalSettings.php   # host path
-      #   target: /var/www/html/LocalSettings.php  # container path
+      - type: bind
+        source: {{scripts_dir}}         # scripts directory path
+        target: /scripts                # container path
 
 volumes:
   wiki-etc:

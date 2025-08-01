@@ -680,6 +680,7 @@ class DockerApplication(object):
             volume_type=volume_type,
             mysql_data=mysql_data,
             wiki_www=wiki_www,
+            scripts_dir=self.docker_path,
             overwrite=overwrite,
         )
         self.generate(
@@ -707,6 +708,13 @@ class DockerApplication(object):
                     force_overwrite=self.config.force_user,
                     lenient=self.config.lenient,
                 )
+        self.generate(
+            f"setup-mediawiki.sh",
+            f"{self.docker_path}/setup-mediawiki.sh",
+            script_dir="/scripts",
+            web_dir="/var/www/html",
+            overwrite=overwrite,
+        )
         self.generate(
             f"addSysopUser.sh",
             f"{self.docker_path}/addSysopUser.sh",
@@ -847,7 +855,9 @@ class DockerApplication(object):
                 print("Initializing MediaWiki SQL tables ...")
             dbStatus = self.checkDBConnection()
             if dbStatus.ok:
-                # first install extensions
+                # run the mediawiki setup including composer based extensions
+                self.execute("/scripts/setup-mediawiki.sh", "/scripts")
+                # then install extensions
                 self.installExtensions()
                 # then create and fill database and update it
                 self.initDB()
