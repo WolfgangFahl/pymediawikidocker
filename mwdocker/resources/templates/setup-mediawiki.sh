@@ -50,26 +50,32 @@ error() {
 #
 lang_images () {
   local l_target="$1"
-  if [ ! -d $l_target ]
-  then
+  if [ ! -d "$l_target" ]; then
     error "image directory $l_target does not exist"
   fi
-  from=http://semantic-mediawiki.org/w/
-  for img in images/e/e7/Lang-De.gif images/7/78/Lang-En.gif images/6/61/Lang-Es.gif images/f/f0/Lang-Fr.gif images/9/95/Lang-Ja.gif images/c/cb/Lang-Nl.gif images/3/38/Lang-Ru.gif images/8/85/Lang-Zh-hans.gif images/2/20/Lang-Uk.gif
-  do
-    imgpath=`echo $img | cut -f1-3 -d/`
-    imgname=`echo $img | cut -f4 -d/`
-    if [ ! -f $l_target/$img ]
-    then
-      color_msg $blue "downloading $imgname ..."
-      mkdir -p $l_target/$imgpath
-      curl -L -s -o $l_target/$img $from/$img
-      chown www-data:www-data $imgpath
+  local from="http://semantic-mediawiki.org/w/"
+  local imgs=(
+    images/e/e7/Lang-De.gif images/7/78/Lang-En.gif images/6/61/Lang-Es.gif
+    images/f/f0/Lang-Fr.gif images/9/95/Lang-Ja.gif images/c/cb/Lang-Nl.gif
+    images/3/38/Lang-Ru.gif images/8/85/Lang-Zh-hans.gif images/2/20/Lang-Uk.gif
+  )
+
+  for img in "${imgs[@]}"; do
+    local imgpath="$(dirname "$img")"
+    local imgname="$(basename "$img")"
+    local fullpath="$l_target/$img"
+
+    if [ ! -f "$fullpath" ]; then
+      color_msg "$blue" "downloading $imgname ..."
+      mkdir -p "$l_target/$imgpath"
+      curl -L -s -o "$fullpath" "$from/$img"
+      chown www-data:www-data "$l_target/$imgpath"
     else
-      color_msg $green "$imgname already downloaded"
-   fi
+      color_msg "$green" "$imgname already downloaded"
+    fi
   done
 }
+
 
 #
 # run the update script
