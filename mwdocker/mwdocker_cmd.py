@@ -56,11 +56,11 @@ class MediaWikiDockerCmd(BaseCmd):
         if args.check:
             self.exit_code = self.cluster.check()
         elif args.create:
-            self.exit_code = self.cluster.start(forceRebuild=args.forceRebuild)
+            self.exit_code = self.cluster.start(forceRebuild=self.config.forceRebuild)
         elif args.list:
             self.exit_code = self.cluster.listWikis()
         elif args.down:
-            self.exit_code = self.cluster.down(forceRebuild=args.forceRebuild)
+            self.exit_code = self.cluster.down(forceRebuild=self.config.forceRebuild)
         else:
             self.parser.print_usage()
             self.exit_code = 1
