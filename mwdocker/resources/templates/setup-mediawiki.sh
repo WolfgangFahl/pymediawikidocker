@@ -135,9 +135,7 @@ initdb() {
 
 echo "Setting up MediaWiki using scripts from: ${SCRIPT_DIR}"
 
-# Update MediaWiki extensions via composer
-cd ${WEB_DIR}
-composer update --no-dev
+
 
 # Run other setup scripts
 chmod +x ${SCRIPT_DIR}/*.sh
@@ -151,23 +149,32 @@ do
   fi
 done
 
+
 # fix permissions before starting
 fix_permissions
 
+cd ${WEB_DIR}
 # call initialize database function
 initdb
 
 # run the update script
 run_update
 
-# install extensions which are not installed via compose
+# install extensions which are not installed via composer
+cd ${WEB_DIR}/extensions
+
 ${SCRIPT_DIR}/installExtensions.sh
 
 # fix permissions again
+fix_permissions
+
+cd ${WEB_DIR}
+# Update MediaWiki extensions via composer
+composer update --no-dev
+
 # mostly to avoid the never ending story of
 # https://github.com/SemanticMediaWiki/SemanticMediaWiki/issues/4785
 # Semantic MediaWiki was installed and enabled but is missing an appropriate upgrade key.
-fix_permissions
 
 # run the update script again
 run_update
