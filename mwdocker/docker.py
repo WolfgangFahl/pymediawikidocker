@@ -400,12 +400,14 @@ class DockerApplication(object):
             print(f"Executing docker command: {command_line}")
 
         try:
-            for line in docker.execute(
+            # see https://gabrieldemarmiesse.github.io/python-on-whales/user_guide/docker_run/#stream-the-output
+            for stream_type,stream_content in docker.execute(
                 container=self.mwContainer.container,
                 command=command_list,
                 stream=True):
-                    decoded_line = line.decode("utf-8", errors="replace")
-                    print(decoded_line, end="")
+                    decoded_line = stream_content.decode("utf-8", errors="replace")
+                    target_stream = sys.stderr if stream_type == "stderr" else sys.stdout
+                    print(decoded_line, end="", file=target_stream)
 
         except Exception as ex:
             logs = self.mwContainer.detect_crash()
