@@ -5,11 +5,9 @@ Created on 2021-08-06
 """
 
 import datetime
-import grp
 import os
 import platform
 import pprint
-import pwd
 import sys
 import time
 import traceback

@@ -16,6 +16,8 @@ RUN apt-get -y update && \
     git \
     graphviz \
     imagemagick \
+    python3 \
+    python3-pip \
     procps \
     ssh-client \
     vim \
