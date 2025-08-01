@@ -5,13 +5,10 @@
 set -e
 
 # Script directory as parameter (default fallback)
-SCRIPT_DIR="${1:-/root}"
+SCRIPT_DIR="${1:-/scripts}"
 WEB_DIR="/var/www/html"
 
 echo "Setting up MediaWiki using scripts from: ${SCRIPT_DIR}"
-
-# Make scripts executable
-chmod +x ${SCRIPT_DIR}/*.sh
 
 # Update MediaWiki extensions via composer
 cd ${WEB_DIR}

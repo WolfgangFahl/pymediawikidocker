@@ -329,6 +329,12 @@ class DockerApplication(object):
         env = Environment(loader=FileSystemLoader(template_dir))
         return env
 
+    def setupMediaWiki(self):
+        """
+        setup media wiki
+        """
+        self.execute("chmod +x /scripts/*.sh;/scripts/setup-mediawiki.sh")
+
     def initDB(self):
         """
         initialize my SQL database
@@ -856,7 +862,7 @@ class DockerApplication(object):
             dbStatus = self.checkDBConnection()
             if dbStatus.ok:
                 # run the mediawiki setup including composer based extensions
-                self.execute("/scripts/setup-mediawiki.sh", "/scripts")
+                self.setupMediaWiki()
                 # then install extensions
                 self.installExtensions()
                 # then create and fill database and update it
