@@ -75,21 +75,20 @@ class DockerContainer:
         msg = f"mediawiki {self.kind} container {self.name}"
         return Logger.check_and_log(msg, ok)
 
-    def detect_crash(self)->str:
+    def detect_crash(self) -> str:
         """
         check that we are still running and get crash details if not
 
         Returns:
             str: None if running, log if crashed
         """
-        logs=None
+        logs = None
         try:
             if not self.container.state.running:
                 logs = docker.container.logs(self.name)
         except Exception as ex:
-            logs=str(ex)
+            logs = str(ex)
         return logs
-
 
     def wait_for_state(
         self, running: bool, interval: float = 0.2, timeout: float = 60.0
@@ -420,13 +419,17 @@ class DockerApplication(object):
                 command_line = " ".join(command_list)
                 print(f"Executing docker command {command_line}")
             try:
-                docker.execute(container=self.mwContainer.container, command=command_list)
+                docker.execute(
+                    container=self.mwContainer.container, command=command_list
+                )
             except Exception as ex:
                 # Check if container crashed
                 logs = self.mwContainer.detect_crash()
                 if logs is not None:
                     print(f"{self.mwContainer.name} crashed with log: {logs}")
-                    raise Exception(f"Container {self.mwContainer.name} crashed during execute: {ex}")
+                    raise Exception(
+                        f"Container {self.mwContainer.name} crashed during execute: {ex}"
+                    )
                 else:
                     # Re-raise original exception if not a crash
                     raise ex
@@ -828,7 +831,6 @@ class DockerApplication(object):
                 if self.config.verbose:
                     print(f"{dc.name} 🟢 started in {start_secs:.2f}s")
         return mw, db
-
 
     def start(self, forceRebuild: bool = False, withInitDB=True):
         """

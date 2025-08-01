@@ -312,7 +312,7 @@ class MwConfig:
         self.extensionNameList = args.extensionNameList
         self.extensionJsonFile = args.extensionJsonFile
         self.bind_mount = args.bind_mount
-        self.forceRebuild = args.forceRebuild
+        self.forceRebuild = args.forceRebuild or args.force
         self.host = args.host
         self.logo = args.logo
         self.mariaDBVersion = args.mariaDBVersion
@@ -360,14 +360,6 @@ class MwConfig:
             help="set container name (only valid and recommended for single version call)",
         )
         parser.add_argument(
-            "-d",
-            "--debug",
-            dest="debug",
-            action="store_true",
-            default=self.debug,
-            help="enable debug mode [default: %(default)s]",
-        )
-        parser.add_argument(
             "-el",
             "--extensionList",
             dest="extensionNameList",
@@ -382,8 +374,8 @@ class MwConfig:
             default=self.extensionJsonFile,
             help="additional extension descriptions default: [default: %(default)s]",
         )
+        # since -f is a default options we have to make sure we accept it as forceRebuild
         parser.add_argument(
-            "-f",
             "--forceRebuild",
             action="store_true",
             default=self.forceRebuild,
@@ -488,13 +480,6 @@ class MwConfig:
             dest="user",
             default=self.user,
             help="set username of initial user with sysop rights [default: %(default)s] ",
-        )
-        parser.add_argument(
-            "-q",
-            "--quiet",
-            default=not self.verbose,
-            help="not verbose [default: %(default)s]",
-            action="store_true",
         )
 
 

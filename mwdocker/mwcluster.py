@@ -5,14 +5,10 @@ Created on 2021-08-06
 
 import dataclasses
 import sys
-import traceback
-import webbrowser
-from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser
 
 from mwdocker.config import MwClusterConfig
 from mwdocker.docker import DockerApplication
 from mwdocker.logger import Logger
-from mwdocker.version import Version
 
 
 class MediaWikiCluster(object):
@@ -175,102 +171,3 @@ class MediaWikiCluster(object):
         appConfig.__post_init__()
         mwApp = DockerApplication(config=appConfig)
         return mwApp
-
-
-DEBUG = False
-
-
-def main(argv=None):  # IGNORE:C0111
-    """main program."""
-
-    if argv is None:
-        argv = sys.argv[1:]
-
-    program_name = "mwcluster"
-    program_version = f"v{Version.version}"
-    program_build_date = str(Version.updated)
-    program_version_message = f"{program_name} ({program_version},{program_build_date})"
-    program_license = Version.license
-
-    try:
-        # Setup argument parser
-        parser = ArgumentParser(
-            description=program_license, formatter_class=ArgumentDefaultsHelpFormatter
-        )
-        mwClusterConfig = MwClusterConfig()
-        mwClusterConfig.addArgs(parser)
-        parser.add_argument(
-            "--about",
-            help="show about info [default: %(default)s]",
-            action="store_true",
-        )
-        parser.add_argument(
-            "--create", action="store_true", help="create wikis [default: %(default)s]"
-        )
-        parser.add_argument(
-            "--down", action="store_true", help="shutdown wikis [default: %(default)s]"
-        )
-        parser.add_argument(
-            "--check",
-            action="store_true",
-            help="check the wikis [default: %(default)s]",
-        )
-        parser.add_argument(
-            "--list", action="store_true", help="list the wikis [default: %(default)s]"
-        )
-        parser.add_argument(
-            "-V", "--version", action="version", version=program_version_message
-        )
-        args = parser.parse_args(argv)
-        if args.about:
-            print(program_version_message)
-            print(f"see {Version.doc_url}")
-            webbrowser.open(Version.doc_url)
-        else:
-            action = None
-            withGenerate = False
-            if args.check:
-                action = "checking docker access"
-            elif args.create:
-                action = "creating docker compose applications"
-                withGenerate = True
-            elif args.list:
-                action = "listing docker compose wiki applications"
-            elif args.down:
-                action = "running docker compose down"
-            if not action:
-                parser.print_usage()
-            else:
-                print(f"{action} for mediawiki versions {args.versions}")
-                # create a MediaWiki Cluster
-                mwClusterConfig.fromArgs(args)
-                mwCluster = MediaWikiCluster(config=mwClusterConfig)
-                mwCluster.createApps(withGenerate=withGenerate)
-                if args.check:
-                    return mwCluster.check()
-                elif args.create:
-                    return mwCluster.start(forceRebuild=args.forceRebuild)
-                elif args.list:
-                    return mwCluster.listWikis()
-                elif args.down:
-                    return mwCluster.down(forceRebuild=args.forceRebuild)
-    except KeyboardInterrupt:
-        ### handle keyboard interrupt ###
-        return 1
-    except Exception as e:
-        if DEBUG:
-            raise (e)
-        indent = len(program_name) * " "
-        sys.stderr.write(program_name + ": " + repr(e) + "\n")
-        sys.stderr.write(indent + "  for help use --help")
-        if args is None:
-            print("args could not be parsed")
-        elif args.debug:
-            print(traceback.format_exc())
-        return 2
-
-
-if __name__ == "__main__":
-    if DEBUG:
-        sys.argv.append("-d")
-    sys.exit(main())

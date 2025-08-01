@@ -76,4 +76,4 @@ only-include = ["mwdocker"]
 
 
 [project.scripts]
-mwcluster = "mwdocker.mwcluster:main"
+mwcluster = "mwdocker.mwdocker_cmd:main"

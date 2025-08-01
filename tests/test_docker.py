@@ -24,9 +24,9 @@ class TestDocker(Basetest):
         test docker state checking and waiting
         """
         # Run a simple ash loop in busybox to test scripting support
-        imax=3
+        imax = 3
         if self.inPublicCI():
-            imax=10
+            imax = 10
         for i in range(1, imax):
             with self.subTest(sleep=i):
                 container_name = f"busybox-sleep-{i}"
@@ -57,16 +57,12 @@ class TestDocker(Basetest):
         crash_methods = [
             # Method 1: Kill current shell process
             ["sh", "-c", "sleep 1; kill -9 $$"],
-
             # Method 2: Exit with error code
             ["sh", "-c", "sleep 1; exit 1"],
-
             # Method 3: SIGKILL self
             ["sh", "-c", "sleep 1; kill -KILL $$"],
-
             # Method 4: SIGSEGV self
             ["sh", "-c", "sleep 1; kill -SEGV $$"],
-
             # Method 5: Invalid memory access (if available)
             ["sh", "-c", "sleep 1; kill -ABRT $$"],
         ]
@@ -86,7 +82,9 @@ class TestDocker(Basetest):
                     remove=False,
                 )
 
-                dc = DockerContainer(name=container_name, kind="crash-test", container=container)
+                dc = DockerContainer(
+                    name=container_name, kind="crash-test", container=container
+                )
 
                 # Wait for it to start
                 start_secs = dc.wait_for_state(running=True)
@@ -104,5 +102,5 @@ class TestDocker(Basetest):
                 else:
                     crashed = False
 
-            #self.assertTrue(crashed, f"Crash method {i} {crash_cmd} should have detected crash")
+            # self.assertTrue(crashed, f"Crash method {i} {crash_cmd} should have detected crash")
             docker.container.remove(container_name, force=True)
