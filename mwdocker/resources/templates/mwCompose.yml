@@ -41,8 +41,8 @@ services:
       - type: {{volume_type}}           # 'volume' or 'bind'
         source: {{wiki_www}}            # volume name or host path
         target: /var/www/               # container path
-      - type: bind 
-        source: wiki-etc                # volume name or host path
+      - type: volume 
+        source: wiki-etc                # volume name 
         target: /etc                    # container path
       # - type: bind
       #   source: ./LocalSettings.php   # host path
