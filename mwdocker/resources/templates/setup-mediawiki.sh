@@ -95,6 +95,19 @@ fix_permissions() {
   chgrp -R www-data ${WEB_DIR}
 }
 
+
+# add crontab entry
+# run startRunJobs.sh every minute
+# prepare logging
+add_crontab_entry() {
+	mkdir -p /var/log/mediawiki
+	touch /var/log/mediawiki/runJobs.log
+	# add an entry for the crontab
+	(crontab -l 2>/dev/null; echo "*/1 * * * * /root/startRunJobs.sh") | crontab -
+	# start the cron service
+	service cron start
+}
+
 #
 # start the run jobs
 #
@@ -127,11 +140,14 @@ composer update --no-dev
 # Run other setup scripts
 chmod +x ${SCRIPT_DIR}/*.sh
 
-# copy LocalSettings.php
-if [ ! -f ${WEB_DIR}/LocalSettings.php ]
-then
-  cp -p ${SCRIPT_DIR}/LocalSettings.php ${WEB_DIR}/LocalSettings.php
-fi
+# copy LocalSettings.php and phpinfo.php
+for script in LocalSettings.php phpinfo.php
+do
+  if [ ! -f ${WEB_DIR}/$script ]
+  then
+    cp -p ${SCRIPT_DIR}/$script ${WEB_DIR}/$script
+  fi
+done
 
 # fix permissions before starting
 fix_permissions
@@ -146,7 +162,6 @@ fix_permissions
 initdb
 
 ${SCRIPT_DIR}/addSysopUser.sh
-${SCRIPT_DIR}/addCronTabEntry.sh
 
 # run the update script
 run_update
@@ -155,5 +170,8 @@ run_update
 lang_images ${WEB_DIR}/images
 # fix permissions before finishing
 fix_permissions
+
+# make sure we start runjobs every minute for updates
+add_crontab_entry
 
 echo "MediaWiki setup complete!"
