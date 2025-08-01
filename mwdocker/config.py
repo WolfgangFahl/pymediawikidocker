@@ -312,7 +312,7 @@ class MwConfig:
         self.extensionNameList = args.extensionNameList
         self.extensionJsonFile = args.extensionJsonFile
         self.bind_mount = args.bind_mount
-        self.forceRebuild = args.forceRebuild or args.force
+        self.forceRebuild = args.forceRebuild or getattr(args, "force", False)
         self.host = args.host
         self.logo = args.logo
         self.mariaDBVersion = args.mariaDBVersion
