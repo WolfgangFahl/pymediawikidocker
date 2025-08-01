@@ -330,42 +330,6 @@ class DockerApplication(object):
         env = Environment(loader=FileSystemLoader(template_dir))
         return env
 
-    def setupMediaWiki(self):
-        """
-        setup media wiki
-        """
-        self.execute("chmod", "+x", "/scripts/setup-mediawiki.sh")
-        self.execute("/scripts/setup-mediawiki.sh", "/scripts")
-
-    def initDB(self):
-        """
-        initialize my SQL database
-        """
-        # restore the mySQL dump data
-        self.execute("/root/initdb.sh")
-        # update the database e.g. to initialize Semantic MediaWiki tables
-        self.execute("/root/update.sh")
-        # add an initial sysop user as specified
-        self.execute("/root/addSysopUser.sh")
-
-    def installExtensions(self):
-        """
-        install all extensions
-        """
-        self.execute("/root/installExtensions.sh")
-        self.execute("/root/fixPermissions.sh")
-
-    def startUp(self):
-        """
-        run startUp scripts
-        """
-        # fix permissions
-        self.execute("/root/fixPermissions.sh")
-        # add language icons
-        self.execute("/root/lang.sh", "--site", "/var/www/html")
-        # start cron job
-        self.execute("/root/addCronTabEntry.sh")
-
     def createWikiUser(self, wikiId: str = None, store: bool = False):
         """
         create my wikiUser and optionally save it
@@ -755,16 +719,10 @@ class DockerApplication(object):
             f"{self.docker_path}/composer.local.json", overwrite=overwrite
         )
         for file_name in [
-            "addCronTabEntry.sh",
-            "fixPermissions.sh",
-            "initdb.sh",
-            "lang.sh",
             "phpinfo.php",
             "install_djvu.sh",
             "plantuml.sh",
-            "startRunJobs.sh",
             "upload.ini",
-            "update.sh",
         ]:
             self.generate(
                 f"{file_name}", f"{self.docker_path}/{file_name}", overwrite=overwrite
@@ -879,12 +837,6 @@ class DockerApplication(object):
             if dbStatus.ok:
                 # run the mediawiki setup including composer based extensions
                 self.setupMediaWiki()
-                # then install extensions
-                self.installExtensions()
-                # then create and fill database and update it
-                self.initDB()
-                # then run startUp scripts
-                self.startUp()
         if self.config.verbose:
             print(
                 f"MediaWiki {self.config.container_base_name} is ready at {self.config.full_url}"
