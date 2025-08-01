@@ -4,10 +4,11 @@ Created on 2025-08-01
 @author: wf
 """
 
-from argparse import ArgumentParser, Namespace
 import sys
+from argparse import ArgumentParser, Namespace
 
 from basemkit.base_cmd import BaseCmd
+
 from mwdocker.config import MwClusterConfig, MwConfig
 from mwdocker.mwcluster import MediaWikiCluster
 from mwdocker.version import Version
@@ -23,7 +24,7 @@ class MediaWikiDockerCmd(BaseCmd):
         self.config = MwClusterConfig()
         self.cluster = None
 
-    def getMwConfig(self, argv=None, version=None)->MwClusterConfig:
+    def getMwConfig(self, argv=None, version=None) -> MwClusterConfig:
         """
         get a mediawiki configuration for the given command line arguments
         """
@@ -31,9 +32,9 @@ class MediaWikiDockerCmd(BaseCmd):
             argv = self.argv
         parser = ArgumentParser()
         if version is None:
-            version=MwConfig.version
+            version = MwConfig.version
         mwClusterConfig = MwClusterConfig(version=version)
-        self.config=mwClusterConfig
+        self.config = mwClusterConfig
         self.add_arguments(parser)
         args = parser.parse_args(argv)
         mwClusterConfig.fromArgs(args)

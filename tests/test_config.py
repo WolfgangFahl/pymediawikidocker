@@ -4,10 +4,11 @@ Created on 2023-04-06
 @author: wf
 """
 
-from argparse import ArgumentParser
 import json
+from argparse import ArgumentParser
 
 from basemkit.basetest import Basetest
+
 from mwdocker.config import Host, MwClusterConfig, MwConfig
 from mwdocker.mwdocker_cmd import MediaWikiDockerCmd
 from mwdocker.version import Version
@@ -100,7 +101,7 @@ class TestConfig(Basetest):
         """
         test command line argument handling
         """
-        mwdocker_cmd=MediaWikiDockerCmd(version=Version)
+        mwdocker_cmd = MediaWikiDockerCmd(version=Version)
         argv_examples = [
             (
                 ["--prot", "https"],
@@ -112,7 +113,7 @@ class TestConfig(Basetest):
             ),
         ]
         for argv, expected in argv_examples:
-            mwClusterConfig=mwdocker_cmd.getMwConfig(argv)
+            mwClusterConfig = mwdocker_cmd.getMwConfig(argv)
             json_str = mwClusterConfig.as_json()
             debug = self.debug
             # debug = True

@@ -21,8 +21,9 @@ import mwdocker
 from mwdocker.config import MwClusterConfig
 from mwdocker.mariadb import MariaDB
 from mwdocker.mwcluster import MediaWikiCluster
-from mwdocker.version import Version
 from mwdocker.mwdocker_cmd import MediaWikiDockerCmd
+from mwdocker.version import Version
+
 
 class TestInstall(Basetest):
     """
@@ -37,9 +38,9 @@ class TestInstall(Basetest):
         self.argv = ["--docker_path", self.docker_path]
         self.default_config = MwClusterConfig()
 
-    def getMwConfig(self, argv=None, version=None)->MwClusterConfig:
-        mwdocker_cmd=MediaWikiDockerCmd(version=Version)
-        config=mwdocker_cmd.getMwConfig(argv, version)
+    def getMwConfig(self, argv=None, version=None) -> MwClusterConfig:
+        mwdocker_cmd = MediaWikiDockerCmd(version=Version)
+        config = mwdocker_cmd.getMwConfig(argv, version)
         return config
 
     def getMwCluster(
@@ -331,7 +332,7 @@ class TestInstall(Basetest):
                 pass
             stdout_txt = stdout.getvalue()
             debug = self.debug
-            debug=True
+            debug = True
             if debug:
                 print(stdout_txt)
             self.assertTrue(expected in stdout_txt, f"for argv {argv}")
