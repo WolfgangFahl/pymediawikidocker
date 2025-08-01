@@ -37,22 +37,10 @@ class TestInstall(Basetest):
         self.argv = ["--docker_path", self.docker_path]
         self.default_config = MwClusterConfig()
 
-    def getMwConfig(self, argv=None, version=None):
-        """
-        get a mediawiki configuration for the given command line arguments
-        """
-        if not argv:
-            argv = self.argv
+    def getMwConfig(self, argv=None, version=None)->MwClusterConfig:
         mwdocker_cmd=MediaWikiDockerCmd(version=Version)
-        parser = ArgumentParser()
-        if version is None:
-            version = self.default_config.version
-        mwClusterConfig = MwClusterConfig(version=version)
-        mwdocker_cmd.config=mwClusterConfig
-        mwdocker_cmd.add_arguments(parser)
-        args = parser.parse_args(argv)
-        mwClusterConfig.fromArgs(args)
-        return mwClusterConfig
+        config=mwdocker_cmd.getMwConfig(argv, version)
+        return config
 
     def getMwCluster(
         self,
@@ -337,7 +325,7 @@ class TestInstall(Basetest):
             try:
                 stdout = io.StringIO()
                 with redirect_stdout(stdout):
-                    mwdocker.mwcluster.main(argv)
+                    mwdocker.mwdocker_cmd.main(argv)
                 # self.fail("system exit expected")
             except SystemExit:
                 pass
