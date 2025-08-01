@@ -664,17 +664,30 @@ class DockerApplication(object):
         Args:
             overwrite (bool): if True overwrite the existing files
         """
-        self.generate_env_file(overwrite=overwrite)
-
-        # then generate Dockerfile
+        # first generate Dockerfile
+        # the goal is to get an empty MediaWiki (no LocalSettings/extensions)
+        # with composer ready
         self.generate(
             "mwDockerfile",
             f"{self.docker_path}/Dockerfile",
             composerVersion=self.composerVersion,
             overwrite=overwrite,
         )
-        # Docker compose - we have to configure whether
+        # the master setup script
+        # this used to be part of Dockerfile but
+        # needs to be scripted when we use bind mounts due
+        # to docker's poor design of permission and mount handling
+        self.generate(
+            f"setup-mediawiki.sh",
+            f"{self.docker_path}/setup-mediawiki.sh",
+            script_dir="/scripts",
+            web_dir="/var/www/html",
+            overwrite=overwrite,
+        )
+        # then the Docker compose - we have to configure whether
         # bind mounts or volumes are to be used
+        # at this stage we will have two containers
+        # one for the database and one for the MediaWiki
         if self.config.bind_mount:
             volume_type = "bind"
             mysql_data = f"/var/lib/mysql"
@@ -695,6 +708,9 @@ class DockerApplication(object):
             scripts_dir=self.docker_path,
             overwrite=overwrite,
         )
+        # now generate the parts we will use later to
+        # create the fully configured wiki
+        # first - LocalSettings with references to all extensions
         self.generate(
             f"mwLocalSettings{self.config.shortVersion}.php",
             f"{self.docker_path}/LocalSettings.php",
@@ -705,11 +721,14 @@ class DockerApplication(object):
             logo=self.config.logo,
             overwrite=overwrite,
         )
+        # the SQL file for initial content
         self.generate(
             f"mwWiki{self.config.shortVersion}.sql",
             f"{self.docker_path}/wiki.sql",
             overwrite=overwrite,
         )
+        # a WikiUser for automated access via
+        # py-3rdparty mediawiki
         if self.config.random_password:
             self.config.password = self.config.create_random_password(
                 length=self.config.password_length
@@ -720,13 +739,6 @@ class DockerApplication(object):
                     force_overwrite=self.config.force_user,
                     lenient=self.config.lenient,
                 )
-        self.generate(
-            f"setup-mediawiki.sh",
-            f"{self.docker_path}/setup-mediawiki.sh",
-            script_dir="/scripts",
-            web_dir="/var/www/html",
-            overwrite=overwrite,
-        )
         self.generate(
             f"addSysopUser.sh",
             f"{self.docker_path}/addSysopUser.sh",
