@@ -26,7 +26,7 @@ from mwdocker.config import MwClusterConfig
 from mwdocker.html_table import HtmlTables
 from mwdocker.logger import Logger
 from mwdocker.mariadb import MariaDB
-
+from mwdocker.version import Version
 
 class DockerMap:
     """
@@ -604,6 +604,7 @@ class DockerApplication(object):
                 sql_port=self.config.sql_port,
                 smw_version=self.config.smw_version,
                 timestamp=timestamp,
+                pmwdVersion=Version.version,
                 config=self.config,
                 **kwArgs,
             )
