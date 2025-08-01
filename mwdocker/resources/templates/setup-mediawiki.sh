@@ -128,9 +128,9 @@ composer update --no-dev
 chmod +x ${SCRIPT_DIR}/*.sh
 
 # copy LocalSettings.php
-if [ ! -f ${WEB_DIR}/Localsettings.php ]
+if [ ! -f ${WEB_DIR}/LocalSettings.php ]
 then
-  cp -p ${SCRIPT_DIR}/Localsettings.php ${WEB_DIR}/Localsettings.php
+  cp -p ${SCRIPT_DIR}/LocalSettings.php ${WEB_DIR}/LocalSettings.php
 fi
 
 # fix permissions before starting
