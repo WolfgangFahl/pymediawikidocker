@@ -49,6 +49,9 @@ class MediaWikiCluster(object):
         Returns:
             dict(str): a dict of apps by version
         """
+        exitCode = self.checkDocker()
+        if exitCode > 0:
+            raise ValueError("createApps needs docker command in PATH")
         app_count = len(self.config.versions)
         for i, version in enumerate(self.config.versions):
             mwApp = self.getDockerApplication(i, app_count, version)

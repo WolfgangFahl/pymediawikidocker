@@ -17,7 +17,7 @@ dependencies = [
 	# https://pypi.org/project/pybasemkit/
 	# https://github.com/WolfgangFahl/pybasemkit
 	# Python base module kit: YAML/JSON I/O, structured logging, CLI tooling, shell execution, and remote pydevd debug support.
-	"pybasemkit>=0.0.5",
+	"pybasemkit>=0.0.7",
 	#python-on-whales
 	'python-on-whales>=0.77.0',
 	# https://pypi.org/project/Jinja2/
