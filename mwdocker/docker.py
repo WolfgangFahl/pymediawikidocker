@@ -378,38 +378,47 @@ class DockerApplication(object):
             wikiUser = self.createWikiUser(wikiId, store=True)
         return wikiUser
 
-    def execute(self, *commands: str):
+    def execute(self, *commands: str, stream: bool = True):
         """
-        execute the given variable list of command strings
+        Execute the given variable list of command strings inside the MediaWiki container.
 
         Args:
-            commands: str - the command strings to be executed ...
+            commands: str - command strings to be executed
+            stream: bool - whether to stream output live (default: True)
         """
         command_list = list(commands)
-        if self.mwContainer:
-            if self.config.verbose:
-                command_line = " ".join(command_list)
-                print(f"Executing docker command {command_line}")
-            try:
-                docker.execute(
-                    container=self.mwContainer.container, command=command_list
-                )
-            except Exception as ex:
-                # Check if container crashed
-                logs = self.mwContainer.detect_crash()
-                if logs is not None:
-                    print(f"{self.mwContainer.name} crashed with log: {logs}")
-                    raise Exception(
-                        f"Container {self.mwContainer.name} crashed during execute: {ex}"
-                    )
-                else:
-                    # Re-raise original exception if not a crash
-                    raise ex
-        else:
+        if not self.mwContainer:
             mwContainerNameDash = self.getContainerName("mw", "-")
             mwContainerNameUnderscore = self.getContainerName("mw", "_")
-            errMsg = f"no mediawiki Container {mwContainerNameDash} or {mwContainerNameUnderscore} for {self.name} activated by docker compose\n- you might want to check the separator character used for container names for your platform {platform.system()}"
-            raise Exception(f"{errMsg}")
+            raise Exception(
+                f"no mediawiki Container {mwContainerNameDash} or {mwContainerNameUnderscore} for {self.name} "
+                f"activated by docker compose\n- you might want to check the separator character used "
+                f"for container names for your platform {platform.system()}"
+            )
+
+        if self.config.verbose:
+            command_line = " ".join(command_list)
+            print(f"Executing docker command: {command_line}")
+
+        try:
+            result = docker.execute(
+                container=self.mwContainer.container,
+                command=command_list,
+                stream=stream
+            )
+            if stream:
+                for line in result:
+                    print(line, end="")
+        except Exception as ex:
+            logs = self.mwContainer.detect_crash()
+            if logs is not None:
+                print(f"{self.mwContainer.name} crashed with log: {logs}")
+                raise Exception(
+                    f"Container {self.mwContainer.name} crashed during execute: {ex}"
+                )
+            else:
+                raise ex
+
 
     def close(self):
         """
