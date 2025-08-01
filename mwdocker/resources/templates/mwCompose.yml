@@ -27,7 +27,6 @@ services:
 
   # MediaWiki
   mw:
-    user: "${UID}:${GID}"
     container_name: {{container_base_name}}-mw
     build: .
     restart: always

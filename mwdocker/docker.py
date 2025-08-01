@@ -657,17 +657,6 @@ class DockerApplication(object):
         requireJson = self.getComposerRequire()
         self.optionalWrite(composerFilePath, requireJson, overwrite)
 
-    def generate_env_file(self, overwrite: bool = False):
-        """Generate .env file with current user UID/GID"""
-        uid = os.getuid()
-        gid = os.getgid()
-
-        env_content = f"""UID={uid}
-    GID={gid}
-    """
-        env_path = f"{self.docker_path}/.env"
-        self.optionalWrite(env_path, env_content, overwrite)
-
     def generateAll(self, overwrite: bool = False):
         """
         generate all files needed for the docker handling
