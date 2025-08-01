@@ -841,3 +841,11 @@ class DockerApplication(object):
             print(
                 f"MediaWiki {self.config.container_base_name} is ready at {self.config.full_url}"
             )
+
+    def setupMediaWiki(self):
+        """
+        setup MediaWiki via a script that calls the generated scripts
+        """
+        self.execute("chmod", "+x", "/scripts/setup-mediawiki.sh")
+        self.execute("/scripts/setup-mediawiki.sh", "/scripts")
+
