@@ -336,7 +336,7 @@ class DockerApplication(object):
         """
         setup media wiki
         """
-        self.execute("chmod", "+x", "/scripts/*.sh")
+        self.execute("chmod", "+x", "/scripts/setup-mediawiki.sh")
         self.execute("/scripts/setup-mediawiki.sh", "/scripts")
 
     def initDB(self):

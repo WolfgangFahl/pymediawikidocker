@@ -10,11 +10,13 @@ WEB_DIR="/var/www/html"
 
 echo "Setting up MediaWiki using scripts from: ${SCRIPT_DIR}"
 
+
 # Update MediaWiki extensions via composer
 cd ${WEB_DIR}
 composer update --no-dev
 
-# Run setup scripts
+# Run other setup scripts
+chmod +x ${SCRIPT_DIR}/*.sh
 ${SCRIPT_DIR}/fixPermissions.sh
 ${SCRIPT_DIR}/installExtensions.sh
 
