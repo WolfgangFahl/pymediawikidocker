@@ -57,11 +57,11 @@ services:
 volumes:
   wiki-etc:
     driver: local
+  wiki-html:
+    driver: local
 {% if volume_type == "volume" %}
   {{mysql_data}}:
     driver: local
   {{wiki_sites}}:
-    driver: local
-  {{wiki_html}}:
     driver: local
 {% endif %}
