@@ -28,6 +28,7 @@ services:
   # MediaWiki
   mw:
     container_name: {{container_base_name}}-mw
+    user: "{{uid}}:{{gid}}"
     build: .
     restart: always
     command: --default-authentication-plugin=mysql_native_password

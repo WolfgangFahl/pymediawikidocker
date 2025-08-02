@@ -48,9 +48,8 @@ class Host:
 @lod_storable
 class MwConfig:
     """
-    MediaWiki configuration for a Single Wiki
+    MediaWiki and docker configuration for a Single Wiki
     """
-
     version: str = "1.39.13"
     smw_version: Optional[str] = None
     extensionNameList: Optional[List[str]] = field(
@@ -65,32 +64,40 @@ class MwConfig:
     extensionJsonFile: Optional[str] = None
     user: str = "Sysop"
     prefix: str = "mw"
-    password_length: int = 15
-    random_password: bool = False
-    force_user: bool = False
-    lenient: bool = True
-    password: str = "sysop-1234!"
-    mySQLRootPassword: Optional[str] = None
-    mySQLPassword: Optional[str] = None
     logo: str = "$wgResourceBasePath/resources/assets/wiki.png"
-    port: int = 9080
-    base_port: Optional[int] = None
-    sql_port: int = 9306
     url = None
     full_url = None
     prot: str = "http"
     host: str = Host.get_default_host()
     article_path: Optional[str] = None  # "/index.php/$1"
     script_path: str = ""
+    wikiId: Optional[str] = None
+    # mysql settings
+    mySQLRootPassword: Optional[str] = None
+    mySQLPassword: Optional[str] = None
+    mariaDBVersion: str = "11.4"
+
+    # docker settings
+    bind_mount: bool = False
+    port: int = 9080
+    base_port: Optional[int] = None
+    sql_port: int = 9306
     container_base_name: Optional[str] = None
     networkName: str = "mwNetwork"
-    mariaDBVersion: str = "11.4"
-    forceRebuild: bool = False
-    bind_mount: bool = False
-    debug: bool = False
-    verbose: bool = True
-    wikiId: Optional[str] = None
     docker_path: Optional[str] = None
+    gid: int=33 # www-data
+    uid: int=33 # www-data
+
+    # build control
+    verbose: bool = True
+    random_password: bool = False
+    force_user: bool = False
+    lenient: bool = True
+    password_length: int = 15
+    forceRebuild: bool = False
+    debug: bool = False
+    # FIXME - we should avoid a predefined known password
+    password: str = "sysop-1234!"
 
     def default_docker_path(self) -> str:
         """
@@ -279,9 +286,7 @@ class MwConfig:
             for duplicate in duplicates:
                 print(duplicate.name)
         if extensionJsonFile is not None:
-            extraExtensionList = ExtensionList.load_from_json_file(
-                extensionJsonFile
-            )  # @UndefinedVariable
+            extraExtensionList = ExtensionList.load_from_json_file(extensionJsonFile)  # @UndefinedVariable
             for ext in extraExtensionList.extensions:
                 if ext.name in self.extByName:
                     print(f"overriding {ext.name} extension definition")
@@ -314,6 +319,8 @@ class MwConfig:
         self.extensionNameList = args.extensionNameList
         self.extensionJsonFile = args.extensionJsonFile
         self.bind_mount = args.bind_mount
+        self.uid=args.uid
+        self.gid=args.gid
         self.forceRebuild = args.forceRebuild or getattr(args, "force", False)
         self.host = args.host
         self.logo = args.logo
@@ -483,6 +490,9 @@ class MwConfig:
             default=self.user,
             help="set username of initial user with sysop rights [default: %(default)s] ",
         )
+        parser.add_argument("--uid", type=int, default=self.uid, help="User ID  (default: 33 for www-data)")
+        parser.add_argument("--gid", type=int, default=self.gid, help="Group ID (default: 33 for www-data)")
+
 
 
 @dataclass

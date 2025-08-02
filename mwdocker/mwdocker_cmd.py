@@ -41,6 +41,9 @@ class MediaWikiDockerCmd(BaseCmd):
         return mwClusterConfig
 
     def add_arguments(self, parser: ArgumentParser):
+        """
+        add parser arguments
+        """
         super().add_arguments(parser)
         self.config.addArgs(parser)
         parser.add_argument("--create", action="store_true")

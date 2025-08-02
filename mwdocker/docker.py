@@ -677,6 +677,8 @@ class DockerApplication(object):
             mysql_data=mysql_data,
             wiki_www=wiki_www,
             scripts_dir=self.docker_path,
+            uid=self.config.uid,
+            gid=self.config.gid,
             overwrite=overwrite,
         )
         # now generate the parts we will use later to
