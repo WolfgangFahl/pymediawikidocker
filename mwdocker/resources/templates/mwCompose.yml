@@ -10,8 +10,8 @@ services:
 
   # MySQL compatible relational database
   db:
-    image: mariadb:{{mariaDBVersion}}
-    container_name: {{container_base_name}}-db
+    image: "mariadb:{{mariaDBVersion}}"
+    container_name: "{{container_base_name}}-db"
     restart: always
     environment:
       MYSQL_DATABASE: wiki
