@@ -295,6 +295,11 @@ extensions:
   purpose: Enable the execution of sparql query to different endpoint and produce
     various output format.
   giturl: https://github.com/imolainformatica/SparqlResultFormat
+- name: SubpageNavigation
+  wikidata_id: Q123244126
+  url: https://www.mediawiki.org/wiki/Extension:SubpageNavigation
+  extension: SubpageNavigation
+  purpose: 'Shows direct children of current page in article header, provides dynamic subpage tree on the sidebar and a special page to browse all pages/subpages of the wiki in different modalities'
 - name: SyntaxHighlight
   url: https://www.mediawiki.org/wiki/Extension:SyntaxHighlight
   extension: SyntaxHighlight_GeSHi

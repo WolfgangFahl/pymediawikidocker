@@ -132,7 +132,6 @@ initdb() {
   # initialize the database from the sql backup
   cat ${SCRIPT_DIR}/wiki.sql  | mysql --host db -u wikiuser wiki --password="$password"
 }
-
 echo "Setting up MediaWiki using scripts from: ${SCRIPT_DIR}"
 
 

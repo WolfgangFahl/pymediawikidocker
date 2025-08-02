@@ -6,6 +6,7 @@ Created on 2021-08-06
 
 import datetime
 import os
+import stat
 import platform
 import pprint
 import sys
@@ -635,6 +636,16 @@ class DockerApplication(object):
         Args:
             overwrite (bool): if True overwrite the existing files
         """
+        # we have to configure whether
+        # bind mounts or volumes are to be used
+        if self.config.bind_mount:
+            volume_type = "bind"
+            mysql_data = f"/var/lib/mysql"
+            wiki_www = f"/var/www/mediawiki/sites"
+        else:
+            volume_type = "volume"
+            mysql_data = "mysql-data"
+            wiki_www = "wiki-www"
         # first generate Dockerfile
         # the goal is to get an empty MediaWiki (no LocalSettings/extensions)
         # with composer ready
@@ -642,6 +653,7 @@ class DockerApplication(object):
             "mwDockerfile",
             f"{self.docker_path}/Dockerfile",
             composerVersion=self.composerVersion,
+            volume_type=volume_type,
             overwrite=overwrite,
         )
         # the master setup script
@@ -655,18 +667,9 @@ class DockerApplication(object):
             web_dir="/var/www/html",
             overwrite=overwrite,
         )
-        # then the Docker compose - we have to configure whether
-        # bind mounts or volumes are to be used
+        # the Docker compose
         # at this stage we will have two containers
         # one for the database and one for the MediaWiki
-        if self.config.bind_mount:
-            volume_type = "bind"
-            mysql_data = f"/var/lib/mysql"
-            wiki_www = f"/var/www/mediawiki/sites"
-        else:
-            volume_type = "volume"
-            mysql_data = "mysql-data"
-            wiki_www = "wiki-www"
         self.generate(
             "mwCompose.yml",
             f"{self.docker_path}/docker-compose.yml",
@@ -731,6 +734,7 @@ class DockerApplication(object):
         )
         for file_name in [
             "phpinfo.php",
+            "disable_sudo.sh",
             "install_djvu.sh",
             "plantuml.sh",
             "upload.ini",
@@ -738,6 +742,23 @@ class DockerApplication(object):
             self.generate(
                 f"{file_name}", f"{self.docker_path}/{file_name}", overwrite=overwrite
             )
+
+        # chmod generated scripts that need to be bash callable
+        # to be executable on container operating system (linux)
+        # when bind mounted or being copied
+        for executable in [
+            "disable_sudo.sh",
+            "install_djvu.sh",
+            "plantuml.sh",
+            "addSysopUser.sh",
+            "installExtensions.sh",
+            "setup-mediawiki.sh",
+        ]:
+            path = os.path.join(self.docker_path, executable)
+            if os.path.exists(path):
+                st = os.stat(path)
+                os.chmod(path, st.st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
+
         # remember the configuration we used for generating
         # avoid endless loop - forceRebuilds - we have rebuild already
         forceRebuild = self.config.forceRebuild

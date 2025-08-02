@@ -6,6 +6,7 @@ FROM mediawiki:{{mwVersion}}
 
 MAINTAINER Wolfgang Fahl <wf@bitplan.com>
 
+# we start as root user
 # install some more utilities
 RUN apt-get -y update && \
     apt-get -y --no-install-recommends --fix-missing install \
@@ -20,6 +21,7 @@ RUN apt-get -y update && \
     python3-pip \
     procps \
     ssh-client \
+    sudo \
     vim \
     unzip \
     libzip-dev \
@@ -34,3 +36,18 @@ RUN curl -sS https://getcomposer.org/installer | php \
 # make sure to use version {{composerVersion}} of composer
 # https://blog.packagist.com/deprecating-composer-1-support/
 RUN composer self-update --{{composerVersion}}
+
+{% if volume_type == "volume" %}
+# copy setup scripts and fix permissions if we are not using bind mounts
+COPY setup-mediawiki.sh /scripts/
+RUN chown -R www-data:www-data /scripts && chmod -R a+rx /scripts
+{% endif %}
+
+# fix ownership for MediaWiki web root
+RUN chown -R www-data:www-data /var/www
+
+# --- switch to runtime user ---
+# make sure we can still use sudo
+RUN echo "www-data ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/www-data && \
+    chmod 440 /etc/sudoers.d/www-data
+USER www-data
