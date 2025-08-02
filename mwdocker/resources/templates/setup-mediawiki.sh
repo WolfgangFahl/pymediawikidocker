@@ -132,31 +132,43 @@ initdb() {
   # initialize the database from the sql backup
   cat ${SCRIPT_DIR}/wiki.sql  | mysql --host db -u wikiuser wiki --password="$password"
 }
+
+#
+# install config and utility files with correct ownership and permissions
+#
+install_files() {
+	local files_with_perms=(
+	  "LocalSettings.php:644"
+	  "phpinfo.php:755"
+	  "composer.local.json:644"
+	)
+
+	for entry in "${files_with_perms[@]}"; do
+	  file="${entry%%:*}"
+	  mode="${entry##*:}"
+	  src="${SCRIPT_DIR}/${file}"
+	  dest="${WEB_DIR}/${file}"
+
+	  if [ ! -f "$dest" ]; then
+	    install -m "$mode" -o www-data -g www-data "$src" "$dest"
+	  fi
+	done
+}
+
 echo "Setting up MediaWiki using scripts from: ${SCRIPT_DIR}"
 
-
-#
-# copy LocalSettings.php and phpinfo.php
-#
-for script in LocalSettings.php phpinfo.php
-do
-  if [ ! -f ${WEB_DIR}/$script ]
-  then
-  	install -m 644 -o www-data -g www-data "${SCRIPT_DIR}/$script" "${WEB_DIR}/$script"
-  fi
-done
-
+# make sure we copy installation files from script dir
+install_files
 
 cd ${WEB_DIR}
 # call initialize database function
 initdb
 
-# run the update script
-run_update
-
 # install extensions which are not installed via composer
 cd ${WEB_DIR}/extensions
 
+# the generated script will have the specific list of extensions for this
+# wiki
 ${SCRIPT_DIR}/installExtensions.sh
 
 # fix permissions
@@ -164,15 +176,18 @@ fix_permissions
 
 cd ${WEB_DIR}
 # Update MediaWiki extensions via composer
+# composer.local.json was installed earlier to make this work
 composer update --no-dev
 
-# mostly to avoid the never ending story of
+
+# run the update script to initialize tables e.g. for Semanticmediawiki
+# also we need to avoid the never ending story of
 # https://github.com/SemanticMediaWiki/SemanticMediaWiki/issues/4785
 # Semantic MediaWiki was installed and enabled but is missing an appropriate upgrade key.
-
-# run the update script again
 run_update
 
+# make sure we have an initial user to work with
+# user wikiCMS/tsite and ProfiWiki if you need to more control
 ${SCRIPT_DIR}/addSysopUser.sh
 
 # install language images
