@@ -878,6 +878,5 @@ class DockerApplication(object):
         """
         setup MediaWiki via a script that calls the generated scripts
         """
-        self.execute("chmod", "+x", "/scripts/setup-mediawiki.sh")
         self.execute("/scripts/setup-mediawiki.sh", "/scripts")
 
