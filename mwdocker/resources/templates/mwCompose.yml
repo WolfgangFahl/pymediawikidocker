@@ -39,15 +39,20 @@ services:
     depends_on:
       - db
     volumes:
-      - type: {{volume_type}}           # 'volume' or 'bind'
-        source: {{wiki_www}}            # volume name or host path
-        target: /var/www/               # container path
+      - type:   {{volume_type}}           # 'volume' or 'bind'
+        source: {{wiki_sites}}            # volume name or host path
+        target: /var/www/mediawiki/sites  # container path
+    # docker managed volume
       - type: volume 
-        source: wiki-etc                # volume name 
-        target: /etc                    # container path
+        source: wiki-etc                  # volume name 
+        target: /etc                      # container path
+      - type: volume 
+        source: wiki-html                 # volume name 
+        target: /var/www/html             # container path
+    # host bound volumes
       - type: bind
-        source: {{scripts_dir}}         # scripts directory path
-        target: /scripts                # container path
+        source: {{scripts_dir}}           # scripts directory path
+        target: /scripts                  # container path
 
 volumes:
   wiki-etc:
@@ -55,6 +60,8 @@ volumes:
 {% if volume_type == "volume" %}
   {{mysql_data}}:
     driver: local
-  {{wiki_www}}:
+  {{wiki_sites}}:
+    driver: local
+  {{wiki_html}}:
     driver: local
 {% endif %}

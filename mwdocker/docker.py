@@ -641,11 +641,11 @@ class DockerApplication(object):
         if self.config.bind_mount:
             volume_type = "bind"
             mysql_data = f"/var/lib/mysql"
-            wiki_www = f"/var/www/mediawiki/sites"
+            wiki_sites = f"/var/www/mediawiki/sites"
         else:
             volume_type = "volume"
             mysql_data = "mysql-data"
-            wiki_www = "wiki-www"
+            wiki_sites = "wiki-sites"
         # first generate Dockerfile
         # the goal is to get an empty MediaWiki (no LocalSettings/extensions)
         # with composer ready
@@ -678,7 +678,7 @@ class DockerApplication(object):
             container_base_name=self.config.container_base_name,
             volume_type=volume_type,
             mysql_data=mysql_data,
-            wiki_www=wiki_www,
+            wiki_sites=wiki_sites,
             scripts_dir=self.docker_path,
             uid=self.config.uid,
             gid=self.config.gid,
