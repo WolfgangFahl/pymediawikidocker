@@ -93,8 +93,8 @@ run_update() {
 # make sure we use proper permissions
 #
 fix_permissions() {
-  chown -R www-data ${WEB_DIR}
-  chgrp -R www-data ${WEB_DIR}
+  sudo chown -R www-data ${WEB_DIR}
+  sudo chgrp -R www-data ${WEB_DIR}
 }
 
 
@@ -135,22 +135,17 @@ initdb() {
 echo "Setting up MediaWiki using scripts from: ${SCRIPT_DIR}"
 
 
-
-# Run other setup scripts
-chmod +x ${SCRIPT_DIR}/*.sh
-
+#
 # copy LocalSettings.php and phpinfo.php
+#
 for script in LocalSettings.php phpinfo.php
 do
   if [ ! -f ${WEB_DIR}/$script ]
   then
-    cp -p ${SCRIPT_DIR}/$script ${WEB_DIR}/$script
+  	install -m 644 -o www-data -g www-data "${SCRIPT_DIR}/$script" "${WEB_DIR}/$script"
   fi
 done
 
-
-# fix permissions before starting
-fix_permissions
 
 cd ${WEB_DIR}
 # call initialize database function
@@ -164,7 +159,7 @@ cd ${WEB_DIR}/extensions
 
 ${SCRIPT_DIR}/installExtensions.sh
 
-# fix permissions again
+# fix permissions
 fix_permissions
 
 cd ${WEB_DIR}

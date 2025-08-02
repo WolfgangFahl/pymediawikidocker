@@ -37,12 +37,6 @@ RUN curl -sS https://getcomposer.org/installer | php \
 # https://blog.packagist.com/deprecating-composer-1-support/
 RUN composer self-update --{{composerVersion}}
 
-{% if volume_type == "volume" %}
-# copy setup scripts and fix permissions if we are not using bind mounts
-COPY setup-mediawiki.sh /scripts/
-RUN chown -R www-data:www-data /scripts && chmod -R a+rx /scripts
-{% endif %}
-
 # fix ownership for MediaWiki web root
 RUN chown -R www-data:www-data /var/www
 
