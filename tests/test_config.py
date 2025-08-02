@@ -63,6 +63,8 @@ class TestConfig(Basetest):
             "wikiId": None,
             "versions": ["1.35.13", "1.39.13", "1.43.3", "1.44.0"],
             "base_port": 9080,
+            "gid": 33,
+            "uid": 33,
             "bind_mount": False,
             "docker_path": mwClusterConfig.docker_path,
         }

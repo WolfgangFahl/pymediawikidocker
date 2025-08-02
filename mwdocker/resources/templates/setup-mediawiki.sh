@@ -102,12 +102,25 @@ fix_permissions() {
 # run startRunJobs.sh every minute
 # prepare logging
 add_crontab_entry() {
-	mkdir -p /var/log/mediawiki
-	touch /var/log/mediawiki/runJobs.log
-	# add an entry for the crontab
-	(crontab -l 2>/dev/null; echo "*/1 * * * * /root/startRunJobs.sh") | crontab -
-	# start the cron service
-	service cron start
+  sudo mkdir -p /var/log/mediawiki
+  sudo touch /var/log/mediawiki/runJobs.log
+  sudo chown www-data:www-data /var/log/mediawiki/runJobs.log
+
+  local cron_job="*/1 * * * * /root/startRunJobs.sh"
+  local tmp_cron="/tmp/current_cron"
+
+  # get current crontab (if any), excluding our line
+  if crontab -l 2>/dev/null | grep -vF "$cron_job" > "$tmp_cron"; then
+    true  # successful read
+  else
+    touch "$tmp_cron"
+  fi
+
+  echo "$cron_job" >> "$tmp_cron"
+  crontab "$tmp_cron"
+  rm -f "$tmp_cron"
+
+  sudo service cron start
 }
 
 #
