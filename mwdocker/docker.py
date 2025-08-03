@@ -138,6 +138,40 @@ class DockerContainer:
             host_port = pb.host_port
         return host_port
 
+    def execute(self, *commands: str,verbose:bool=False):
+        """
+        Execute the given variable list of command strings inside the MediaWiki container.
+
+        Args:
+            commands: str - command parts to be executed
+        """
+        command_list = list(commands)
+
+
+        if verbose:
+            command_line = " ".join(command_list)
+            print(f"Executing docker command: {command_line}")
+
+        try:
+            # see https://gabrieldemarmiesse.github.io/python-on-whales/user_guide/docker_run/#stream-the-output
+            for stream_type,stream_content in docker.execute(
+                container=self.container,
+                command=command_list,
+                stream=True):
+                    decoded_line = stream_content.decode("utf-8", errors="replace")
+                    target_stream = sys.stderr if stream_type == "stderr" else sys.stdout
+                    print(decoded_line, end="", file=target_stream)
+
+        except Exception as ex:
+            logs = self.detect_crash()
+            if logs is not None:
+                print(f"{self.name} crashed with log: {logs}")
+                raise Exception(
+                    f"Container {self.name} crashed during execute: {ex}"
+                )
+            else:
+                raise ex
+
 
 @dataclass
 class DBStatus:
@@ -384,42 +418,17 @@ class DockerApplication(object):
         Execute the given variable list of command strings inside the MediaWiki container.
 
         Args:
-            commands: str - command strings to be executed
+            commands: str - command parts to be executed
         """
-        command_list = list(commands)
         if not self.mwContainer:
             mwContainerNameDash = self.getContainerName("mw", "-")
             mwContainerNameUnderscore = self.getContainerName("mw", "_")
             raise Exception(
-                f"no mediawiki Container {mwContainerNameDash} or {mwContainerNameUnderscore} for {self.name} "
-                f"activated by docker compose\n- you might want to check the separator character used "
-                f"for container names for your platform {platform.system()}"
+              f"no mediawiki Container {mwContainerNameDash} or {mwContainerNameUnderscore} for {self.name} "
+              f"activated by docker compose\n- you might want to check the separator character used "
+              f"for container names for your platform {platform.system()}"
             )
-
-        if self.config.verbose:
-            command_line = " ".join(command_list)
-            print(f"Executing docker command: {command_line}")
-
-        try:
-            # see https://gabrieldemarmiesse.github.io/python-on-whales/user_guide/docker_run/#stream-the-output
-            for stream_type,stream_content in docker.execute(
-                container=self.mwContainer.container,
-                command=command_list,
-                stream=True):
-                    decoded_line = stream_content.decode("utf-8", errors="replace")
-                    target_stream = sys.stderr if stream_type == "stderr" else sys.stdout
-                    print(decoded_line, end="", file=target_stream)
-
-        except Exception as ex:
-            logs = self.mwContainer.detect_crash()
-            if logs is not None:
-                print(f"{self.mwContainer.name} crashed with log: {logs}")
-                raise Exception(
-                    f"Container {self.mwContainer.name} crashed during execute: {ex}"
-                )
-            else:
-                raise ex
-
+        self.mwContainer.execute(commands,verbose=self.config.verbose)
 
     def close(self):
         """
