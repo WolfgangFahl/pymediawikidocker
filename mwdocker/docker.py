@@ -428,7 +428,7 @@ class DockerApplication(object):
               f"activated by docker compose\n- you might want to check the separator character used "
               f"for container names for your platform {platform.system()}"
             )
-        self.mwContainer.execute(commands,verbose=self.config.verbose)
+        self.mwContainer.execute(*commands,verbose=self.config.verbose)
 
     def close(self):
         """
