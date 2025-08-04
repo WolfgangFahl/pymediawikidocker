@@ -649,7 +649,7 @@ class DockerApplication(object):
         # bind mounts or volumes are to be used
         if self.config.bind_mount:
             volume_type = "bind"
-            mysql_data = f"/var/lib/mysql"
+            mysql_data = f"/var/lib/mediawiki/mysql/{self.config.shortVersion}"
             wiki_sites = f"/var/www/mediawiki/sites"
         else:
             volume_type = "volume"
