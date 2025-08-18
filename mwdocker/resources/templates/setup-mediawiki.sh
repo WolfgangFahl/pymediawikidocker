@@ -52,7 +52,6 @@ usage() {
   cat << EOF
 Usage: $0 [OPTIONS]
 
-MediaWiki setup script with modular execution options.
 
 GENERAL OPTIONS:
   --script-dir DIR      Directory containing setup files (default: /scripts)
@@ -258,8 +257,8 @@ echo "MediaWiki setup complete!"
 
 while [[ $# -gt 0 ]]; do
   case "$arg" in
-   	--script-dir) SCRIPT_DIR="${2:?missing DIR}"; shift ;;
-    --web-dir)    WEB_DIR="${2:?missing DIR}";    shift ;;
+   	--script-dir)    SCRIPT_DIR="${2:?missing DIR}"; shift ;;
+    --web-dir)       WEB_DIR="${2:?missing DIR}";    shift ;;
     --install-files) install_files ;;
     --initdb)        initdb ;;
     --extensions)    do_extensions ;;
@@ -270,7 +269,7 @@ while [[ $# -gt 0 ]]; do
     --lang-images)   lang_images "${WEB_DIR}/images" ;;
     --crontab)       add_crontab_entry ;;
     --start-runjobs) start_runJobs ;;
-    --all)           all();;
+    --all)           all;;
     -h|--help)       usage; exit 0 ;;
     *) echo "Unknown option: $arg"; usage; exit 1 ;;
   esac
