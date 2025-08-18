@@ -215,8 +215,9 @@ class DockerApplication(object):
 
         self.getContainers()
         self.dbConn = None
-        self.database = "wiki"
-        self.dbUser = "wikiuser"
+        self.wiki_id=self.config.getWikiId()
+        self.database = f"{self.wiki_id}_wiki"
+        self.dbUser = f"{self.wiki_id}_user"
         self.wikiUser = None
 
     @staticmethod
