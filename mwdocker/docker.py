@@ -901,9 +901,9 @@ class DockerApplication(object):
         """
         self.execute(
             "bash", "/scripts/setup-mediawiki.sh",
-            "--all",
             "--script-dir", "/scripts",
             "--web-dir", "/var/www/html",
+            "--all",
         )
 
 

@@ -256,28 +256,10 @@ echo "MediaWiki setup complete!"
 # default: show help if no args
 [ $# -eq 0 ] && { usage; exit 0; }
 
-for arg in "$@"; do
+while [[ $# -gt 0 ]]; do
   case "$arg" in
-    --script-dir) shift; SCRIPT_DIR="$1";;
-    --install-files) install_files ;;
-    --initdb)        initdb ;;
-    --extensions)    ${SCRIPT_DIR}/installExtensions.sh ;;
-    --permissions)   fix_permissions ;;
-    --composer)      composer update --no-dev ;;
-    --update)        run_update ;;
-    --sysop)         ${SCRIPT_DIR}/addSysopUser.sh ;;
-    --lang-images)   lang_images "${WEB_DIR}/images" ;;
-    --crontab)       add_crontab_entry ;;
-    --start-runjobs) start_runJobs ;;
-    --all)           all ;;
-    -h|--help)       usage; exit 0 ;;
-    *) echo "Unknown option: $arg"; usage; exit 1 ;;
-  esac
-done
-
-for arg in "$@"; do
-  case "$arg" in
-    --script-dir) shift; SCRIPT_DIR="$1";;
+   	--script-dir) SCRIPT_DIR="${2:?missing DIR}"; shift ;;
+    --web-dir)    WEB_DIR="${2:?missing DIR}";    shift ;;
     --install-files) install_files ;;
     --initdb)        initdb ;;
     --extensions)    do_extensions ;;
@@ -292,4 +274,5 @@ for arg in "$@"; do
     -h|--help)       usage; exit 0 ;;
     *) echo "Unknown option: $arg"; usage; exit 1 ;;
   esac
+  shift
 done
