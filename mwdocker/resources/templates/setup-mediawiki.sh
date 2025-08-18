@@ -136,15 +136,17 @@ start_runJobs() {
 	php maintenance/runJobs.php >> /var/log/mediawiki/runJobs.log 2>&1
 }
 
-#
 # initialize the database
-#
 initdb() {
-  # get the database password from Localsettings.php
-  password=$(grep wgDBpassword /var/www/html/LocalSettings.php  | cut -f2 -d'"')
+  # get DB connection details from LocalSettings.php
+  password=$(grep wgDBpassword /var/www/html/LocalSettings.php | cut -d'"' -f2)
+  user=$(grep wgDBuser /var/www/html/LocalSettings.php | cut -d'"' -f2)
+  dbname=$(grep wgDBname /var/www/html/LocalSettings.php | cut -d'"' -f2)
+
   # initialize the database from the sql backup
-  cat ${SCRIPT_DIR}/wiki.sql  | mysql --host db -u wikiuser wiki --password="$password"
+  cat "${SCRIPT_DIR}/wiki.sql" | mysql --host=db -u"$user" -p"$password" "$dbname"
 }
+
 
 #
 # install config and utility files with correct ownership and permissions
