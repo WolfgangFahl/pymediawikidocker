@@ -46,6 +46,40 @@ error() {
 }
 
 #
+# show usage information
+#
+usage() {
+  cat << EOF
+Usage: $0 [OPTIONS]
+
+MediaWiki setup script with modular execution options.
+
+GENERAL OPTIONS:
+  --script-dir DIR      Directory containing setup files (default: /scripts)
+  --web-dir DIR         MediaWiki web root (default: /var/www/html)
+  -h, --help            Show this help
+
+STEPS (choose any; default is --all if none given):
+  --all                 Run all steps (default)
+  --install-files       Install config and utility files
+  --initdb              Initialize database from SQL backup
+  --extensions          Install MediaWiki extensions (installExtensions.sh)
+  --permissions         Fix file permissions
+  --composer            Update extensions via composer
+  --update              Run MediaWiki update script
+  --sysop               Add sysop user
+  --lang-images         Download language images
+  --crontab             Add crontab entry for runJobs
+  --start-runjobs       Start a single runJobs execution now
+
+Examples:
+  $0 --all
+  $0 --script-dir /custom/scripts --initdb --permissions
+  $0 --help
+EOF
+}
+
+#
 # download the language images to the given image directory
 #
 lang_images () {
@@ -170,6 +204,8 @@ install_files() {
 	done
 }
 
+# run all steps
+all() {
 echo "Setting up MediaWiki using scripts from: ${SCRIPT_DIR}"
 
 # make sure we copy installation files from script dir
@@ -215,3 +251,45 @@ fix_permissions
 add_crontab_entry
 
 echo "MediaWiki setup complete!"
+}
+
+# default: show help if no args
+[ $# -eq 0 ] && { usage; exit 0; }
+
+for arg in "$@"; do
+  case "$arg" in
+    --script-dir) shift; SCRIPT_DIR="$1";;
+    --install-files) install_files ;;
+    --initdb)        initdb ;;
+    --extensions)    ${SCRIPT_DIR}/installExtensions.sh ;;
+    --permissions)   fix_permissions ;;
+    --composer)      composer update --no-dev ;;
+    --update)        run_update ;;
+    --sysop)         ${SCRIPT_DIR}/addSysopUser.sh ;;
+    --lang-images)   lang_images "${WEB_DIR}/images" ;;
+    --crontab)       add_crontab_entry ;;
+    --start-runjobs) start_runJobs ;;
+    --all)           all ;;
+    -h|--help)       usage; exit 0 ;;
+    *) echo "Unknown option: $arg"; usage; exit 1 ;;
+  esac
+done
+
+for arg in "$@"; do
+  case "$arg" in
+    --script-dir) shift; SCRIPT_DIR="$1";;
+    --install-files) install_files ;;
+    --initdb)        initdb ;;
+    --extensions)    do_extensions ;;
+    --permissions)   fix_permissions ;;
+    --composer)      do_composer_update ;;
+    --update)        run_update ;;
+    --sysop)         do_sysop ;;
+    --lang-images)   lang_images "${WEB_DIR}/images" ;;
+    --crontab)       add_crontab_entry ;;
+    --start-runjobs) start_runJobs ;;
+    --all)           all();;
+    -h|--help)       usage; exit 0 ;;
+    *) echo "Unknown option: $arg"; usage; exit 1 ;;
+  esac
+done

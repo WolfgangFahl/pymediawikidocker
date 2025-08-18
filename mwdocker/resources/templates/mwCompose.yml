@@ -14,8 +14,8 @@ services:
     container_name: "{{container_base_name}}-db"
     restart: always
     environment:
-      MYSQL_DATABASE: wiki
-      MYSQL_USER: wikiuser
+      MYSQL_DATABASE: "{{wiki_id}}_wiki"
+      MYSQL_USER: "{{wiki_id}}_user"
       MYSQL_PASSWORD: "{{mySQLPassword}}"
       MYSQL_ROOT_PASSWORD: "{{mySQLRootPassword}}"
     ports:

@@ -646,6 +646,8 @@ class DockerApplication(object):
         Args:
             overwrite (bool): if True overwrite the existing files
         """
+        # make sure we have the wiki_id ready
+        wiki_id=self.config.getWikiId()
         # we have to configure whether
         # bind mounts or volumes are to be used
         if self.config.bind_mount:
@@ -689,6 +691,7 @@ class DockerApplication(object):
             mySQLPassword=self.config.mySQLPassword,
             container_base_name=self.config.container_base_name,
             db_container_name=self.config.db_container_name,
+            wiki_id=wiki_id,
             volume_type=volume_type,
             mysql_data=mysql_data,
             wiki_sites=wiki_sites,
@@ -703,7 +706,7 @@ class DockerApplication(object):
         self.generate(
             f"mwLocalSettings{self.config.shortVersion}.php",
             f"{self.docker_path}/LocalSettings.php",
-            wiki_id=self.config.getWikiId(),
+            wiki_id=wiki_id,
             mySQLPassword=self.config.mySQLPassword,
             hostname=self.config.host,
             extensions=self.config.extensionMap.values(),
@@ -894,7 +897,13 @@ class DockerApplication(object):
 
     def setupMediaWiki(self):
         """
-        setup MediaWiki via a script that calls the generated scripts
+        setup MediaWiki via the generated script with explicit args
         """
-        self.execute("/scripts/setup-mediawiki.sh", "/scripts")
+        self.execute(
+            "bash", "/scripts/setup-mediawiki.sh",
+            "--all",
+            "--script-dir", "/scripts",
+            "--web-dir", "/var/www/html",
+        )
+
 
