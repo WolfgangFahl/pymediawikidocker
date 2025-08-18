@@ -161,7 +161,7 @@ class TestInstall(Basetest):
 
         refactor port binding access
         """
-        mwCluster, apps = self.newClusterApps()
+        _mwCluster, apps = self.newClusterApps()
         debug = self.debug
         # debug = True
         for mwApp in apps:

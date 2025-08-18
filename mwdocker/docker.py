@@ -4,30 +4,30 @@ Created on 2021-08-06
 @author: wf
 """
 
+from dataclasses import dataclass
 import datetime
 import os
-import stat
 import platform
 import pprint
+import stat
 import sys
 import time
 import traceback
 import typing
-from dataclasses import dataclass
 
-import mysql.connector
 from jinja2 import Environment, FileSystemLoader
 from jinja2.exceptions import TemplateNotFound
 from lodstorage.lod import LOD
-from mysql.connector import Error
-from python_on_whales import docker
-from wikibot3rd.wikiuser import WikiUser
-
 from mwdocker.config import MwClusterConfig
 from mwdocker.html_table import HtmlTables
 from mwdocker.logger import Logger
 from mwdocker.mariadb import MariaDB
 from mwdocker.version import Version
+from mysql.connector import Error
+import mysql.connector
+from python_on_whales import docker
+from python_on_whales.exceptions import DockerException
+from wikibot3rd.wikiuser import WikiUser
 
 
 class DockerMap:
@@ -796,7 +796,11 @@ class DockerApplication(object):
         # remember current directory
         cwd = os.getcwd()
         os.chdir(self.docker_path)
-        docker.compose.down(volumes=forceRebuild)
+        try:
+            docker.compose.down(volumes=forceRebuild)
+        except DockerException as dex:
+            print(f"warning: docker compose down failed in {self.docker_path}:{str(dex)}")
+            pass
         # switch back to previous current directory
         os.chdir(cwd)
 
