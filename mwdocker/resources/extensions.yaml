@@ -425,13 +425,18 @@ extensions:
   purpose: |
     Convert tab-separated or similar data into a Wiki table
   giturl: https://github.com/DannyS712/mediawiki-extensions-SimpleTable
-
 - name: UseResource
   url: https://www.mediawiki.org/wiki/Extension:UseResource
   extension: UseResource
   purpose: |
     Adds the usescript and usestyle tags to load JavaScript and CSS on a per-page basis
   giturl: https://github.com/wikimedia/mediawiki-extensions-UseResource
+- name: WikiEditor
+  url: https://www.mediawiki.org/wiki/Extension:WikiEditor
+  extension: WikiEditor
+  wikidata_id: Q21679226
+  purpose: |
+    The WikiEditor extension provides an improved interface (primarily a toolbar) for editing wikitext
 
 
 
