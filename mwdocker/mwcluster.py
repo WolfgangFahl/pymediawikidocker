@@ -173,7 +173,7 @@ class MediaWikiCluster(object):
         # let post_init create a new container_base_name and db_container_name
         if count > 1:
             appConfig.container_base_name = None
-            appConfig.db_container_name = self.args.db_container_name
+            appConfig.db_container_name = self.args.db_container_name if self.args else None
         appConfig.__post_init__()
         mwApp = DockerApplication(config=appConfig)
         return mwApp
