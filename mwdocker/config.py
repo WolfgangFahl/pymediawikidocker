@@ -83,10 +83,13 @@ class MwConfig:
     base_port: Optional[int] = None
     sql_port: int = 9306
     container_base_name: Optional[str] = None
+    # derived from container_base_name if different than default
+    # an external db_container is going to be used
+    db_container_name: Optional[str] = None
     networkName: str = "mwNetwork"
     docker_path: Optional[str] = None
-    gid: int=33 # www-data
-    uid: int=33 # www-data
+    gid: int = 33  # www-data
+    uid: int = 33  # www-data
 
     # build control
     verbose: bool = True
@@ -121,11 +124,25 @@ class MwConfig:
             self.docker_path = self.default_docker_path()
         if not self.container_base_name:
             self.container_base_name = f"{self.prefix}-{self.shortVersion}"
+        if not self.db_container_name:  # Add this block
+            self.db_container_name = f"{self.container_base_name}-db"
         if not self.article_path:
             self.article_path = ""
         if not self.base_port:
             self.base_port = self.port
         self.reset_url(self.url)
+
+    @property
+    def has_external_db(self) -> bool:
+        """
+        Check if using external database container
+
+        Returns:
+            bool: True if db_container_name differs from default pattern
+        """
+        default_db_name = f"{self.container_base_name}-db"
+        external= self.db_container_name != default_db_name
+        return external
 
     def reset_url(self, url: str):
         """
@@ -146,7 +163,7 @@ class MwConfig:
 
             self.full_url = f"{self.base_url}{self.script_path}"
 
-    def reset_container_base_name(self, container_base_name: str = None):
+    def reset_container_base_name(self, container_base_name: str=None):
         """
         reset the container base name to the given name
 
@@ -190,7 +207,7 @@ class MwConfig:
         path = f"{config_base_path}/MwConfig.json"
         return path
 
-    def save(self, path: str = None) -> str:
+    def save(self, path: str=None) -> str:
         """
         save my json
 
@@ -207,7 +224,7 @@ class MwConfig:
             print(json_str, file=f)
         return path
 
-    def load(self, path: str = None) -> "MwConfig":
+    def load(self, path: str=None) -> "MwConfig":
         """
         load the the MwConfig from the given path of if path is None (default)
         use the config_path for the current configuration
@@ -242,7 +259,7 @@ class MwConfig:
         )
         return shortVersion
 
-    def create_random_password(self, length: int = 15) -> str:
+    def create_random_password(self, length: int=15) -> str:
         """
         create a random password
 
@@ -269,7 +286,7 @@ class MwConfig:
         return wikiId
 
     def getExtensionMap(
-        self, extensionNameList: list = None, extensionJsonFile: str = None
+        self, extensionNameList: list=None, extensionJsonFile: str=None
     ):
         """
         get map of extensions to handle
@@ -315,12 +332,13 @@ class MwConfig:
         self.prefix = args.prefix
         self.article_path = args.article_path
         self.container_base_name = args.container_name
+        self.db_container_name = args.db_container_name
         self.docker_path = args.docker_path
         self.extensionNameList = args.extensionNameList
         self.extensionJsonFile = args.extensionJsonFile
         self.bind_mount = args.bind_mount
-        self.uid=args.uid
-        self.gid=args.gid
+        self.uid = args.uid
+        self.gid = args.gid
         self.forceRebuild = args.forceRebuild or getattr(args, "force", False)
         self.host = args.host
         self.logo = args.logo
@@ -367,6 +385,12 @@ class MwConfig:
             "--container_name",
             default=self.container_base_name,
             help="set container name (only valid and recommended for single version call)",
+        )
+        parser.add_argument(
+            "-dcn",
+            "--db_container_name",
+            default=self.db_container_name,
+            help="set database container name [default: %(default)s]",
         )
         parser.add_argument(
             "-el",
@@ -492,7 +516,6 @@ class MwConfig:
         )
         parser.add_argument("--uid", type=int, default=self.uid, help="User ID  (default: 33 for www-data)")
         parser.add_argument("--gid", type=int, default=self.gid, help="Group ID (default: 33 for www-data)")
-
 
 
 @dataclass

@@ -679,12 +679,15 @@ class DockerApplication(object):
         # the Docker compose
         # at this stage we will have two containers
         # one for the database and one for the MediaWiki
+        # the db container may be optionally an existing database container
+        template_name = "mwComposeExternalDB.yml" if self.config.has_external_db else "mwCompose.yml"
         self.generate(
-            "mwCompose.yml",
+            template_name,
             f"{self.docker_path}/docker-compose.yml",
             mySQLRootPassword=self.config.mySQLRootPassword,
             mySQLPassword=self.config.mySQLPassword,
             container_base_name=self.config.container_base_name,
+            db_container_name=self.config.db_container_name,
             volume_type=volume_type,
             mysql_data=mysql_data,
             wiki_sites=wiki_sites,
@@ -699,6 +702,7 @@ class DockerApplication(object):
         self.generate(
             f"mwLocalSettings{self.config.shortVersion}.php",
             f"{self.docker_path}/LocalSettings.php",
+            wiki_id=self.getWikiId(),
             mySQLPassword=self.config.mySQLPassword,
             hostname=self.config.host,
             extensions=self.config.extensionMap.values(),

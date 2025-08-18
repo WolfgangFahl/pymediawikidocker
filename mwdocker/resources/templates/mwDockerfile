@@ -20,6 +20,7 @@ RUN apt-get -y update && \
     python3 \
     python3-pip \
     procps \
+    rcs \
     ssh-client \
     sudo \
     vim \
@@ -38,7 +39,7 @@ RUN curl -sS https://getcomposer.org/installer | php \
 RUN composer self-update --{{composerVersion}}
 
 # fix ownership for MediaWiki web root
-RUN chown -R www-data:www-data /var/www
+RUN chown -R www-data:www-data /var/www/html
 
 # --- switch to runtime user ---
 # make sure we can still use sudo

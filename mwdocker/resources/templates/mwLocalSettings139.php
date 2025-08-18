@@ -19,7 +19,7 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 ## Uncomment this to disable output compression
 # $wgDisableOutputCompression = true;
 
-$wgSitename = "wiki";
+$wgSitename = "{{wiki_id}}";
 $wgMetaNamespace = "Wiki";
 
 {% include 'mwLocalSettings_path.php' %}
@@ -46,8 +46,8 @@ $wgEmailAuthentication = true;
 ## Database settings
 $wgDBtype = "mysql";
 $wgDBserver = "db";
-$wgDBname = "wiki";
-$wgDBuser = "wikiuser";
+$wgDBname = "{{wiki_id}}_wiki";
+$wgDBuser = "{{wiki_id}}_user";
 $wgDBpassword = "{{mySQLPassword}}";
 
 # MySQL specific settings
