@@ -3,6 +3,7 @@ Created on 2021-08-06
 @author: wf
 """
 
+from argparse import Namespace
 import dataclasses
 import sys
 
@@ -29,7 +30,7 @@ class MediaWikiCluster(object):
     # 2025-04-13 Security and maintenance release: 1.39.12 / 1.42.6 / 1.43.1
     # 2025-06-30 Security and maintenance release: 1.39.13 / 1.42.7 / 1.43.3
 
-    def __init__(self, config: MwClusterConfig):
+    def __init__(self, config: MwClusterConfig,args:Namespace=None):
         """
         Constructor
 
@@ -37,6 +38,7 @@ class MediaWikiCluster(object):
             config(MWClusterConfig): the MediaWiki Cluster Configuration to use
         """
         self.config = config
+        self.args=args
         self.apps = {}
 
     def createApps(self, withGenerate: bool = True) -> dict:
@@ -168,9 +170,10 @@ class MediaWikiCluster(object):
         appConfig.base_port = self.config.base_port + i
         appConfig.port = self.config.base_port + i
         appConfig.sql_port = self.config.sql_port + i
-        # let post_init create a new container_base_name
+        # let post_init create a new container_base_name and db_container_name
         if count > 1:
             appConfig.container_base_name = None
+            appConfig.db_container_name = self.args.db_container_name
         appConfig.__post_init__()
         mwApp = DockerApplication(config=appConfig)
         return mwApp

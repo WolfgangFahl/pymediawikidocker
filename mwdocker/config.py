@@ -21,6 +21,8 @@ from lodstorage.lod import LOD
 from mwdocker.mw import ExtensionList
 
 
+import socket
+
 class Host:
     """
     Host name getter
@@ -29,20 +31,29 @@ class Host:
     @classmethod
     def get_default_host(cls) -> str:
         """
-        get the default host as the fully qualifying hostname
-        of the computer the server runs on
-
-        Returns:
-            str: the hostname
+        Get the default host as a usable hostname or IP,
+        never returning reverse-DNS PTRs and avoiding localhost which
+        might cause to try socket access instead of proper host access
         """
         host = socket.getfqdn()
+
         # work around https://github.com/python/cpython/issues/79345
-        if (
-            host
-            == "1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa"
+        if host == (
+            "1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa"
         ):
-            host = "localhost"  # host="127.0.0.1"
+            host = "127.0.0.1"
+
+        elif host.endswith(".in-addr.arpa"):
+            host = "127.0.0.1"
+
+        elif host.endswith(".ip6.arpa"):
+            host = "::1"
+
+        elif host == "localhost":
+            host = "127.0.0.1"
+
         return host
+
 
 
 @lod_storable
@@ -124,7 +135,7 @@ class MwConfig:
             self.docker_path = self.default_docker_path()
         if not self.container_base_name:
             self.container_base_name = f"{self.prefix}-{self.shortVersion}"
-        if not self.db_container_name:  # Add this block
+        if not self.db_container_name:
             self.db_container_name = f"{self.container_base_name}-db"
         if not self.article_path:
             self.article_path = ""

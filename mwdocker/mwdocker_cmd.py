@@ -55,7 +55,7 @@ class MediaWikiDockerCmd(BaseCmd):
         if super().handle_args(args):
             return True
         self.config.fromArgs(args)
-        self.cluster = MediaWikiCluster(self.config)
+        self.cluster = MediaWikiCluster(self.config,args)
         self.cluster.createApps(withGenerate=args.create)
         if args.check:
             self.exit_code = self.cluster.check()
