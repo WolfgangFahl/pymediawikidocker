@@ -14,7 +14,6 @@ services:
     user: "{{uid}}:{{gid}}"
     build: .
     restart: always
-    command: --default-authentication-plugin=mysql_native_password
     ports:
       - {{port}}:80
     external_links:
@@ -37,6 +36,4 @@ volumes:
   wiki-etc:
     driver: local
   wiki-html:
-    driver: local
-  {{wiki_sites}}:
     driver: local
