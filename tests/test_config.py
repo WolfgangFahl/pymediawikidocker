@@ -5,7 +5,6 @@ Created on 2023-04-06
 """
 
 import json
-from argparse import ArgumentParser
 
 from basemkit.basetest import Basetest
 
@@ -55,6 +54,7 @@ class TestConfig(Basetest):
             "article_path": "",
             "script_path": "",
             "container_base_name": "mw-139",
+            "db_container_name": "mw-139-db",
             "networkName": "mwNetwork",
             "mariaDBVersion": "11.4",
             "forceRebuild": False,

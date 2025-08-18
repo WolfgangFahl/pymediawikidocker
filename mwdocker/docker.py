@@ -702,7 +702,7 @@ class DockerApplication(object):
         self.generate(
             f"mwLocalSettings{self.config.shortVersion}.php",
             f"{self.docker_path}/LocalSettings.php",
-            wiki_id=self.getWikiId(),
+            wiki_id=self.config.getWikiId(),
             mySQLPassword=self.config.mySQLPassword,
             hostname=self.config.host,
             extensions=self.config.extensionMap.values(),
