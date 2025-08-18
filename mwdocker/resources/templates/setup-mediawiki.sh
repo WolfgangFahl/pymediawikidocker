@@ -256,7 +256,7 @@ echo "MediaWiki setup complete!"
 [ $# -eq 0 ] && { usage; exit 0; }
 
 while [[ $# -gt 0 ]]; do
-  case "$arg" in
+  case "$1" in
    	--script-dir)    SCRIPT_DIR="${2:?missing DIR}"; shift ;;
     --web-dir)       WEB_DIR="${2:?missing DIR}";    shift ;;
     --install-files) install_files ;;
