@@ -8,6 +8,7 @@ set -e
 # Script directory as parameter (default fallback)
 SCRIPT_DIR="${1:-/scripts}"
 WEB_DIR="/var/www/html"
+MYSQL_ROOT_PASSWORD=""
 
 
 #ansi colors
@@ -62,6 +63,8 @@ STEPS (choose any; default is --all if none given):
   --all                 Run all steps (default)
   --install-files       Install config and utility files
   --initdb              Initialize database from SQL backup
+  --grant               Grant database permissions
+  --mysql-root-password PWD  MySQL root password for grants
   --extensions          Install MediaWiki extensions (installExtensions.sh)
   --permissions         Fix file permissions
   --composer            Update extensions via composer
@@ -169,17 +172,29 @@ start_runJobs() {
 	php maintenance/runJobs.php >> /var/log/mediawiki/runJobs.log 2>&1
 }
 
-# initialize the database
-initdb() {
-  # get DB connection details from LocalSettings.php
-  password=$(grep wgDBpassword /var/www/html/LocalSettings.php | cut -d'"' -f2)
-  user=$(grep wgDBuser /var/www/html/LocalSettings.php | cut -d'"' -f2)
-  dbname=$(grep wgDBname /var/www/html/LocalSettings.php | cut -d'"' -f2)
-
-  # initialize the database from the sql backup
-  cat "${SCRIPT_DIR}/wiki.sql" | mysql --host=db -u"$user" -p"$password" "$dbname"
+# Add this function before initdb():
+get_mysql_connection() {
+  # Extract DB connection details from LocalSettings.php
+  DB_PASSWORD=$(grep wgDBpassword /var/www/html/LocalSettings.php | cut -d'"' -f2)
+  DB_USER=$(grep wgDBuser /var/www/html/LocalSettings.php | cut -d'"' -f2)
+  DB_NAME=$(grep wgDBname /var/www/html/LocalSettings.php | cut -d'"' -f2)
 }
 
+
+# grant permissions
+grant_permissions() {
+  if [ -z "${MYSQL_ROOT_PASSWORD}" ]; then
+    error "MySQL root password not provided. Use --mysql-root-password option"
+  fi
+  get_mysql_connection
+  mysql --host=db -uroot -p"${MYSQL_ROOT_PASSWORD}" -e "GRANT ALL PRIVILEGES ON ${DB_NAME}.* TO '${DB_USER}'@'%'; FLUSH PRIVILEGES;"
+}
+
+# initialize the database
+initdb() {
+  get_mysql_connection
+  cat "${SCRIPT_DIR}/wiki.sql" | mysql --host=db -u"$DB_USER" -p"$DB_PASSWORD" "$DB_NAME"
+}
 
 #
 # install config and utility files with correct ownership and permissions
@@ -259,8 +274,10 @@ while [[ $# -gt 0 ]]; do
   case "$1" in
    	--script-dir)    SCRIPT_DIR="${2:?missing DIR}"; shift ;;
     --web-dir)       WEB_DIR="${2:?missing DIR}";    shift ;;
+    --mysql-root-password) MYSQL_ROOT_PASSWORD="${2:?missing PWD}"; shift ;;
     --install-files) install_files ;;
     --initdb)        initdb ;;
+    --grant)         grant_permissions;;
     --extensions)    do_extensions ;;
     --permissions)   fix_permissions ;;
     --composer)      do_composer_update ;;

@@ -884,8 +884,18 @@ class DockerApplication(object):
         """
         self.up(forceRebuild=forceRebuild)
         if withInitDB:
+            msg="Initializing MediaWiki SQL tables"
+            if self.config.has_external_db:
+                msg+=" and permissions"
             if self.config.verbose:
-                print("Initializing MediaWiki SQL tables ...")
+                print(f"{msg} ...")
+            # Grant permissions first for external DB
+            if self.config.has_external_db:
+                self.execute(
+                    "bash", "/scripts/setup-mediawiki.sh",
+                    "--mysql-root-password", self.config.mySQLRootPassword,
+                    "--grant"
+                )
             dbStatus = self.checkDBConnection()
             if dbStatus.ok:
                 # run the mediawiki setup including composer based extensions
