@@ -400,7 +400,6 @@ class MwConfig:
         parser.add_argument(
             "-dcn",
             "--db_container_name",
-            default=self.db_container_name,
             help="set database container name [default: %(default)s]",
         )
         parser.add_argument(
