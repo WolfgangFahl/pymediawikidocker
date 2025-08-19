@@ -155,8 +155,7 @@ a link to the page also shows up in their "Personal URLs", between "Talk" and "P
             elif "//github.com/wikimedia/" in self.giturl:
                 # default WMF convention: branch per MediaWiki REL
                 options = f' --single-branch --branch {branch}'
-            # always keep dir last, options in the middle
-            script = f'git_get {self.giturl}{options} {self.extension}'
+            script = f'git_get "{self.giturl}" "{self.extension}" "{options}"'
         else:
             script = "# no installation script command specified"
             if self.composer:
