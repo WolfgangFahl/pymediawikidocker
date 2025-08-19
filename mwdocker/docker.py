@@ -885,7 +885,11 @@ class DockerApplication(object):
 
         # connect external DB container with alias
         try:
-            docker.network.connect(network_name, self.config.db_container_name, aliases=[db_alias])
+            docker.network.connect(
+                network=network_name,
+                container=self.config.db_container_name,
+                alias=db_alias
+            )
         except Exception as ex:
             # already connected or harmless -> ignore
             if self.config.debug:
