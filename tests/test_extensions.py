@@ -87,7 +87,7 @@ class TestExtensions(Basetest):
             "BreadCrumbs2": "https://www.mediawiki.org/wiki/Extension:BreadCrumbs2",
         }
         expectedScript = {
-            "Admin Links": "git clone https://github.com/wikimedia/mediawiki-extensions-AdminLinks --single-branch --branch master AdminLinks"
+            "Admin Links": 'git_get "https://github.com/wikimedia/mediawiki-extensions-AdminLinks" "AdminLinks" "--single-branch --branch master"'
         }
         for extensionName in extensionNames:
             ext = extMap[extensionName]

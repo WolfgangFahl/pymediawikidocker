@@ -151,10 +151,10 @@ a link to the page also shows up in their "Personal URLs", between "Talk" and "P
                 tag = self.tagmap.get(branch)
             if tag:
                 # use the mapped tag
-                options = f' --branch {tag}'
+                options = f'--branch {tag}'
             elif "//github.com/wikimedia/" in self.giturl:
                 # default WMF convention: branch per MediaWiki REL
-                options = f' --single-branch --branch {branch}'
+                options = f'--single-branch --branch {branch}'
             script = f'git_get "{self.giturl}" "{self.extension}" "{options}"'
         else:
             script = "# no installation script command specified"
