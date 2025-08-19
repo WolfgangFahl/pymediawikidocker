@@ -22,8 +22,6 @@ services:
       MYSQL_ROOT_PASSWORD: "{{mySQLRootPassword}}"
     ports:
       - {{port}}:80
-    external_links:
-      - {{db_container_name}}:db
     volumes:
       - type: {{volume_type}}
         source: {{wiki_sites}}
@@ -37,6 +35,13 @@ services:
       - type: bind
         source: {{scripts_dir}}
         target: /scripts
+    # database connection
+    networks:
+        db: {}
+
+networks:
+    db:
+        external: true        
 
 volumes:
   wiki-etc:

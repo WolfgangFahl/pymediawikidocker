@@ -5,8 +5,8 @@
 
 set -e
 
-# Script directory as parameter (default fallback)
-SCRIPT_DIR="${1:-/scripts}"
+# global directories - may be modified with options
+SCRIPT_DIR="/scripts"
 WEB_DIR="/var/www/html"
 
 
@@ -171,7 +171,9 @@ start_runJobs() {
 	php maintenance/runJobs.php >> /var/log/mediawiki/runJobs.log 2>&1
 }
 
-# Add this function before initdb():
+#
+# mysql connection details from LocalSettings.php
+#
 get_mysql_connection() {
   # Extract DB connection details from LocalSettings.php
   DB_PASSWORD=$(grep wgDBpassword /var/www/html/LocalSettings.php | cut -d'"' -f2)
@@ -179,8 +181,9 @@ get_mysql_connection() {
   DB_NAME=$(grep wgDBname /var/www/html/LocalSettings.php | cut -d'"' -f2)
 }
 
-
-# grant permissions
+#
+# grant permissions for non root user as declared in LocalSettings.php
+#
 grant_permissions() {
   if [ -z "${MYSQL_ROOT_PASSWORD}" ]; then
     error "MySQL root password not provided. Use --mysql-root-password option or set in Environment"
@@ -189,7 +192,9 @@ grant_permissions() {
   mysql --host=db -uroot -p"${MYSQL_ROOT_PASSWORD}" -e "GRANT ALL PRIVILEGES ON ${DB_NAME}.* TO '${DB_USER}'@'%'; FLUSH PRIVILEGES;"
 }
 
-# initialize the database
+#
+# initialize the Mediawiki database content with the needed table structure
+#
 initdb() {
   get_mysql_connection
   cat "${SCRIPT_DIR}/wiki.sql" | mysql --host=db -u"$DB_USER" -p"$DB_PASSWORD" "$DB_NAME"
@@ -217,53 +222,55 @@ install_files() {
 	done
 }
 
-# run all steps
+#
+# run all MediaWiki setup steps
+#
 all() {
-echo "Setting up MediaWiki using scripts from: ${SCRIPT_DIR}"
+	echo "Setting up MediaWiki using scripts from: ${SCRIPT_DIR}"
 
-# make sure we copy installation files from script dir
-install_files
+	# make sure we copy installation files from script dir
+	install_files
 
-cd ${WEB_DIR}
-# call initialize database function
-initdb
+	cd ${WEB_DIR}
+	# call initialize database function
+	initdb
 
-# install extensions which are not installed via composer
-cd ${WEB_DIR}/extensions
+	# install extensions which are not installed via composer
+	cd ${WEB_DIR}/extensions
 
-# the generated script will have the specific list of extensions for this
-# wiki
-${SCRIPT_DIR}/installExtensions.sh
+	# the generated script will have the specific list of extensions for this
+	# wiki
+	${SCRIPT_DIR}/installExtensions.sh
 
-# fix permissions
-fix_permissions
+	# fix permissions
+	fix_permissions
 
-cd ${WEB_DIR}
-# Update MediaWiki extensions via composer
-# composer.local.json was installed earlier to make this work
-composer update --no-dev
+	cd ${WEB_DIR}
+	# Update MediaWiki extensions via composer
+	# composer.local.json was installed earlier to make this work
+	composer update --no-dev
 
 
-# run the update script to initialize tables e.g. for Semanticmediawiki
-# also we need to avoid the never ending story of
-# https://github.com/SemanticMediaWiki/SemanticMediaWiki/issues/4785
-# Semantic MediaWiki was installed and enabled but is missing an appropriate upgrade key.
-run_update
+	# run the update script to initialize tables e.g. for Semanticmediawiki
+	# also we need to avoid the never ending story of
+	# https://github.com/SemanticMediaWiki/SemanticMediaWiki/issues/4785
+	# Semantic MediaWiki was installed and enabled but is missing an appropriate upgrade key.
+	run_update
 
-# make sure we have an initial user to work with
-# user wikiCMS/tsite and ProfiWiki if you need to more control
-${SCRIPT_DIR}/addSysopUser.sh
+	# make sure we have an initial user to work with
+	# user wikiCMS/tsite and ProfiWiki if you need to more control
+	${SCRIPT_DIR}/addSysopUser.sh
 
-# install language images
-lang_images ${WEB_DIR}/images
+	# install language images
+	lang_images ${WEB_DIR}/images
 
-# fix permissions again before finishing
-fix_permissions
+	# fix permissions again before finishing
+	fix_permissions
 
-# make sure we start runjobs every minute for updates
-add_crontab_entry
+	# make sure we start runjobs every minute for updates
+	add_crontab_entry
 
-echo "MediaWiki setup complete!"
+	echo "MediaWiki setup complete!"
 }
 
 # default: show help if no args

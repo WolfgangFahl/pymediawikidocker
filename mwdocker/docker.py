@@ -874,6 +874,23 @@ class DockerApplication(object):
                     print(f"{dc.name} 🟢 started in {start_secs:.2f}s")
         return mw, db
 
+    def prepare_external_db_access(self,network_name:str="db",db_alias:str="db"):
+        """
+        make sure the external database container can be reached
+        """
+        # ensure network exists
+        nets = {n.name for n in docker.network.list()}
+        if network_name not in nets:
+            docker.network.create(network_name)
+
+        # connect external DB container with alias
+        try:
+            docker.network.connect(network_name, self.config.db_container_name, aliases=[db_alias])
+        except Exception as ex:
+            # already connected or harmless -> ignore
+            if self.config.debug:
+                print(f"network connect hint: {ex}", file=sys.stderr)
+
     def start(self, forceRebuild: bool = False, withInitDB=True):
         """
         start my containers
@@ -889,8 +906,9 @@ class DockerApplication(object):
                 msg+=" and permissions"
             if self.config.verbose:
                 print(f"{msg} ...")
-            # Grant permissions first for external DB
             if self.config.has_external_db:
+                self.prepare_external_db_access()
+                        # Grant permissions first for external DB
                 self.execute(
                     "bash", "/scripts/setup-mediawiki.sh",
                     # do not export root password here - try using ENV variable
