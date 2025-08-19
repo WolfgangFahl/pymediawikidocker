@@ -229,7 +229,13 @@ extensions:
   extension: PageForms
   purpose: (known before 2016 as Semantic Forms) is an extension to MediaWiki that
     allows users to add, edit and query data using forms
-  composer: '"mediawiki/page-forms": "5.9.1"'
+  #composer: '"mediawiki/page-forms": "5.9.1"'
+  giturl: https://github.com/wikimedia/mediawiki-extensions-PageForms
+  tagmap:
+    REL1_35: "5.9.1"
+    REL1_39: "5.9.1"
+    REL1_43: "6.0"
+    REL1_44: "6.0"
   wikidata_id: Q21678466
   since: '2016-09-07T00:00:00'
 - name: ParserFunctions
