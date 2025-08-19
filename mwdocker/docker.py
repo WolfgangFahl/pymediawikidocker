@@ -899,6 +899,8 @@ class DockerApplication(object):
             forceRebuild (bool): if True force rebuilding
             withInitDB (bool): if True intialize my database
         """
+        if self.config.has_external_db:
+            self.prepare_external_db_access()
         self.up(forceRebuild=forceRebuild)
         if withInitDB:
             msg="Initializing MediaWiki SQL tables"
@@ -907,8 +909,7 @@ class DockerApplication(object):
             if self.config.verbose:
                 print(f"{msg} ...")
             if self.config.has_external_db:
-                self.prepare_external_db_access()
-                        # Grant permissions first for external DB
+                # Grant permissions first for external DB
                 self.execute(
                     "bash", "/scripts/setup-mediawiki.sh",
                     # do not export root password here - try using ENV variable
