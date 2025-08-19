@@ -142,17 +142,18 @@ a link to the page also shows up in their "Personal URLs", between "Talk" and "P
         Args:
             branch(str): the branch to clone
         """
+        script=""
         if self.giturl:
+            options=""
             if "//github.com/wikimedia/" in self.giturl:
-                # glone from the branch
-                return f"git clone {self.giturl} --single-branch --branch {branch} {self.extension}"
-            else:
-                return f"git clone {self.giturl} {self.extension}"
+                # clone from the branch
+                options=f" --single-branch --branch {branch}"
+            script=f'git_get "{self.giturl}" "{self.extension}" "{options}"'
         else:
-            text = "# no installation script command specified"
+            script = "# no installation script command specified"
             if self.composer:
-                text += f"\n# installed with composer require {self.composer}"
-            return text
+                script += f"\n# installed with composer require {self.composer}"
+        return script
 
 
 @lod_storable
