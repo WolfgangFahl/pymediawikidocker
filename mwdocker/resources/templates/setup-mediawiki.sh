@@ -183,16 +183,21 @@ get_mysql_connection() {
   DB_NAME=$(grep wgDBname $settings | cut -d'"' -f2)
 }
 
-#
 # grant permissions for non root user as declared in LocalSettings.php
-#
 grant_permissions() {
   if [ -z "${MYSQL_ROOT_PASSWORD}" ]; then
     error "MySQL root password not provided. Use --mysql-root-password option or set in Environment"
   fi
   get_mysql_connection
-  mysql --host=db -uroot -p"${MYSQL_ROOT_PASSWORD}" -e "GRANT ALL PRIVILEGES ON ${DB_NAME}.* TO '${DB_USER}'@'%'; FLUSH PRIVILEGES;"
+  mysql --host=db -uroot -p"${MYSQL_ROOT_PASSWORD}" <<EOF
+CREATE DATABASE IF NOT EXISTS ${DB_NAME};
+CREATE USER IF NOT EXISTS '${DB_USER}'@'%' IDENTIFIED BY '${DB_PASSWORD}';
+ALTER USER '${DB_USER}'@'%' IDENTIFIED BY '${DB_PASSWORD}';
+GRANT ALL PRIVILEGES ON ${DB_NAME}.* TO '${DB_USER}'@'%';
+FLUSH PRIVILEGES;
+EOF
 }
+
 
 #
 # initialize the Mediawiki database content with the needed table structure

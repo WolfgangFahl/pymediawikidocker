@@ -903,9 +903,9 @@ class DockerApplication(object):
             forceRebuild (bool): if True force rebuilding
             withInitDB (bool): if True intialize my database
         """
+        self.up(forceRebuild=forceRebuild)
         if self.config.has_external_db:
             self.prepare_external_db_access()
-        self.up(forceRebuild=forceRebuild)
         if withInitDB:
             msg="Initializing MediaWiki SQL tables"
             if self.config.has_external_db:
