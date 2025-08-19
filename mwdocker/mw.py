@@ -4,15 +4,14 @@ Created on 2021-06-23
 @author: wf
 """
 
-import os
-import urllib
 from dataclasses import field
 from datetime import datetime
-from typing import List, Optional
+import os
+from typing import List, Optional, Dict
+import urllib
 
 from basemkit.yamlable import lod_storable
 from lodstorage.lod import LOD
-
 from mwdocker.webscrape import WebScrape
 
 
@@ -32,6 +31,7 @@ class Extension:
     since: Optional[str] = None
     localSettings: Optional[str] = None
     require_once_until: Optional[str] = None
+    tagmap: Optional[Dict[str, str]] = None  # optionally map MediaWiki REL branches e.g. { "REL1_39": "0.14.0" }
 
     @classmethod
     def getSamples(cls):
@@ -135,25 +135,34 @@ a link to the page also shows up in their "Personal URLs", between "Talk" and "P
             localSettingsLine += f"\n  {self.localSettings}"
         return localSettingsLine
 
-    def asScript(self, branch="master"):
+    def asScript(self, branch: str = "master") -> str:
         """
-        return me as a shell Script command line list
+        return me as a shell script command line string
 
         Args:
-            branch(str): the branch to clone
+            branch (str): the MediaWiki branch (e.g. REL1_39)
         """
-        script=""
+        script = ""
         if self.giturl:
-            options=""
-            if "//github.com/wikimedia/" in self.giturl:
-                # clone from the branch
-                options=f" --single-branch --branch {branch}"
-            script=f'git_get "{self.giturl}" "{self.extension}" "{options}"'
+            options = ""
+            # check if tagmap defines a tag for this branch
+            tag = None
+            if self.tagmap:
+                tag = self.tagmap.get(branch)
+            if tag:
+                # use the mapped tag
+                options = f' --branch {tag}'
+            elif "//github.com/wikimedia/" in self.giturl:
+                # default WMF convention: branch per MediaWiki REL
+                options = f' --single-branch --branch {branch}'
+            # always keep dir last, options in the middle
+            script = f'git_get {self.giturl}{options} {self.extension}'
         else:
             script = "# no installation script command specified"
             if self.composer:
                 script += f"\n# installed with composer require {self.composer}"
         return script
+
 
 
 @lod_storable

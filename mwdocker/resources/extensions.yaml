@@ -82,9 +82,14 @@ extensions:
   extension: Diagrams
   purpose: Render Graphviz, Mscgen, and PlantUML diagrams in wiki pages.
   giturl: https://github.com/samwilson/diagrams-extension.git
-  composer: '"samwilson/diagrams": "~0.14.0"'
+  #composer: '"samwilson/diagrams": "~0.14.0"'
   wikidata_id: Q84791451
   since: '2019-12-12T00:00:00'
+  tagmap:
+    REL1_35: "0.13.2"
+    REL1_39: "0.13.2"
+    REL1_43: "0.14.0"
+    REL1_44: "0.14.0"
 - name: DjVu
   url: https://www.mediawiki.org/wiki/Manual:How_to_use_DjVu_with_MediaWiki
   purpose: Render DjVu graphics

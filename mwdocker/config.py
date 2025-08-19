@@ -20,9 +20,6 @@ from lodstorage.lod import LOD
 
 from mwdocker.mw import ExtensionList
 
-
-import socket
-
 class Host:
     """
     Host name getter
