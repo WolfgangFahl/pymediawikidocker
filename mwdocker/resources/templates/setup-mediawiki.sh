@@ -8,7 +8,6 @@ set -e
 # Script directory as parameter (default fallback)
 SCRIPT_DIR="${1:-/scripts}"
 WEB_DIR="/var/www/html"
-MYSQL_ROOT_PASSWORD=""
 
 
 #ansi colors
@@ -184,7 +183,7 @@ get_mysql_connection() {
 # grant permissions
 grant_permissions() {
   if [ -z "${MYSQL_ROOT_PASSWORD}" ]; then
-    error "MySQL root password not provided. Use --mysql-root-password option"
+    error "MySQL root password not provided. Use --mysql-root-password option or set in Environment"
   fi
   get_mysql_connection
   mysql --host=db -uroot -p"${MYSQL_ROOT_PASSWORD}" -e "GRANT ALL PRIVILEGES ON ${DB_NAME}.* TO '${DB_USER}'@'%'; FLUSH PRIVILEGES;"
@@ -271,10 +270,11 @@ echo "MediaWiki setup complete!"
 [ $# -eq 0 ] && { usage; exit 0; }
 
 while [[ $# -gt 0 ]]; do
-  case "$1" in
-   	--script-dir)    SCRIPT_DIR="${2:?missing DIR}"; shift ;;
-    --web-dir)       WEB_DIR="${2:?missing DIR}";    shift ;;
-    --mysql-root-password) MYSQL_ROOT_PASSWORD="${2:?missing PWD}"; shift ;;
+  option="$1"
+  case "$option" in
+   	--script-dir)    export SCRIPT_DIR="${2:?missing DIR}"; shift ;;
+    --web-dir)       export WEB_DIR="${2:?missing DIR}";    shift ;;
+    --mysql-root-password) export MYSQL_ROOT_PASSWORD="${2:?missing PWD}"; shift ;;
     --install-files) install_files ;;
     --initdb)        initdb ;;
     --grant)         grant_permissions;;
@@ -288,7 +288,7 @@ while [[ $# -gt 0 ]]; do
     --start-runjobs) start_runJobs ;;
     --all)           all;;
     -h|--help)       usage; exit 0 ;;
-    *) echo "Unknown option: $arg"; usage; exit 1 ;;
+    *) echo "Unknown option: $option"; usage; exit 1 ;;
   esac
   shift
 done

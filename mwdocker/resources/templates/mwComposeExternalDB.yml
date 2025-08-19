@@ -14,6 +14,12 @@ services:
     user: "{{uid}}:{{gid}}"
     build: .
     restart: always
+    # to be used by scripts
+    environment:
+      MYSQL_DATABASE: "{{wiki_id}}_wiki"
+      MYSQL_USER: "{{wiki_id}}_user"
+      MYSQL_PASSWORD: "{{mySQLPassword}}"
+      MYSQL_ROOT_PASSWORD: "{{mySQLRootPassword}}"
     ports:
       - {{port}}:80
     external_links:

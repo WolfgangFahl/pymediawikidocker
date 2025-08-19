@@ -893,7 +893,8 @@ class DockerApplication(object):
             if self.config.has_external_db:
                 self.execute(
                     "bash", "/scripts/setup-mediawiki.sh",
-                    "--mysql-root-password", self.config.mySQLRootPassword,
+                    # do not export root password here - try using ENV variable
+                    #"--mysql-root-password", self.config.mySQLRootPassword,
                     "--grant"
                 )
             dbStatus = self.checkDBConnection()
