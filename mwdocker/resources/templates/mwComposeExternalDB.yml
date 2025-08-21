@@ -19,6 +19,7 @@ services:
       MYSQL_DATABASE: "{{wiki_id}}_wiki"
       MYSQL_USER: "{{wiki_id}}_user"
       MYSQL_PASSWORD: "{{mySQLPassword}}"
+      # this was determined from the database container at generation time
       MYSQL_ROOT_PASSWORD: "{{mySQLRootPassword}}"
     ports:
       - {{port}}:80

@@ -152,7 +152,7 @@ a link to the page also shows up in their "Personal URLs", between "Talk" and "P
             if tag:
                 # use the mapped tag
                 options = f'--branch {tag}'
-            elif "//github.com/wikimedia/" in self.giturl:
+            elif "//github.com/wikimedia/" in self.giturl or "//gerrit.wikimedia.org" in self.giturl:
                 # default WMF convention: branch per MediaWiki REL
                 options = f'--single-branch --branch {branch}'
             script = f'git_get "{self.giturl}" "{self.extension}" "{options}"'

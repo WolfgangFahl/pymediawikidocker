@@ -19,6 +19,7 @@ from basemkit.yamlable import lod_storable
 from lodstorage.lod import LOD
 
 from mwdocker.mw import ExtensionList
+from mwdocker.docker_map import DockerMap
 
 class Host:
     """
@@ -352,9 +353,14 @@ class MwConfig:
         self.logo = args.logo
         self.mariaDBVersion = args.mariaDBVersion
         # passwords
-        self.mySQLRootPassword = args.mysqlPassword
+        if args.mysqlPassword:
+            self.mySQLRootPassword = args.mysqlPassword
         if not self.mySQLRootPassword:
-            self.mySQLRootPassword = self.create_random_password(self.password_length)
+            if args.db_container_name:
+                # we need the password from the database container
+                pass
+            else:
+                self.mySQLRootPassword = self.create_random_password(self.password_length)
         self.mySQLPassword = self.create_random_password(self.password_length)
         self.prot = args.prot
         self.script_path = args.script_path
@@ -557,3 +563,17 @@ class MwClusterConfig(MwConfig):
             default=self.versions,
             help="mediawiki versions to create docker applications for [default: %(default)s] ",
         )
+
+    def fromArgs(self, args):
+        """
+        initialize me from the given commmand line arguments
+
+        Args:
+            args(Namespace): the command line arguments
+        """
+        dbc_name=args.db_container_name
+        if dbc_name:
+            env=DockerMap.getEnv(dbc_name)
+            self.mySQLRootPassword=env["MYSQL_ROOT_PASSWORD"]
+            pass
+        super().fromArgs(args)

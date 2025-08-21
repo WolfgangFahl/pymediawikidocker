@@ -28,25 +28,7 @@ import mysql.connector
 from python_on_whales import docker
 from python_on_whales.exceptions import DockerException
 from wikibot3rd.wikiuser import WikiUser
-
-
-class DockerMap:
-    """
-    helper class to convert lists of docker elements to maps for improved
-    lookup functionality
-    """
-
-    @staticmethod
-    def getContainerMap():
-        """
-        get a map/dict of containers by container name
-        """
-        containerMap = {}
-        for container in docker.container.list():
-            containerMap[container.name] = container
-            pass
-        return containerMap
-
+from mwdocker.docker_map import DockerMap
 
 class DockerContainer:
     """
@@ -687,6 +669,7 @@ class DockerApplication(object):
         self.generate(
             template_name,
             f"{self.docker_path}/docker-compose.yml",
+            # might be None for ExternalDB case
             mySQLRootPassword=self.config.mySQLRootPassword,
             mySQLPassword=self.config.mySQLPassword,
             container_base_name=self.config.container_base_name,
@@ -892,8 +875,9 @@ class DockerApplication(object):
             )
         except Exception as ex:
             # already connected or harmless -> ignore
-            if self.config.debug:
-                print(f"network connect hint: {ex}", file=sys.stderr)
+            if not "already exists" in str(ex):
+                if self.config.debug:
+                    print(f"network connect hint: {ex}", file=sys.stderr)
 
     def start(self, forceRebuild: bool = False, withInitDB=True):
         """
