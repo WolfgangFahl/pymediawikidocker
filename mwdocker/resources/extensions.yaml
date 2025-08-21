@@ -430,6 +430,13 @@ extensions:
     Provides parser functions for performing loops
   giturl: https://github.com/wikimedia/mediawiki-extensions-Loops
   wikidata_id: Q21677430
+- name: PluggableAuth
+  url: https://www.mediawiki.org/wiki/Extension:PluggableAuth
+  extension: PluggableAuth
+  wikidata_id: Q21678089
+  purpose: |
+    provides a framework for creating authentication and authorization extensions.
+  giturl: https://gerrit.wikimedia.org/r/mediawiki/extensions/PluggableAuth
 - name: SimpleTable
   url: https://www.mediawiki.org/wiki/Extension:SimpleTable
   extension: SimpleTable
@@ -442,6 +449,13 @@ extensions:
   purpose: |
     Adds the usescript and usestyle tags to load JavaScript and CSS on a per-page basis
   giturl: https://github.com/wikimedia/mediawiki-extensions-UseResource
+- name: WSOAuth
+  url: https://www.mediawiki.org/wiki/Extension:WSOAuth
+  extension: WSOAuth
+  wikidata_id: Q117027185
+  purpose: |
+    provide authentication using an OAuth provider.
+  giturl: https://gerrit.wikimedia.org/r/mediawiki/extensions/WSOAuth
 - name: WikiEditor
   url: https://www.mediawiki.org/wiki/Extension:WikiEditor
   extension: WikiEditor
