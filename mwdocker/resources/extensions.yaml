@@ -120,8 +120,12 @@ extensions:
     using the jQuery UI JavaScript library.
   giturl: https://github.com/wikimedia/mediawiki-extensions-HeaderTabs
   wikidata_id: Q21676903
-  since: '2008-03-20T00:00:00'
   require_once_until: '127'
+- name: HitCounters
+  url: https://www.mediawiki.org/wiki/Extension:HitCounters
+  extension: HitCounters
+  purpose: displays the view count in the page footer and the most viewed pages on a special page called PopularPages.
+  giturl: https://gerrit.wikimedia.org/r/mediawiki/extensions/HitCounters
 - name: ImageLink
   url: https://wiki.bitplan.com/index.php/ImageLink
   extension: ImageLink
