@@ -353,15 +353,18 @@ class MwConfig:
         self.logo = args.logo
         self.mariaDBVersion = args.mariaDBVersion
         # passwords
-        if args.mysqlPassword:
-            self.mySQLRootPassword = args.mysqlPassword
+        if args.mysqlRootPassword:
+            self.mySQLRootPassword = args.mysqlRootPassword
         if not self.mySQLRootPassword:
             if args.db_container_name:
                 # we need the password from the database container
                 pass
             else:
                 self.mySQLRootPassword = self.create_random_password(self.password_length)
-        self.mySQLPassword = self.create_random_password(self.password_length)
+        if args.mysqlPassword:
+            self.mySQLPassword = args.mysqlPassword
+        else:
+            self.mySQLPassword = self.create_random_password(self.password_length)
         self.prot = args.prot
         self.script_path = args.script_path
         self.versions = args.versions
@@ -461,9 +464,14 @@ class MwConfig:
             help="mariaDB Version to be installed [default: %(default)s]",
         )
         parser.add_argument(
-            "--mysqlPassword",
+            "--mysqlRootPassword",
             default=self.mySQLRootPassword,
-            help="set sqlRootPassword [default: %(default)s] - random password if None",
+            help="set sql root Password [default: %(default)s] - random password if None",
+        )
+        parser.add_argument(
+            "--mysqlPassword",
+            default=self.myPassword,
+            help="set sql user Password [default: %(default)s] - random password if None",
         )
         parser.add_argument(
             "-rp",
