@@ -279,6 +279,7 @@ all() {
 	cd ${WEB_DIR}
 	# Update MediaWiki extensions via composer
 	# composer.local.json was installed earlier to make this work
+	composer self-update --2
 	composer update --no-dev
 
 
