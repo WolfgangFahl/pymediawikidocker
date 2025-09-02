@@ -470,7 +470,7 @@ class MwConfig:
         )
         parser.add_argument(
             "--mysqlPassword",
-            default=self.myPassword,
+            default=self.mySQLPassword,
             help="set sql user Password [default: %(default)s] - random password if None",
         )
         parser.add_argument(
