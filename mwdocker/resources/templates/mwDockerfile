@@ -34,9 +34,10 @@ RUN apt-get -y update && \
 RUN curl -sS https://getcomposer.org/installer | php \
     && mv composer.phar /usr/local/bin/composer
 
-# make sure to use version {{composerVersion}} of composer
+# make sure to use version 2 instead of composer
+# even if {{composerVersion}} is default
 # https://blog.packagist.com/deprecating-composer-1-support/
-RUN composer self-update --{{composerVersion}}
+RUN composer self-update --2
 
 # fix ownership for MediaWiki web root
 RUN chown -R www-data:www-data /var/www/html
