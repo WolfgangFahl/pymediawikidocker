@@ -18,6 +18,8 @@ services:
       MYSQL_USER: "{{wiki_id}}_user"
       MYSQL_PASSWORD: "{{mySQLPassword}}"
       MYSQL_ROOT_PASSWORD: "{{mySQLRootPassword}}"
+      # https://stackoverflow.com/a/67006851/1497139
+      MYSQL_ROOT_HOST: "%"
     ports:
       - {{sql_port}}:3306
     volumes:
