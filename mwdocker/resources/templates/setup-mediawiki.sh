@@ -70,6 +70,7 @@ STEPS (choose any; default is --all if none given):
   --permissions         Fix file permissions
   --composer            Update extensions via composer
   --update              Run MediaWiki update script
+  --short-urls          Write .htaccess to enable /Page short URLs (no /wiki/)
   --sysop               Add sysop user
   --lang-images         Download language images
   --crontab             Add crontab entry for runJobs
@@ -254,6 +255,58 @@ install_files() {
 }
 
 #
+# install extensions not managed via composer
+#
+do_extensions() {
+  cd "${WEB_DIR}/extensions"
+  "${SCRIPT_DIR}/installExtensions.sh"
+}
+
+#
+# composer update for extensions managed via composer.local.json
+#
+do_composer_update() {
+  cd "${WEB_DIR}"
+  composer update --no-dev
+}
+
+
+#
+# add initial sysop user
+#
+do_sysop() {
+	# make sure we have an initial user to work with
+	# use wikiCMS/tsite and ProfiWiki if you need to more control
+	${SCRIPT_DIR}/addSysopUser.sh
+}
+
+#
+# enable short URLs via .htaccess (no /wiki prefix), root install
+# Writes ${WEB_DIR}/.htaccess and sets proper ownership/permissions.
+#
+short_urls_htaccess() {
+  local ht="${WEB_DIR}/.htaccess"
+  cat >"$ht" <<'EOF'
+RewriteEngine On
+
+# serve existing files/dirs (api.php, load.php, resources/, images/, etc.)
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# root -> Main Page
+RewriteRule ^$ index.php [L]
+
+# everything else -> title
+RewriteRule ^(.+)$ index.php?title=$1 [L,QSA]
+EOF
+  chown www-data:www-data "$ht"
+  chmod 0644 "$ht"
+  color_msg "$green" "Short URLs enabled via .htaccess (/$1, no prefix)."
+}
+
+
+#
 # run all MediaWiki setup steps
 #
 all() {
@@ -266,20 +319,14 @@ all() {
 	# call initialize database function
 	initdb
 
-	# install extensions which are not installed via composer
-	cd ${WEB_DIR}/extensions
-
-	# the generated script will have the specific list of extensions for this
-	# wiki
-	${SCRIPT_DIR}/installExtensions.sh
+	# install non composer extensions
+	do_extensions
 
 	# fix permissions
 	fix_permissions
 
-	cd ${WEB_DIR}
-	# Update MediaWiki extensions via composer
-	# composer.local.json was installed earlier to make this work
-	composer update --no-dev
+	# install composer based extensions
+	do_composer_update
 
 
 	# run the update script to initialize tables e.g. for Semanticmediawiki
@@ -288,9 +335,11 @@ all() {
 	# Semantic MediaWiki was installed and enabled but is missing an appropriate upgrade key.
 	run_update
 
-	# make sure we have an initial user to work with
-	# user wikiCMS/tsite and ProfiWiki if you need to more control
-	${SCRIPT_DIR}/addSysopUser.sh
+	# add sysop user
+	do_sysop
+
+	# allow short urls
+	short_urls_htaccess
 
 	# install language images
 	lang_images ${WEB_DIR}/images
@@ -321,6 +370,7 @@ while [[ $# -gt 0 ]]; do
     --permissions)   fix_permissions ;;
     --composer)      do_composer_update ;;
     --update)        run_update ;;
+    --short-urls)    short_urls_htaccess ;;
     --sysop)         do_sysop ;;
     --lang-images)   lang_images "${WEB_DIR}/images" ;;
     --crontab)       add_crontab_entry ;;
