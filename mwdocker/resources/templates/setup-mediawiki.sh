@@ -5,6 +5,9 @@
 
 set -e
 
+# load system-wide profile so PATH is set like in interactive shells
+source /etc/profile
+
 # global directories - may be modified with options
 SCRIPT_DIR="/scripts"
 WEB_DIR="/var/www/html"
@@ -165,13 +168,14 @@ add_crontab_entry() {
 # start the run jobs
 #
 start_runJobs() {
-	jobs=$(pgrep -fla runjobs | wc -l)
-	if [ $jobs -gt 3 ]
-	then
-	  echo "$jobs runjobs already running ..."
-	  exit 1
-	fi
-	php maintenance/runJobs.php >> /var/log/mediawiki/runJobs.log 2>&1
+  jobs=$(pgrep -fla runjobs | wc -l)
+  if [ $jobs -gt 3 ]
+  then
+    echo "$jobs runjobs already running ..."
+    exit 1
+  fi
+  cd ${WEB_DIR}
+  php maintenance/runJobs.php >> /var/log/mediawiki/runJobs.log 2>&1
 }
 
 #
@@ -275,9 +279,9 @@ do_composer_update() {
 # add initial sysop user
 #
 do_sysop() {
-	# make sure we have an initial user to work with
-	# use wikiCMS/tsite and ProfiWiki if you need to more control
-	${SCRIPT_DIR}/addSysopUser.sh
+  # make sure we have an initial user to work with
+  # use wikiCMS/tsite and ProfiWiki if you need to more control
+  ${SCRIPT_DIR}/addSysopUser.sh
 }
 
 #
