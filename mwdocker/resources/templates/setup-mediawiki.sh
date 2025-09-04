@@ -143,7 +143,7 @@ add_crontab_entry() {
   sudo touch /var/log/mediawiki/runJobs.log
   sudo chown www-data:www-data /var/log/mediawiki/runJobs.log
 
-  local cron_job="*/1 * * * * /scripts/startRunJobs.sh"
+  local cron_job="*/1 * * * * /scripts/setup-mediawiki.sh --start-runjobs"
   local tmp_cron="/tmp/current_cron"
 
   # get current crontab (if any), excluding our line
