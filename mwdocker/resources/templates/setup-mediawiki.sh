@@ -95,24 +95,23 @@ lang_images () {
     error "image directory $l_target does not exist"
   fi
   local from="http://semantic-mediawiki.org/w/"
+  # all language images to download
   local imgs=(
-    images/e/e7/Lang-De.gif images/7/78/Lang-En.gif images/6/61/Lang-Es.gif
-    images/f/f0/Lang-Fr.gif images/9/95/Lang-Ja.gif images/c/cb/Lang-Nl.gif
-    images/3/38/Lang-Ru.gif images/8/85/Lang-Zh-hans.gif images/2/20/Lang-Uk.gif
+    e/e7/Lang-De.gif 7/78/Lang-En.gif 6/61/Lang-Es.gif
+    f/f0/Lang-Fr.gif 9/95/Lang-Ja.gif c/cb/Lang-Nl.gif
+    3/38/Lang-Ru.gif 8/85/Lang-Zh-hans.gif 2/20/Lang-Uk.gif
   )
 
-  for img in "${imgs[@]}"; do
-    local imgpath="$(dirname "$img")"
-    local imgname="$(basename "$img")"
-    local fullpath="$l_target/$img"
-
+  for rel in "${imgs[@]}"; do
+    local fullpath="$l_target/$rel"
+    local dirpath="$(dirname "$fullpath")"
     if [ ! -f "$fullpath" ]; then
-      color_msg "$blue" "downloading $imgname ..."
-      mkdir -p "$l_target/$imgpath"
-      curl -L -s -o "$fullpath" "$from/$img"
-      chown www-data:www-data "$l_target/$imgpath"
+      color_msg "$blue" "downloading $(basename "$rel") ..."
+      mkdir -p "$dirpath"
+      curl -fLs -o "$fullpath" "$from/images/$rel"
+      chown www-data:www-data "$dirpath" "$fullpath"
     else
-      color_msg "$green" "$imgname already downloaded"
+      color_msg "$green" "$(basename "$rel") already present"
     fi
   done
 }
