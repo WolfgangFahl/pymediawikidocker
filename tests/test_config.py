@@ -27,7 +27,7 @@ class TestConfig(Basetest):
         """
         mwClusterConfig = MwClusterConfig()
         expected = {
-            "version": "1.39.13",
+            "version": "1.39.14",
             "smw_version": None,
             "extensionNameList": [
                 "Admin Links",
@@ -61,7 +61,7 @@ class TestConfig(Basetest):
             "debug": False,
             "verbose": True,
             "wikiId": None,
-            "versions": ["1.35.13", "1.39.13", "1.43.3", "1.44.0"],
+            "versions": ["1.35.13", "1.39.14", "1.43.4", "1.44.1"],
             "base_port": 9080,
             "gid": 33,
             "uid": 33,

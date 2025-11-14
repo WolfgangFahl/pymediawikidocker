@@ -8,6 +8,7 @@ MAINTAINER Wolfgang Fahl <wf@bitplan.com>
 
 # we start as root user
 # install some more utilities
+# including gd
 RUN apt-get -y update && \
     apt-get -y --no-install-recommends --fix-missing install \
     mariadb-client \
@@ -27,7 +28,12 @@ RUN apt-get -y update && \
     unzip \
     libzip-dev \
     zip \
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
     && docker-php-ext-install zip \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install gd \
     && rm -rf /var/lib/apt/lists/*
 
 # install composer
