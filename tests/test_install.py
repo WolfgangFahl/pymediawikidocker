@@ -214,7 +214,7 @@ class TestInstall(Basetest):
             "--prefix",
             "smw4",
             "--version_list",
-            "1.39.14",
+            "1.39.15",
             "--smw_version",
             "4.2.0",
             "--base_port",
@@ -228,7 +228,7 @@ class TestInstall(Basetest):
             ["MagicNoCache", "Data Transfer", "Page Forms", "Semantic Result Formats"]
         )
         apps = mwCluster.createApps(withGenerate=True)
-        app = apps["1.39.14"]
+        app = apps["1.39.15"]
         app.start(forceRebuild=True)
 
     @unittest.skipIf(
@@ -316,7 +316,7 @@ class TestInstall(Basetest):
         for argv, expected in [
             (["-h"], "--user"),
             (["-V"], Version.updated),
-            (["--list"], "1.39.14"),
+            (["--list"], "1.39.15"),
         ]:
             try:
                 stdout = io.StringIO()
