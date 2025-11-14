@@ -59,7 +59,7 @@ class MwConfig:
     """
     MediaWiki and docker configuration for a Single Wiki
     """
-    version: str = "1.39.14"
+    version: str = "1.39.15"
     smw_version: Optional[str] = None
     extensionNameList: Optional[List[str]] = field(
         default_factory=lambda: [
