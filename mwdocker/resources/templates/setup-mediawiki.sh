@@ -270,6 +270,10 @@ do_extensions() {
 #
 do_composer_update() {
   cd "${WEB_DIR}"
+
+  # Ensure composer cache directory exists (fix_permissions already set ownership)
+  mkdir -p /var/www/.composer/cache
+
   composer update --no-dev
 }
 
