@@ -135,6 +135,11 @@ run_update() {
 fix_permissions() {
   sudo chown -R www-data ${WEB_DIR}
   sudo chgrp -R www-data ${WEB_DIR}
+  # Ensure composer home directory exists with correct structure
+  local COMPOSER_DIR=${WEB_DIR}/.composer
+  sudo mkdir -p ${COMPOSER_DIR}/cache
+  sudo chown -R www-data ${COMPOSER_DIR}
+  sudo chgrp -R www-data ${COMPOSER_DIR}
 }
 
 
@@ -270,10 +275,6 @@ do_extensions() {
 #
 do_composer_update() {
   cd "${WEB_DIR}"
-
-  # Ensure composer cache directory exists (fix_permissions already set ownership)
-  mkdir -p /var/www/.composer/cache
-
   composer update --no-dev
 }
 
@@ -363,11 +364,18 @@ all() {
 # default: show help if no args
 [ $# -eq 0 ] && { usage; exit 0; }
 
+# Set Composer home to prevent /var/www/.composer permission errors
+export COMPOSER_HOME="${WEB_DIR}/.composer"
+
 while [[ $# -gt 0 ]]; do
   option="$1"
   case "$option" in
    	--script-dir)    export SCRIPT_DIR="${2:?missing DIR}"; shift ;;
-    --web-dir)       export WEB_DIR="${2:?missing DIR}";    shift ;;
+    --web-dir)
+    	export WEB_DIR="${2:?missing DIR}";
+    	shift
+    	export COMPOSER_HOME="${WEB_DIR}/.composer"
+    	;;
     --settings)      export SETTINGS="${2:?missing FILE}";  shift ;;
     --mysql-root-password) export MYSQL_ROOT_PASSWORD="${2:?missing PWD}"; shift ;;
     --install-files) install_files ;;
