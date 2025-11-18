@@ -1297,7 +1297,7 @@ CREATE TABLE `searchindex` (
   UNIQUE KEY `si_page` (`si_page`),
   FULLTEXT KEY `si_title` (`si_title`),
   FULLTEXT KEY `si_text` (`si_text`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 COLLATE=utf8_general_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
