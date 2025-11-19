@@ -22,6 +22,8 @@ services:
       MYSQL_ROOT_HOST: "%"
     ports:
       - {{sql_port}}:3306
+    networks:
+      - mediawiki-net
     volumes:
       - type: {{volume_type}}           # 'volume' or 'bind'
         source: {{mysql_data}}          # volume name or host path
@@ -36,10 +38,10 @@ services:
     command: --default-authentication-plugin=mysql_native_password
     ports:
       - {{port}}:80
-    links:
-      - db
     depends_on:
       - db
+    networks:
+      - mediawiki-net
     volumes:
       - type:   {{volume_type}}           # 'volume' or 'bind'
         source: {{wiki_sites}}            # volume name or host path
@@ -55,6 +57,10 @@ services:
       - type: bind
         source: {{scripts_dir}}           # scripts directory path
         target: /scripts                  # container path
+        
+networks:
+  mediawiki-net:
+    driver: bridge
 
 volumes:
   wiki-etc:

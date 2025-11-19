@@ -220,7 +220,7 @@ class TestInstall(Basetest):
             "--base_port",
             "9480",
             "--sql_base_port",
-            "10306",
+            "9406",
         ]
         self.printCommand("--down -f", args)
         mwCluster = self.getMwCluster(args, createApps=False)
