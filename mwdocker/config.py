@@ -84,7 +84,7 @@ class MwConfig:
     # mysql settings
     mySQLRootPassword: Optional[str] = None
     mySQLPassword: Optional[str] = None
-    mariaDBVersion: str = "11.4"
+    mariaDBVersion: str = "11.8"
 
     # docker settings
     bind_mount: bool = False

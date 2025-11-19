@@ -56,7 +56,7 @@ class TestConfig(Basetest):
             "container_base_name": "mw-139",
             "db_container_name": "mw-139-db",
             "networkName": "mwNetwork",
-            "mariaDBVersion": "11.4",
+            "mariaDBVersion": "11.8",
             "forceRebuild": False,
             "debug": False,
             "verbose": True,
