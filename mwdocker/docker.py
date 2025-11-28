@@ -201,6 +201,9 @@ class DockerApplication(object):
         self.database = f"{self.wiki_id}_wiki"
         self.dbUser = f"{self.wiki_id}_user"
         self.wikiUser = None
+        # Hook to allow modifying results
+        # e.g. docker-compose.yaml after generation is finished
+        self.postgen_hook = None
 
     @staticmethod
     def checkDockerEnvironment(debug: bool = False) -> str:
@@ -758,6 +761,9 @@ class DockerApplication(object):
             if os.path.exists(path):
                 st = os.stat(path)
                 os.chmod(path, st.st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
+
+        if self.postgen_hook:
+            self.postgen_hook(self)
 
         # remember the configuration we used for generating
         # avoid endless loop - forceRebuilds - we have rebuild already
