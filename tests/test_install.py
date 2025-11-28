@@ -11,7 +11,7 @@ import os
 import shutil
 import socket
 import unittest
-from argparse import ArgumentParser
+import tempfile
 from contextlib import redirect_stdout
 
 from basemkit.basetest import Basetest
@@ -34,7 +34,18 @@ class TestInstall(Basetest):
     def setUp(self, debug=False, profile=True):
         Basetest.setUp(self, debug=debug, profile=profile)
         # make sure we don't use the $HOME directory
-        self.docker_path = "/tmp/.pmw"
+        # 1. Check if running in Jenkins (which sets the WORKSPACE env var)
+        workspace = os.environ.get("WORKSPACE")
+
+        if workspace:
+            # Isolate artifacts inside the specific Jenkins build folder
+            self.docker_path = os.path.join(workspace, ".pmw")
+        else:
+            # 2. Fallback for local dev: Use Python's secure temp location
+            # This usually maps to /tmp on Linux but handles user permissions better
+            self.docker_path = os.path.join(tempfile.gettempdir(), ".pmw")
+
+
         self.argv = ["--docker_path", self.docker_path]
         self.default_config = MwClusterConfig()
 
