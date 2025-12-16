@@ -4,7 +4,7 @@
 #
 FROM mediawiki:{{mwVersion}}
 
-MAINTAINER Wolfgang Fahl <wf@bitplan.com>
+LABEL maintainer="Wolfgang Fahl <wf@bitplan.com>"
 
 # we start as root user
 # install some more utilities
