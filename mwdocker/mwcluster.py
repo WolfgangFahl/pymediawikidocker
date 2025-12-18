@@ -3,9 +3,9 @@ Created on 2021-08-06
 @author: wf
 """
 
-from argparse import Namespace
 import dataclasses
 import sys
+from argparse import Namespace
 
 from mwdocker.config import MwClusterConfig
 from mwdocker.docker import DockerApplication
@@ -34,7 +34,7 @@ class MediaWikiCluster(object):
     # 2025-12-18 Security and maintenance release: 1.39.16 / 1.43.6 / 1.44.3 / 1.45.1
     # 2025-12-18 1.39.17 is also out in docker images
 
-    def __init__(self, config: MwClusterConfig,args:Namespace=None):
+    def __init__(self, config: MwClusterConfig, args: Namespace = None):
         """
         Constructor
 
@@ -42,7 +42,7 @@ class MediaWikiCluster(object):
             config(MWClusterConfig): the MediaWiki Cluster Configuration to use
         """
         self.config = config
-        self.args=args
+        self.args = args
         self.apps = {}
 
     def createApps(self, withGenerate: bool = True) -> dict:
@@ -177,7 +177,9 @@ class MediaWikiCluster(object):
         # let post_init create a new container_base_name and db_container_name
         if count > 1:
             appConfig.container_base_name = None
-            appConfig.db_container_name = self.args.db_container_name if self.args else None
+            appConfig.db_container_name = (
+                self.args.db_container_name if self.args else None
+            )
         appConfig.__post_init__()
         mwApp = DockerApplication(config=appConfig)
         return mwApp

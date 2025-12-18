@@ -4,14 +4,15 @@ Created on 2021-06-23
 @author: wf
 """
 
+import os
+import urllib
 from dataclasses import field
 from datetime import datetime
-import os
-from typing import List, Optional, Dict
-import urllib
+from typing import Dict, List, Optional
 
 from basemkit.yamlable import lod_storable
 from lodstorage.lod import LOD
+
 from mwdocker.webscrape import WebScrape
 
 
@@ -31,7 +32,9 @@ class Extension:
     since: Optional[str] = None
     localSettings: Optional[str] = None
     require_once_until: Optional[str] = None
-    tagmap: Optional[Dict[str, str]] = None  # optionally map MediaWiki REL branches e.g. { "REL1_39": "0.14.0" }
+    tagmap: Optional[Dict[str, str]] = (
+        None  # optionally map MediaWiki REL branches e.g. { "REL1_39": "0.14.0" }
+    )
 
     @classmethod
     def getSamples(cls):
@@ -151,17 +154,19 @@ a link to the page also shows up in their "Personal URLs", between "Talk" and "P
                 tag = self.tagmap.get(branch)
             if tag:
                 # use the mapped tag
-                options = f'--branch {tag}'
-            elif "//github.com/wikimedia/" in self.giturl or "//gerrit.wikimedia.org" in self.giturl:
+                options = f"--branch {tag}"
+            elif (
+                "//github.com/wikimedia/" in self.giturl
+                or "//gerrit.wikimedia.org" in self.giturl
+            ):
                 # default WMF convention: branch per MediaWiki REL
-                options = f'--single-branch --branch {branch}'
+                options = f"--single-branch --branch {branch}"
             script = f'git_get "{self.giturl}" "{self.extension}" "{options}"'
         else:
             script = "# no installation script command specified"
             if self.composer:
                 script += f"\n# installed with composer require {self.composer}"
         return script
-
 
 
 @lod_storable

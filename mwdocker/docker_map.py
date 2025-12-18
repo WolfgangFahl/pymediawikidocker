@@ -1,8 +1,9 @@
-'''
+"""
 Created on 2025-08-21
 
 @author: wf
-'''
+"""
+
 from typing import Dict
 
 from python_on_whales import docker
@@ -18,26 +19,28 @@ class DockerMap:
     _container_map = None
 
     @classmethod
-    def getContainer(cls,container_name:str):
+    def getContainer(cls, container_name: str):
         containerMap = DockerMap.getContainerMap()
         if not container_name in containerMap:
-            raise ValueError(f"container {container_name} is not a valid docker container")
-        container=containerMap.get(container_name)
+            raise ValueError(
+                f"container {container_name} is not a valid docker container"
+            )
+        container = containerMap.get(container_name)
         return container
 
     @classmethod
-    def getEnv(cls,container_name:str)->Dict[str,str]:
-        container=cls.getContainer(container_name)
+    def getEnv(cls, container_name: str) -> Dict[str, str]:
+        container = cls.getContainer(container_name)
         env_dict = {}
-        env_list=container.config.env
+        env_list = container.config.env
         for key_value in env_list:
-            if '=' in key_value:
-                key, value = key_value.split('=', 1)
+            if "=" in key_value:
+                key, value = key_value.split("=", 1)
                 env_dict[key] = value
         return env_dict
 
     @staticmethod
-    def getContainerMap(force_refresh: bool = True)->Dict[str,Container]:
+    def getContainerMap(force_refresh: bool = True) -> Dict[str, Container]:
         """
         get a cached map/dict of containers by container name
 

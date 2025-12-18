@@ -4,31 +4,34 @@ Created on 2021-08-06
 @author: wf
 """
 
-from dataclasses import dataclass
 import datetime
 import os
 import platform
 import pprint
 import secrets
+import stat
 import sys
 import time
 import traceback
 import typing
+from dataclasses import dataclass
 
+import mysql.connector
 from jinja2 import Environment, FileSystemLoader
 from jinja2.exceptions import TemplateNotFound
 from lodstorage.lod import LOD
+from mysql.connector import Error
+from python_on_whales import docker
+from python_on_whales.exceptions import DockerException
+from wikibot3rd.wikiuser import WikiUser
+
 from mwdocker.config import MwClusterConfig
+from mwdocker.docker_map import DockerMap
 from mwdocker.html_table import HtmlTables
 from mwdocker.logger import Logger
 from mwdocker.mariadb import MariaDB
 from mwdocker.version import Version
-from mysql.connector import Error
-import mysql.connector
-from python_on_whales import docker
-from python_on_whales.exceptions import DockerException
-from wikibot3rd.wikiuser import WikiUser
-from mwdocker.docker_map import DockerMap
+
 
 class DockerContainer:
     """
@@ -120,7 +123,7 @@ class DockerContainer:
             host_port = pb.host_port
         return host_port
 
-    def execute(self, *commands: str,verbose:bool=False):
+    def execute(self, *commands: str, verbose: bool = False):
         """
         Execute the given variable list of command strings inside the MediaWiki container.
 
@@ -129,28 +132,24 @@ class DockerContainer:
         """
         command_list = list(commands)
 
-
         if verbose:
             command_line = " ".join(command_list)
             print(f"Executing docker command: {command_line}")
 
         try:
             # see https://gabrieldemarmiesse.github.io/python-on-whales/user_guide/docker_run/#stream-the-output
-            for stream_type,stream_content in docker.execute(
-                container=self.container,
-                command=command_list,
-                stream=True):
-                    decoded_line = stream_content.decode("utf-8", errors="replace")
-                    target_stream = sys.stderr if stream_type == "stderr" else sys.stdout
-                    print(decoded_line, end="", file=target_stream)
+            for stream_type, stream_content in docker.execute(
+                container=self.container, command=command_list, stream=True
+            ):
+                decoded_line = stream_content.decode("utf-8", errors="replace")
+                target_stream = sys.stderr if stream_type == "stderr" else sys.stdout
+                print(decoded_line, end="", file=target_stream)
 
         except Exception as ex:
             logs = self.detect_crash()
             if logs is not None:
                 print(f"{self.name} crashed with log: {logs}")
-                raise Exception(
-                    f"Container {self.name} crashed during execute: {ex}"
-                )
+                raise Exception(f"Container {self.name} crashed during execute: {ex}")
             else:
                 raise ex
 
@@ -197,7 +196,7 @@ class DockerApplication(object):
 
         self.getContainers()
         self.dbConn = None
-        self.wiki_id=self.config.getWikiId()
+        self.wiki_id = self.config.getWikiId()
         self.database = f"{self.wiki_id}_wiki"
         self.dbUser = f"{self.wiki_id}_user"
         self.wikiUser = None
@@ -410,11 +409,11 @@ class DockerApplication(object):
             mwContainerNameDash = self.getContainerName("mw", "-")
             mwContainerNameUnderscore = self.getContainerName("mw", "_")
             raise Exception(
-              f"no mediawiki Container {mwContainerNameDash} or {mwContainerNameUnderscore} for {self.name} "
-              f"activated by docker compose\n- you might want to check the separator character used "
-              f"for container names for your platform {platform.system()}"
+                f"no mediawiki Container {mwContainerNameDash} or {mwContainerNameUnderscore} for {self.name} "
+                f"activated by docker compose\n- you might want to check the separator character used "
+                f"for container names for your platform {platform.system()}"
             )
-        self.mwContainer.execute(*commands,verbose=self.config.verbose)
+        self.mwContainer.execute(*commands, verbose=self.config.verbose)
 
     def close(self):
         """
@@ -632,7 +631,7 @@ class DockerApplication(object):
             overwrite (bool): if True overwrite the existing files
         """
         # make sure we have the wiki_id ready
-        wiki_id=self.config.getWikiId()
+        wiki_id = self.config.getWikiId()
         # we have to configure whether
         # bind mounts or volumes are to be used
         if self.config.bind_mount:
@@ -668,7 +667,11 @@ class DockerApplication(object):
         # at this stage we will have two containers
         # one for the database and one for the MediaWiki
         # the db container may be optionally an existing database container
-        template_name = "mwComposeExternalDB.yml" if self.config.has_external_db else "mwCompose.yml"
+        template_name = (
+            "mwComposeExternalDB.yml"
+            if self.config.has_external_db
+            else "mwCompose.yml"
+        )
         self.generate(
             template_name,
             f"{self.docker_path}/docker-compose.yml",
@@ -692,11 +695,11 @@ class DockerApplication(object):
         # secretKey
         # https://www.mediawiki.org/wiki/Manual:$wgSecretKey
         # 64 char random hex
-        secretKey=secrets.token_hex(32)
+        secretKey = secrets.token_hex(32)
         # upgradeKey
         # https://www.mediawiki.org/wiki/Manual:$wgUpgradeKey
         # 16 char random
-        upgradeKey=secrets.token_hex(8)
+        upgradeKey = secrets.token_hex(8)
         self.generate(
             f"mwLocalSettings{self.config.shortVersion}.php",
             f"{self.docker_path}/LocalSettings.php",
@@ -802,7 +805,9 @@ class DockerApplication(object):
         try:
             docker.compose.down(volumes=forceRebuild)
         except DockerException as dex:
-            print(f"warning: docker compose down failed in {self.docker_path}:{str(dex)}")
+            print(
+                f"warning: docker compose down failed in {self.docker_path}:{str(dex)}"
+            )
             pass
         # switch back to previous current directory
         os.chdir(cwd)
@@ -873,7 +878,9 @@ class DockerApplication(object):
                     print(f"{dc.name} 🟢 started in {start_secs:.2f}s")
         return mw, db
 
-    def prepare_external_db_access(self,network_name:str="db",db_alias:str="db"):
+    def prepare_external_db_access(
+        self, network_name: str = "db", db_alias: str = "db"
+    ):
         """
         make sure the external database container can be reached
         """
@@ -887,7 +894,7 @@ class DockerApplication(object):
             docker.network.connect(
                 network=network_name,
                 container=self.config.db_container_name,
-                alias=db_alias
+                alias=db_alias,
             )
         except Exception as ex:
             # already connected or harmless -> ignore
@@ -907,18 +914,19 @@ class DockerApplication(object):
         if self.config.has_external_db:
             self.prepare_external_db_access()
         if withInitDB:
-            msg="Initializing MediaWiki SQL tables"
+            msg = "Initializing MediaWiki SQL tables"
             if self.config.has_external_db:
-                msg+=" and permissions"
+                msg += " and permissions"
             if self.config.verbose:
                 print(f"{msg} ...")
             if self.config.has_external_db:
                 # Grant permissions first for external DB
                 self.execute(
-                    "bash", "/scripts/setup-mediawiki.sh",
+                    "bash",
+                    "/scripts/setup-mediawiki.sh",
                     # do not export root password here - try using ENV variable
-                    #"--mysql-root-password", self.config.mySQLRootPassword,
-                    "--grant"
+                    # "--mysql-root-password", self.config.mySQLRootPassword,
+                    "--grant",
                 )
             dbStatus = self.checkDBConnection()
             if dbStatus.ok:
@@ -934,10 +942,11 @@ class DockerApplication(object):
         setup MediaWiki via the generated script with explicit args
         """
         self.execute(
-            "bash", "/scripts/setup-mediawiki.sh",
-            "--script-dir", "/scripts",
-            "--web-dir", "/var/www/html",
+            "bash",
+            "/scripts/setup-mediawiki.sh",
+            "--script-dir",
+            "/scripts",
+            "--web-dir",
+            "/var/www/html",
             "--all",
         )
-
-

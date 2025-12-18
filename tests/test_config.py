@@ -61,7 +61,7 @@ class TestConfig(Basetest):
             "debug": False,
             "verbose": True,
             "wikiId": None,
-            "versions": ["1.35.13", "1.39.17", "1.43.6", "1.44.3","1.45.1"],
+            "versions": ["1.35.13", "1.39.17", "1.43.6", "1.44.3", "1.45.1"],
             "base_port": 9080,
             "gid": 33,
             "uid": 33,

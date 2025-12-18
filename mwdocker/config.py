@@ -18,8 +18,9 @@ from urllib.parse import urlparse
 from basemkit.yamlable import lod_storable
 from lodstorage.lod import LOD
 
-from mwdocker.mw import ExtensionList
 from mwdocker.docker_map import DockerMap
+from mwdocker.mw import ExtensionList
+
 
 class Host:
     """
@@ -53,12 +54,12 @@ class Host:
         return host
 
 
-
 @lod_storable
 class MwConfig:
     """
     MediaWiki and docker configuration for a Single Wiki
     """
+
     version: str = "1.39.17"
     smw_version: Optional[str] = None
     extensionNameList: Optional[List[str]] = field(
@@ -150,7 +151,7 @@ class MwConfig:
             bool: True if db_container_name differs from default pattern
         """
         default_db_name = f"{self.container_base_name}-db"
-        external= self.db_container_name != default_db_name
+        external = self.db_container_name != default_db_name
         return external
 
     def reset_url(self, url: str):
@@ -172,7 +173,7 @@ class MwConfig:
 
             self.full_url = f"{self.base_url}{self.script_path}"
 
-    def reset_container_base_name(self, container_base_name: str=None):
+    def reset_container_base_name(self, container_base_name: str = None):
         """
         reset the container base name to the given name
 
@@ -216,7 +217,7 @@ class MwConfig:
         path = f"{config_base_path}/MwConfig.json"
         return path
 
-    def save(self, path: str=None) -> str:
+    def save(self, path: str = None) -> str:
         """
         save my json
 
@@ -233,7 +234,7 @@ class MwConfig:
             print(json_str, file=f)
         return path
 
-    def load(self, path: str=None) -> "MwConfig":
+    def load(self, path: str = None) -> "MwConfig":
         """
         load the the MwConfig from the given path of if path is None (default)
         use the config_path for the current configuration
@@ -268,7 +269,7 @@ class MwConfig:
         )
         return shortVersion
 
-    def create_random_password(self, length: int=15) -> str:
+    def create_random_password(self, length: int = 15) -> str:
         """
         create a random password
 
@@ -295,7 +296,7 @@ class MwConfig:
         return wikiId
 
     def getExtensionMap(
-        self, extensionNameList: list=None, extensionJsonFile: str=None
+        self, extensionNameList: list = None, extensionJsonFile: str = None
     ):
         """
         get map of extensions to handle
@@ -312,7 +313,9 @@ class MwConfig:
             for duplicate in duplicates:
                 print(duplicate.name)
         if extensionJsonFile is not None:
-            extraExtensionList = ExtensionList.load_from_json_file(extensionJsonFile)  # @UndefinedVariable
+            extraExtensionList = ExtensionList.load_from_json_file(
+                extensionJsonFile
+            )  # @UndefinedVariable
             for ext in extraExtensionList.extensions:
                 if ext.name in self.extByName:
                     print(f"overriding {ext.name} extension definition")
@@ -360,7 +363,9 @@ class MwConfig:
                 # we need the password from the database container
                 pass
             else:
-                self.mySQLRootPassword = self.create_random_password(self.password_length)
+                self.mySQLRootPassword = self.create_random_password(
+                    self.password_length
+                )
         if args.mysqlPassword:
             self.mySQLPassword = args.mysqlPassword
         else:
@@ -535,8 +540,18 @@ class MwConfig:
             default=self.user,
             help="set username of initial user with sysop rights [default: %(default)s] ",
         )
-        parser.add_argument("--uid", type=int, default=self.uid, help="User ID  (default: 33 for www-data)")
-        parser.add_argument("--gid", type=int, default=self.gid, help="Group ID (default: 33 for www-data)")
+        parser.add_argument(
+            "--uid",
+            type=int,
+            default=self.uid,
+            help="User ID  (default: 33 for www-data)",
+        )
+        parser.add_argument(
+            "--gid",
+            type=int,
+            default=self.gid,
+            help="Group ID (default: 33 for www-data)",
+        )
 
 
 @dataclass
@@ -546,7 +561,7 @@ class MwClusterConfig(MwConfig):
     """
 
     versions: Optional[List[str]] = field(
-        default_factory=lambda: ["1.35.13", "1.39.17", "1.43.6", "1.44.3","1.45.1"]
+        default_factory=lambda: ["1.35.13", "1.39.17", "1.43.6", "1.44.3", "1.45.1"]
     )
     base_port: int = 9080
 
@@ -579,9 +594,9 @@ class MwClusterConfig(MwConfig):
         Args:
             args(Namespace): the command line arguments
         """
-        dbc_name=args.db_container_name
+        dbc_name = args.db_container_name
         if dbc_name:
-            env=DockerMap.getEnv(dbc_name)
-            self.mySQLRootPassword=env["MYSQL_ROOT_PASSWORD"]
+            env = DockerMap.getEnv(dbc_name)
+            self.mySQLRootPassword = env["MYSQL_ROOT_PASSWORD"]
             pass
         super().fromArgs(args)
