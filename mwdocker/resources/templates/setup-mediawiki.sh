@@ -6,16 +6,20 @@
 # Robustness: Exit on error, unset vars, or pipe failure
 set -euo pipefail
 
+# Determine execution context (root vs sudo)
+SUDO=""
+if [ "$EUID" -ne 0 ]; then
+    SUDO="sudo"
+fi
+
 # Robustness: Logging Configuration
 LOG_DIR="/var/log/mediawiki"
 LOG_FILE="${LOG_DIR}/setup.log"
 
 # Ensure log directory exists
 if [ ! -d "$LOG_DIR" ]; then
-    mkdir -p "$LOG_DIR"
-    if [ "$EUID" -eq 0 ]; then
-        chown www-data:www-data "$LOG_DIR"
-    fi
+    $SUDO mkdir -p "$LOG_DIR"
+    $SUDO chown www-data:www-data "$LOG_DIR"
 fi
 
 # Redirect stdout/stderr to log file and console
@@ -35,11 +39,6 @@ WEB_DIR="/var/www/html"
 SETTINGS="LocalSettings.php"
 MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-}
 
-# Determine execution context (root vs sudo)
-SUDO=""
-if [ "$EUID" -ne 0 ]; then
-    SUDO="sudo"
-fi
 
 #ansi colors
 #http://www.csc.uvic.ca/~sae/seng265/fall04/tips/s265s047-tips/bash-using-colors.html
