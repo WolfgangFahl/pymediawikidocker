@@ -59,7 +59,7 @@ class MwConfig:
     """
     MediaWiki and docker configuration for a Single Wiki
     """
-    version: str = "1.39.15"
+    version: str = "1.39.17"
     smw_version: Optional[str] = None
     extensionNameList: Optional[List[str]] = field(
         default_factory=lambda: [
@@ -546,7 +546,7 @@ class MwClusterConfig(MwConfig):
     """
 
     versions: Optional[List[str]] = field(
-        default_factory=lambda: ["1.35.13", "1.39.15", "1.43.5", "1.44.2"]
+        default_factory=lambda: ["1.35.13", "1.39.17", "1.43.6", "1.44.3","1.45.1"]
     )
     base_port: int = 9080
 
