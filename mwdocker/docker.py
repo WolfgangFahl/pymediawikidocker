@@ -9,7 +9,7 @@ import datetime
 import os
 import platform
 import pprint
-import stat
+import secrets
 import sys
 import time
 import traceback
@@ -689,6 +689,14 @@ class DockerApplication(object):
         # now generate the parts we will use later to
         # create the fully configured wiki
         # first - LocalSettings with references to all extensions
+        # secretKey
+        # https://www.mediawiki.org/wiki/Manual:$wgSecretKey
+        # 64 char random hex
+        secretKey=secrets.token_hex(32)
+        # upgradeKey
+        # https://www.mediawiki.org/wiki/Manual:$wgUpgradeKey
+        # 16 char random
+        upgradeKey=secrets.token_hex(8)
         self.generate(
             f"mwLocalSettings{self.config.shortVersion}.php",
             f"{self.docker_path}/LocalSettings.php",
@@ -698,6 +706,8 @@ class DockerApplication(object):
             extensions=self.config.extensionMap.values(),
             mwShortVersion=self.config.shortVersion,
             logo=self.config.logo,
+            secretKey=secretKey,
+            upgradeKey=upgradeKey,
             overwrite=overwrite,
         )
         # the SQL file for initial content

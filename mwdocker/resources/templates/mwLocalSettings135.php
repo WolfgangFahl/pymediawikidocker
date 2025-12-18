@@ -95,14 +95,14 @@ $wgShellLocale = "C.UTF-8";
 # Site language code, should be one of the list in ./languages/data/Names.php
 $wgLanguageCode = "en";
 
-$wgSecretKey = "f37ab2ef4e166c46b662b9fc01eccbfae8bff43d659fc5db1be14e65027dea89";
+$wgSecretKey = "{{secretKey}}";
 
 # Changing this will log out all existing sessions.
 $wgAuthenticationTokenVersion = "1";
 
 # Site upgrade key. Must be set to a string (default provided) to turn on the
 # web installer while LocalSettings.php is in place
-$wgUpgradeKey = "ddeb2a8a6a0279fe";
+$wgUpgradeKey = "{{upgradeKey}}";
 
 ## For attaching licensing metadata to pages, and displaying an
 ## appropriate copyright notice / icon. GNU Free Documentation
