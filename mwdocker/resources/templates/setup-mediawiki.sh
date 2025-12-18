@@ -120,7 +120,8 @@ lang_images () {
   if [ ! -d "$l_target" ]; then
     error "image directory $l_target does not exist"
   fi
-  local from="http://semantic-mediawiki.org/w/"
+  #local from="https://semantic-mediawiki.org/w/"
+  local from="https://wiki.bitplan.com/"
   # all language images to download
   local imgs=(
     e/e7/Lang-De.gif 7/78/Lang-En.gif 6/61/Lang-Es.gif
