@@ -135,7 +135,7 @@ class TestInstall(Basetest):
                 "plantuml.sh",
             ]:
                 fpath = f"{epath}/{fname}"
-                self.assertTrue(os.path.isfile(fpath))
+                self.assertTrue(os.path.isfile(fpath),fpath)
 
     def newClusterApps(self):
         """
