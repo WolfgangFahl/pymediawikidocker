@@ -37,16 +37,18 @@ RUN apt-get -y update && \
     && rm -rf /var/lib/apt/lists/*
 
 # install composer
-RUN curl -sS https://getcomposer.org/installer | php \
-    && mv composer.phar /usr/local/bin/composer
 
 # make sure to use version 2 instead of composer
 # even if {{composerVersion}} is default
 # https://blog.packagist.com/deprecating-composer-1-support/
-RUN composer self-update --2
+# single layer two part
+RUN curl -sS https://getcomposer.org/installer | php \
+    && mv composer.phar /usr/local/bin/composer \
+    && composer self-update --2
 
-# fix ownership for MediaWiki web root
-RUN chown -R www-data:www-data /var/www/html
+# fix ownership for MediaWiki directories
+RUN chown -R www-data:www-data /var/www/html/images \
+    && chown -R www-data:www-data /var/www/html/cache || true
 
 # --- switch to runtime user ---
 # make sure we can still use sudo

@@ -246,12 +246,13 @@ wait_for_db() {
   local host="db"
   local user="$1"
   local pass="$2"
-  local max_retries=30
+  local max_retries=60
   local count=0
 
-  color_msg "$blue" "Waiting for database connection..."
+  color_msg "$blue" "Waiting up to $max_retries for database connection..."
   while ! mysql --host="$host" -u"$user" -p"$pass" -e "SELECT 1;" >/dev/null 2>&1; do
-    sleep 2
+    sleep 1
+    echo -n "."
     count=$((count + 1))
     if [ $count -ge $max_retries ]; then
       error "Timed out waiting for database connection."
