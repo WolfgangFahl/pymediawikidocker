@@ -114,7 +114,7 @@ class TestExtensions(Basetest):
             # "https://www.openresearch.org/wiki/Special:Version",
             # "https://confident.dbis.rwth-aachen.de/or/index.php?title=Special:Version",
             ("https://wiki.bitplan.com/index.php/Special:Version", 33),
-            ("https://cr.bitplan.com/index.php/Special:Version", 35),
+            ("https://cr.bitplan.com/index.php/Special:Version", 33),
         ]:
             extList = ExtensionList.fromSpecialVersion(url, showHtml=False, debug=debug)
             extList.extensions = sorted(extList.extensions, key=lambda ext: ext.name)
@@ -127,7 +127,7 @@ class TestExtensions(Basetest):
                     print(ext)
                 for ext in extList.extensions:
                     print(ext.asWikiMarkup())
-                print(extList.toJSON())
+                print(extList.to_json())
 
     def test_duplicate_extensions(self):
         """

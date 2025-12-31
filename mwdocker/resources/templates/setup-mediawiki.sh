@@ -37,6 +37,7 @@ fi
 SCRIPT_DIR="/scripts"
 WEB_DIR="/var/www/html"
 SETTINGS="LocalSettings.php"
+DB_HOST="db"
 MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-}
 
 
@@ -85,6 +86,7 @@ Usage: $0 [OPTIONS]
 
 GENERAL OPTIONS:
   --script-dir DIR      Directory containing setup files (default: /scripts)
+  --dbhost DB_HOST      Datbase host to use
   --web-dir DIR         MediaWiki web root (default: /var/www/html)
   --settings FILENAME   LocalSettings.php file name
   -h, --help            Show this help
@@ -235,16 +237,16 @@ get_mysql_connection() {
   if [ ! -f "$settings" ]; then
     error "Settings file $settings not found."
   fi
-  DB_PASSWORD=$(grep wgDBpassword "$settings" | cut -d'"' -f2)
-  DB_USER=$(grep wgDBuser "$settings" | cut -d'"' -f2)
-  DB_NAME=$(grep wgDBname "$settings" | cut -d'"' -f2)
+  DB_PASSWORD=$(grep wgDBpassword "$settings" | cut -d'"' -f2 | xargs)
+  DB_USER=$(grep wgDBuser "$settings" | cut -d'"' -f2 | xargs)
+  DB_NAME=$(grep wgDBname "$settings" | cut -d'"' -f2 | xargs)
 }
 
 #
 # Robustness: Wait for database to be ready
 #
 wait_for_db() {
-  local host="db"
+  local host="$DB_HOST"
   local user="$1"
   local pass="$2"
   local max_retries=60
@@ -310,7 +312,24 @@ fix_mariadb() {
 # initialize the Mediawiki database content with the needed table structure
 #
 initdb() {
+  if [ -z "${MYSQL_ROOT_PASSWORD}" ]; then
+    error "MySQL root password required. Use --mysql-root-password option."
+  fi
+
   get_mysql_connection
+
+  wait_for_db "root" "${MYSQL_ROOT_PASSWORD}"
+
+  # Check if database is already initialized
+  local table_count
+  table_count=$(mysql --host=$DB_HOST -uroot -p"${MYSQL_ROOT_PASSWORD}" \
+    -D"${DB_NAME}" -sN -e "SHOW TABLES;" 2>/dev/null | wc -l)
+
+  if [ "${table_count}" -gt 0 ]; then
+  	color_msg "$red" "Database ${DB_NAME} already initialized with $table_count tables"
+  	return 0
+  fi
+
 
   # Check if SQL file exists
   if [ ! -f "${SCRIPT_DIR}/wiki.sql" ]; then
@@ -472,6 +491,7 @@ while [[ $# -gt 0 ]]; do
   option="$1"
   case "$option" in
    	--script-dir)    export SCRIPT_DIR="${2:?missing DIR}"; shift ;;
+   	--dbhost) export DB_HOST="${2:?missing DB_HOST}"; shift ;;
     --web-dir)
     	export WEB_DIR="${2:?missing DIR}";
     	shift
