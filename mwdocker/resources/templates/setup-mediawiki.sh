@@ -93,6 +93,7 @@ STEPS (choose any; default is --all if none given):
   --all                 Run all steps (default)
   --install-files       Install config and utility files
   --initdb              Initialize database from SQL backup
+  --fixmariadb          Fix MariaDB problems e.g. SSL enforcement
   --grant               Grant database permissions
   --mysql-root-password PWD  MySQL root password for grants
   --extensions          Install MediaWiki extensions (installExtensions.sh)
@@ -286,6 +287,24 @@ EOF
   fi
 }
 
+#
+# fix Maria DB issues such as SSL enforcement between docker containers
+# we have a generate my.cnf available for this
+#
+fix_mariadb() {
+  local src="${SCRIPT_DIR}/my.cnf"
+  local dest="/etc/mysql/mariadb.conf.d/90-client-ssl.cnf"
+
+  if [ ! -f "$src" ]; then
+    color_msg "$blue" "No my.cnf found, skipping MariaDB client config."
+    return
+  fi
+
+  $SUDO mkdir -p "$(dirname "$dest")"
+  $SUDO install -m 0644 -o root -g root "$src" "$dest"
+  color_msg "$green" "MariaDB client SSL config installed."
+}
+
 
 #
 # initialize the Mediawiki database content with the needed table structure
@@ -405,6 +424,9 @@ all() {
 	# make sure we copy installation files from script dir
 	install_files
 
+	# fix maria db issues
+	fix_mariadb
+
 	cd "${WEB_DIR}"
 	# call initialize database function
 	initdb
@@ -461,6 +483,7 @@ while [[ $# -gt 0 ]]; do
     --initdb)        initdb ;;
     --grant)         grant_permissions;;
     --extensions)    do_extensions ;;
+    --fixmariadb)    fix_mariadb;;
     --permissions)   fix_permissions ;;
     --composer)      do_composer_update ;;
     --update)        run_update ;;

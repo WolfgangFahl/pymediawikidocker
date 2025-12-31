@@ -754,6 +754,7 @@ class DockerApplication(object):
             "install_djvu.sh",
             "plantuml.sh",
             "upload.ini",
+            "my.cnf"
         ]:
             self.generate(
                 f"{file_name}", f"{self.docker_path}/{file_name}", overwrite=overwrite
