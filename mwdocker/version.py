@@ -15,7 +15,7 @@ class Version(object):
     name = "pymediawikidocker"
     version = mwdocker.__version__
     date = "2021-06-21"
-    updated = "2025-12-16"
+    updated = "2025-12-31"
 
     authors = "Wolfgang Fahl, Tim Holzheim"
 

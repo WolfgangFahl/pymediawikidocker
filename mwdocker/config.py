@@ -230,7 +230,8 @@ class MwConfig:
             path = self.get_config_path()
 
         json_str = self.as_json()
-        with open(path, "w") as f:
+        # Enforce Unix newlines to prevent ^M characters
+        with open(path, "w", newline='\n') as f:
             print(json_str, file=f)
         return path
 
@@ -313,9 +314,7 @@ class MwConfig:
             for duplicate in duplicates:
                 print(duplicate.name)
         if extensionJsonFile is not None:
-            extraExtensionList = ExtensionList.load_from_json_file(
-                extensionJsonFile
-            )  # @UndefinedVariable
+            extraExtensionList = ExtensionList.load_from_json_file(extensionJsonFile)  # @UndefinedVariable
             for ext in extraExtensionList.extensions:
                 if ext.name in self.extByName:
                     print(f"overriding {ext.name} extension definition")
