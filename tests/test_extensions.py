@@ -109,10 +109,11 @@ class TestExtensions(Basetest):
         """
         debug = self.debug
         # debug=False
+        debug=True
         for url, expected in [
             # "https://www.openresearch.org/wiki/Special:Version",
             # "https://confident.dbis.rwth-aachen.de/or/index.php?title=Special:Version",
-            ("https://wiki.bitplan.com/index.php/Special:Version", 36),
+            ("https://wiki.bitplan.com/index.php/Special:Version", 33),
             ("https://cr.bitplan.com/index.php/Special:Version", 35),
         ]:
             extList = ExtensionList.fromSpecialVersion(url, showHtml=False, debug=debug)

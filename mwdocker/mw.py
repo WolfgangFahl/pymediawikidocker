@@ -79,14 +79,23 @@ a link to the page also shows up in their "Personal URLs", between "Talk" and "P
             ext.getDetailsFromUrl(debug=debug)
         return ext
 
+    def iter_sample_fields(self):
+        """
+        Generator to yield non-empty (attr, value) pairs based on sample fields.
+        """
+        samples = self.getSamples()
+        for attr in LOD.getFields(samples):
+            if hasattr(self, attr):
+                value = getattr(self, attr)
+                if value:
+                    yield attr, value
+
     def __str__(self):
         text = ""
         delim = ""
-        samples = self.getSamples()
-        for attr in LOD.getFields(samples):
-            if hasattr(self, attr) and getattr(self, attr):
-                text += f"{delim}{attr}={getattr(self,attr)}"
-                delim = "\n"
+        for attr, value in self.iter_sample_fields():
+            text += f"{delim}{attr}={value}"
+            delim = "\n"
         return text
 
     def getDetailsFromUrl(self, showHtml=False, debug=False):
@@ -107,11 +116,10 @@ a link to the page also shows up in their "Personal URLs", between "Talk" and "P
         """
         return me as wiki Markup
         """
-        samples = self.getJsonTypeSamples()
         nameValues = ""
-        for attr in LOD.getFields(samples):
-            if hasattr(self, attr) and getattr(self, attr):
-                nameValues += f"|{attr}={getattr(self,attr)}\n"
+        for attr, value in self.iter_sample_fields():
+            nameValues += f"|{attr}={value}\n"
+
         wikison = f"""{{{{Extension
 {nameValues}
 }}}}"""
