@@ -312,17 +312,15 @@ fix_mariadb() {
 # initialize the Mediawiki database content with the needed table structure
 #
 initdb() {
-  if [ -z "${MYSQL_ROOT_PASSWORD}" ]; then
-    error "MySQL root password required. Use --mysql-root-password option."
-  fi
 
   get_mysql_connection
 
-  wait_for_db "root" "${MYSQL_ROOT_PASSWORD}"
+  # Test database connection first
+  wait_for_db "$DB_USER" "$DB_PASSWORD"
 
   # Check if database is already initialized
   local table_count
-  table_count=$(mysql --host=$DB_HOST -uroot -p"${MYSQL_ROOT_PASSWORD}" \
+  table_count=$(mysql --host=$DB_HOST -u"$DB_USER" -p"$DB_PASSWORD" \
     -D"${DB_NAME}" -sN -e "SHOW TABLES;" 2>/dev/null | wc -l)
 
   if [ "${table_count}" -gt 0 ]; then
@@ -336,8 +334,6 @@ initdb() {
     error "SQL file not found: ${SCRIPT_DIR}/wiki.sql"
   fi
 
-  # Test database connection first
-  wait_for_db "$DB_USER" "$DB_PASSWORD"
 
   # Import with error handling
   if cat "${SCRIPT_DIR}/wiki.sql" | mysql --host=db -u"$DB_USER" -p"$DB_PASSWORD" "$DB_NAME"; then
