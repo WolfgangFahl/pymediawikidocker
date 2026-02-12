@@ -386,9 +386,12 @@ do_extensions() {
 do_composer_update() {
   cd "${WEB_DIR}"
   if command -v composer >/dev/null 2>&1; then
-      composer update --no-dev
+  	# mitigate composer paranoia
+  	# https://github.com/WolfgangFahl/pymediawikidocker/issues/111
+	composer config audit.block-insecure false
+    composer update --no-dev
   else
-      error "Composer not found in path"
+    error "Composer not found in path"
   fi
 }
 
@@ -400,7 +403,7 @@ do_sysop() {
   # make sure we have an initial user to work with
   # use wikiCMS/tsite and ProfiWiki if you need to more control
   if [ -x "${SCRIPT_DIR}/addSysopUser.sh" ]; then
-      "${SCRIPT_DIR}/addSysopUser.sh"
+    "${SCRIPT_DIR}/addSysopUser.sh"
   fi
 }
 
