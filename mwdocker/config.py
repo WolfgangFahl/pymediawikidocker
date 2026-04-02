@@ -231,7 +231,7 @@ class MwConfig:
 
         json_str = self.as_json()
         # Enforce Unix newlines to prevent ^M characters
-        with open(path, "w", newline='\n') as f:
+        with open(path, "w", newline="\n") as f:
             print(json_str, file=f)
         return path
 
@@ -314,7 +314,9 @@ class MwConfig:
             for duplicate in duplicates:
                 print(duplicate.name)
         if extensionJsonFile is not None:
-            extraExtensionList = ExtensionList.load_from_json_file(extensionJsonFile)  # @UndefinedVariable
+            extraExtensionList = ExtensionList.load_from_json_file(
+                extensionJsonFile
+            )  # @UndefinedVariable
             for ext in extraExtensionList.extensions:
                 if ext.name in self.extByName:
                     print(f"overriding {ext.name} extension definition")
@@ -560,7 +562,7 @@ class MwClusterConfig(MwConfig):
     """
 
     versions: Optional[List[str]] = field(
-        default_factory=lambda: ["1.35.13", "1.39.17", "1.43.6", "1.44.3", "1.45.1"]
+        default_factory=lambda: ["1.35.13", "1.39.17", "1.43.7", "1.44.4", "1.45.2"]
     )
     base_port: int = 9080
 
