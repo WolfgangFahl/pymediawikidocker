@@ -562,7 +562,7 @@ class MwClusterConfig(MwConfig):
     """
 
     versions: Optional[List[str]] = field(
-        default_factory=lambda: ["1.35.13", "1.39.17", "1.43.7", "1.44.4", "1.45.2"]
+        default_factory=lambda: ["1.35.13", "1.39.17", "1.43.8", "1.44.5", "1.45.3"]
     )
     base_port: int = 9080
 
