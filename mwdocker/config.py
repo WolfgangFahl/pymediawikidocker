@@ -92,6 +92,10 @@ class MwConfig:
     port: int = 9080
     base_port: Optional[int] = None
     sql_port: int = 9306
+    # host for the published MariaDB TCP port - the docker port is published on
+    # the host loopback, so this defaults to 127.0.0.1 and is intentionally
+    # decoupled from "host" (the canonical/serve name). See #115.
+    sql_host: str = "127.0.0.1"
     container_base_name: Optional[str] = None
     # derived from container_base_name if different than default
     # an external db_container is going to be used
@@ -354,6 +358,7 @@ class MwConfig:
         self.gid = args.gid
         self.forceRebuild = args.forceRebuild or getattr(args, "force", False)
         self.host = args.host
+        self.sql_host = args.sql_host
         self.logo = args.logo
         self.mariaDBVersion = args.mariaDBVersion
         # passwords
@@ -526,6 +531,11 @@ class MwConfig:
             type=int,
             default=self.sql_port,
             help="set base mySql port 3306 to be exposed - incrementing by one for each version [default: %(default)s]",
+        )
+        parser.add_argument(
+            "--sql_host",
+            default=self.sql_host,
+            help="host for connecting to the published MariaDB TCP port - keep the loopback default unless the db is remote [default: %(default)s]",
         )
         parser.add_argument(
             "-smw",

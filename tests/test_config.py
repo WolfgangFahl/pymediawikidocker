@@ -48,6 +48,7 @@ class TestConfig(Basetest):
             "logo": "$wgResourceBasePath/resources/assets/wiki.png",
             "port": 9080,
             "sql_port": 9306,
+            "sql_host": "127.0.0.1",
             "prot": "http",
             "host": Host.get_default_host(),
             "lenient": True,

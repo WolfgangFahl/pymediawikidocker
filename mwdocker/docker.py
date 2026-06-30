@@ -458,7 +458,7 @@ class DockerApplication(object):
         if self.dbConn is None:
             try:
                 self.dbConn = mysql.connector.connect(
-                    host=self.config.host,
+                    host=self.config.sql_host,
                     database=self.database,
                     user=self.dbUser,
                     port=self.config.sql_port,
