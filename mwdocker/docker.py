@@ -589,12 +589,32 @@ class DockerApplication(object):
         except TemplateNotFound:
             print(f"no template {templateName} for {self.config.version}")
 
+    def getExtensions(self):
+        """
+        get the extensions supported by my MediaWiki version
+
+        extensions whose until version is before my version are
+        skipped with a warning - see issue #117
+
+        Returns:
+            list: the list of supported extensions
+        """
+        extensions = []
+        for ext in self.config.extensionMap.values():
+            if ext.supports(self.config.shortVersion):
+                extensions.append(ext)
+            else:
+                print(
+                    f"warning: skipping extension {ext.name} - only supported until MediaWiki {ext.until} (selected: {self.config.shortVersion})"
+                )
+        return extensions
+
     def getComposerRequire(self):
         """
         get the json string for the composer require e.g. composer.local.json
         """
         requires = []
-        for ext in self.config.extensionMap.values():
+        for ext in self.getExtensions():
             # get the composer statement
             if ext.composer:
                 requires.append(ext.composer)
@@ -706,7 +726,7 @@ class DockerApplication(object):
             wiki_id=wiki_id,
             mySQLPassword=self.config.mySQLPassword,
             hostname=self.config.host,
-            extensions=self.config.extensionMap.values(),
+            extensions=self.getExtensions(),
             mwShortVersion=self.config.shortVersion,
             logo=self.config.logo,
             secretKey=secretKey,
@@ -741,7 +761,7 @@ class DockerApplication(object):
         self.generate(
             f"installExtensions.sh",
             f"{self.docker_path}/installExtensions.sh",
-            extensions=self.config.extensionMap.values(),
+            extensions=self.getExtensions(),
             branch=self.branch,
             overwrite=overwrite,
         )
@@ -754,7 +774,7 @@ class DockerApplication(object):
             "install_djvu.sh",
             "plantuml.sh",
             "upload.ini",
-            "my.cnf"
+            "my.cnf",
         ]:
             self.generate(
                 f"{file_name}", f"{self.docker_path}/{file_name}", overwrite=overwrite

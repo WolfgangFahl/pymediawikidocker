@@ -132,6 +132,7 @@ extensions:
   purpose: This extension allows for external images to be used as clickable icons.
   giturl: https://github.com/BITPlan/ImageLink
   require_once_until: '139'
+  until: '139' # no extension.json yet - see https://github.com/BITPlan/ImageLink/issues/1
 - name: ImageMap
   url: https://www.mediawiki.org/wiki/Extension:ImageMap
   extension: ImageMap
@@ -259,6 +260,7 @@ extensions:
   extension: Renameuser
   purpose: Adds a special page to rename a user (need renameuser right)
   wikidata_id: Q21678251
+  until: '139' # part of MediaWiki core since 1.40
 - name: Replace Text
   url: https://www.mediawiki.org/wiki/Extension:ReplaceText
   extension: ReplaceText

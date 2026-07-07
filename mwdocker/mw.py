@@ -32,6 +32,9 @@ class Extension:
     since: Optional[str] = None
     localSettings: Optional[str] = None
     require_once_until: Optional[str] = None
+    until: Optional[str] = (
+        None  # last supported MediaWiki short version e.g. '139' - skip beyond
+    )
     tagmap: Optional[Dict[str, str]] = (
         None  # optionally map MediaWiki REL branches e.g. { "REL1_39": "0.14.0" }
     )
@@ -124,6 +127,21 @@ a link to the page also shows up in their "Personal URLs", between "Talk" and "P
 {nameValues}
 }}}}"""
         return wikison
+
+    def supports(self, mwShortVersion: str) -> bool:
+        """
+        check whether i support the given MediaWiki version
+
+        Args:
+            mwShortVersion(str): the MediaWiki short version e.g. 143
+
+        Returns:
+            bool: False if my until version is before the given version
+        """
+        supported = True
+        if self.until:
+            supported = self.until >= mwShortVersion
+        return supported
 
     def getLocalSettingsLine(self, mwShortVersion: str):
         """

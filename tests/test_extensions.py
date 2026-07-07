@@ -42,6 +42,24 @@ class TestExtensions(Basetest):
             print(yaml_str)
         self.assertTrue("- name: Page Forms" in yaml_str)
 
+    def test_until_version_hint(self):
+        """
+        test the until version hint for skipping incompatible extensions
+
+        https://github.com/WolfgangFahl/pymediawikidocker/issues/117
+        """
+        extensionList = ExtensionList.restore()
+        ext_by_name = {ext.name: ext for ext in extensionList.extensions}
+        # Renameuser is part of MediaWiki core since 1.40
+        renameuser = ext_by_name["Renameuser"]
+        self.assertEqual("139", renameuser.until)
+        self.assertTrue(renameuser.supports("139"))
+        self.assertFalse(renameuser.supports("143"))
+        # an extension without until hint supports any version
+        page_forms = ext_by_name["Page Forms"]
+        self.assertIsNone(page_forms.until)
+        self.assertTrue(page_forms.supports("146"))
+
     def testExtensionDetailsFromUrl(self):
         """
         test getting details of an extension
@@ -109,7 +127,7 @@ class TestExtensions(Basetest):
         """
         debug = self.debug
         # debug=False
-        debug=True
+        debug = True
         for url, expected in [
             # "https://www.openresearch.org/wiki/Special:Version",
             # "https://confident.dbis.rwth-aachen.de/or/index.php?title=Special:Version",
