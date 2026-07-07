@@ -8,6 +8,8 @@ from urllib.request import Request, urlopen
 
 from bs4 import BeautifulSoup
 
+from mwdocker import __version__
+
 
 class WebScrape(object):
     """
@@ -30,7 +32,11 @@ class WebScrape(object):
         Args:
            showHtml(boolean): True if the html code should be pretty printed and shown
         """
-        req = Request(url, headers={"User-Agent": "Mozilla/5.0"})
+        # honest tool user agent: fake browser agents are challenged by
+        # anti-bot proxies (e.g. Anubis on the BITPlan wikis) while an empty
+        # agent is rejected by the Wikimedia user agent policy
+        user_agent = f"pymediawikidocker/{__version__} (+https://github.com/WolfgangFahl/pymediawikidocker)"
+        req = Request(url, headers={"User-Agent": user_agent})
         html = urlopen(req).read()
         soup = BeautifulSoup(html, "html.parser", from_encoding="utf-8")
         if showHtml:
