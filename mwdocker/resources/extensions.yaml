@@ -131,10 +131,13 @@ extensions:
 - name: ImageLink
   url: https://wiki.bitplan.com/index.php/ImageLink
   extension: ImageLink
-  purpose: This extension allows for external images to be used as clickable icons.
+  purpose: Renders an external image, optionally as a clickable link
   giturl: https://github.com/BITPlan/ImageLink
+  tagmap:
+    REL1_43: "0.2.0"
+  wikidata_id: Q140770649
+  since: '2008-03-20T00:00:00'
   require_once_until: '139'
-  until: '139' # no extension.json yet - see https://github.com/BITPlan/ImageLink/issues/1
 - name: ImageMap
   url: https://www.mediawiki.org/wiki/Extension:ImageMap
   extension: ImageMap
