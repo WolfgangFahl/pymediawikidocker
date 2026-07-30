@@ -128,6 +128,7 @@ extensions:
   extension: HitCounters
   purpose: displays the view count in the page footer and the most viewed pages on a special page called PopularPages.
   giturl: https://gerrit.wikimedia.org/r/mediawiki/extensions/HitCounters
+  wikidata_id: Q21677073
 - name: ImageLink
   url: https://wiki.bitplan.com/index.php/ImageLink
   extension: ImageLink
