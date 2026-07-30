@@ -147,6 +147,21 @@ class TestExtensions(Basetest):
                     print(ext.asWikiMarkup())
                 print(extList.to_json())
 
+    def test_details_from_unreachable_url(self):
+        """
+        getDetailsFromUrl must tolerate network failures such as
+        ConnectionResetError or DNS errors since the details are
+        auxiliary - see the 2026-07-30 CI failure of
+        testSpecialVersionHandling
+        """
+        ext = Extension(
+            name="Unreachable",
+            extension="Unreachable",
+            url="https://nonexistent.invalid/wiki/Extension:Unreachable",
+        )
+        ext.getDetailsFromUrl(debug=self.debug)
+        self.assertIsNone(ext.giturl)
+
     def test_duplicate_extensions(self):
         """
         Test the handling of duplicate extensions when

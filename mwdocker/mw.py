@@ -114,6 +114,12 @@ a link to the page also shows up in their "Personal URLs", between "Talk" and "P
         except urllib.error.HTTPError as herr:
             if debug:
                 print(f"HTTPError {str(herr)} for {self.url}")
+        except OSError as oserr:
+            # covers URLError, ConnectionResetError, timeouts - the
+            # details are auxiliary so a transient network failure
+            # must not abort the Special:Version scraping
+            if debug:
+                print(f"{oserr.__class__.__name__} {str(oserr)} for {self.url}")
 
     def asWikiMarkup(self):
         """
