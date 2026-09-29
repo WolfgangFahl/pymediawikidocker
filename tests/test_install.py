@@ -45,8 +45,18 @@ class TestInstall(Basetest):
             # This usually maps to /tmp on Linux but handles user permissions better
             self.docker_path = os.path.join(tempfile.gettempdir(), ".pmw")
 
-        self.argv = ["--docker_path", self.docker_path]
         self.default_config = MwClusterConfig()
+        # test ports are offset from the defaults to avoid clashes with
+        # services running on the default ports of the CI host
+        port_offset = 500
+        self.argv = [
+            "--docker_path",
+            self.docker_path,
+            "--base_port",
+            str(self.default_config.base_port + port_offset),
+            "--sql_base_port",
+            str(self.default_config.sql_port + port_offset),
+        ]
 
     def getMwConfig(self, argv=None, version=None) -> MwClusterConfig:
         mwdocker_cmd = MediaWikiDockerCmd(version=Version)
