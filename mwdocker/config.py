@@ -573,7 +573,6 @@ class MwClusterConfig(MwConfig):
 
     versions: Optional[List[str]] = field(
         default_factory=lambda: [
-            "1.35.13",
             "1.39.17",
             "1.43.9",
             "1.44.6",
