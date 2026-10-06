@@ -29,6 +29,11 @@ extensions:
   extension: Cargo
   purpose: Storage and querying of template data
   giturl: https://github.com/wikimedia/mediawiki-extensions-Cargo
+  tagmap:
+    REL1_43: "3.9.4" # CVE-2026-103049, CVE-2026-96874 to CVE-2026-96878 fixed in 3.9.4
+    REL1_44: "3.9.4"
+    REL1_45: "3.9.4"
+    REL1_46: "3.9.4"
   wikidata_id: Q21676223
 - name: Cite
   url: https://www.mediawiki.org/wiki/Extension:Cite
@@ -75,6 +80,11 @@ extensions:
     export and import data from and to the wiki, with export done in XML format and
     import possible in both XML, CSV and some spreadsheet formats. '
   giturl: https://github.com/wikimedia/mediawiki-extensions-DataTransfer
+  tagmap:
+    REL1_43: "1.8.1" # CVE-2026-100242 fixed in 1.8.1
+    REL1_44: "1.8.1"
+    REL1_45: "1.8.1"
+    REL1_46: "1.8.1"
   wikidata_id: Q21677041
   since: '2008-02-19T00:00:00'
 - name: Diagrams
@@ -177,6 +187,7 @@ extensions:
   purpose: Enables embedding of dynamic maps into wiki pages, geocoding of addresses
     and other geographical operations
   composer: '"mediawiki/maps": "~7.20.1"'
+  until: '139' # no release with the GHSA-rg4f-xvhj-mw22 fix - Maps12 for MediaWiki 1.43+
   wikidata_id: Q21677553
 - name: Maps9
   url: https://github.com/JeroenDeDauw/Maps/blob/master/README.md#maps
@@ -184,6 +195,7 @@ extensions:
   purpose: Enables embedding of dynamic maps into wiki pages, geocoding of addresses
     and other geographical operations
   composer: '"mediawiki/maps": "~9.0.7"'
+  until: '139' # no release with the GHSA-rg4f-xvhj-mw22 fix - Maps12 for MediaWiki 1.43+
   wikidata_id: Q21677553
 - name: Maps10
   url: https://github.com/JeroenDeDauw/Maps/blob/master/README.md#maps
@@ -191,6 +203,7 @@ extensions:
   purpose: Enables embedding of dynamic maps into wiki pages, geocoding of addresses
     and other geographical operations
   composer: '"mediawiki/maps": "~10.3.0"'
+  until: '139' # no release with the GHSA-rg4f-xvhj-mw22 fix - Maps12 for MediaWiki 1.43+
   wikidata_id: Q21677553
 - name: Maps11
   url: https://github.com/JeroenDeDauw/Maps/blob/master/README.md#maps
@@ -198,13 +211,14 @@ extensions:
   purpose: Enables embedding of dynamic maps into wiki pages, geocoding of addresses
     and other geographical operations
   composer: '"mediawiki/maps": "~11.0.1"'
+  until: '139' # no release with the GHSA-rg4f-xvhj-mw22 fix - Maps12 for MediaWiki 1.43+
   wikidata_id: Q21677553
 - name: Maps12
   url: https://github.com/JeroenDeDauw/Maps/blob/master/README.md#maps
   extension: Maps
   purpose: Enables embedding of dynamic maps into wiki pages, geocoding of addresses
     and other geographical operations
-  composer: '"mediawiki/maps": "~12.0.0"'
+  composer: '"mediawiki/maps": "~12.1.8"' # GHSA-rg4f-xvhj-mw22 fixed in 12.1.8
   wikidata_id: Q21677553
 - name: Mermaid
   url: https://github.com/SemanticMediaWiki/Mermaid
@@ -245,8 +259,8 @@ extensions:
   tagmap:
     REL1_35: "5.9.1"
     REL1_39: "5.9.1"
-    REL1_43: "6.0"
-    REL1_44: "6.0"
+    REL1_43: "6.0.11" # CVE-2026-103445 fixed in 6.0.11
+    REL1_44: "6.0.11"
   wikidata_id: Q21678466
   since: '2016-09-07T00:00:00'
 - name: ParserFunctions

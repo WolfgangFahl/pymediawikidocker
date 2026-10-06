@@ -27,7 +27,7 @@ class TestConfig(Basetest):
         """
         mwClusterConfig = MwClusterConfig()
         expected = {
-            "version": "1.39.17",
+            "version": "1.43.11",
             "smw_version": None,
             "extensionNameList": [
                 "Admin Links",
@@ -54,8 +54,8 @@ class TestConfig(Basetest):
             "lenient": True,
             "article_path": "",
             "script_path": "",
-            "container_base_name": "mw-139",
-            "db_container_name": "mw-139-db",
+            "container_base_name": "mw-143",
+            "db_container_name": "mw-143-db",
             "networkName": "mwNetwork",
             "mariaDBVersion": "11.8",
             "forceRebuild": False,

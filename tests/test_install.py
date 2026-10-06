@@ -251,6 +251,36 @@ class TestInstall(Basetest):
         app = apps["1.39.17"]
         app.start(forceRebuild=True)
 
+    def testInstallationWithPinnedExtensions(self):
+        """
+        https://github.com/WolfgangFahl/pymediawikidocker/issues/122
+        test the tagmap and composer pins of the extensions security supplement
+        on the default MediaWiki version
+        """
+        version = self.default_config.version
+        args = [
+            "-cn",
+            "pin",
+            "--prefix",
+            "pin",
+            "--version_list",
+            version,
+            "--base_port",
+            "9482",
+            "--sql_base_port",
+            "9407",
+        ]
+        self.printCommand("--down -f", args)
+        mwCluster = self.getMwCluster(args, createApps=False)
+        mwCluster.config.addExtensions(
+            ["Page Forms", "Cargo", "Data Transfer", "Maps12"]
+        )
+        apps = mwCluster.createApps(withGenerate=True)
+        app = apps[version]
+        app.start(forceRebuild=True)
+        exitCode = mwCluster.check()
+        self.assertEqual(0, exitCode)
+
     @unittest.skipIf(
         Basetest.inPublicCI(),
         "failure possible as of 2025-09 - seems far outdated",
