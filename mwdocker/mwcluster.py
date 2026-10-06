@@ -33,6 +33,7 @@ class MediaWikiCluster(object):
     # 2025-11-14 Security and maintenance release: 1.39.15 / 1.43.5 / 1.44.2
     # 2025-12-18 Security and maintenance release: 1.39.16 / 1.43.6 / 1.44.3 / 1.45.1
     # 2025-12-18 1.39.17 is also out in docker images
+    # 2026-10-06 Security and maintenance release: 1.43.11 / 1.45.6 / 1.46.2 - 1.35.13 dropped
 
     def __init__(self, config: MwClusterConfig, args: Namespace = None):
         """
